@@ -229,6 +229,65 @@
             justify-content: center;
         }
 
+        /* Card Saldo de Pontos */
+        .points-box {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-highlight);
+            border-radius: 16px;
+            padding: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .points-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.4rem;
+        }
+
+        .points-title {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .points-badge {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .points-msg {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
+            line-height: 1.35;
+        }
+
+        .points-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .points-checkbox-label input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--orange);
+            cursor: pointer;
+        }
+
         /* Order Summary Card */
         .summary-card {
             background-color: var(--bg-card);
@@ -252,6 +311,11 @@
             font-size: 0.82rem;
             color: var(--text-muted);
             margin-bottom: 0.5rem;
+        }
+
+        .summary-row.discount-row {
+            color: var(--success);
+            font-weight: 700;
         }
 
         .summary-row.total-row {
@@ -282,7 +346,7 @@
 
         .form-group label {
             display: block;
-            font-size: 16px;
+            font-size: 0.82rem;
             font-weight: 700;
             color: var(--text-muted);
             margin-bottom: 0.3rem;
@@ -311,7 +375,7 @@
             border-radius: 12px;
             padding: 0.85rem;
             margin-bottom: 1rem;
-            font-size: 16px;
+            font-size: 0.8rem;
             color: var(--text-muted);
         }
 
@@ -319,10 +383,10 @@
             color: var(--orange);
             display: block;
             margin-bottom: 0.2rem;
-            font-size: 16px;
+            font-size: 0.85rem;
         }
 
-        /* Botões de Ação Atualizados */
+        /* Botões de Ação */
         .action-container {
             display: flex;
             flex-direction: column;
@@ -424,9 +488,7 @@
 
     <!-- Top Bar -->
     <div class="top-bar">
-        <a href="index.html" class="back-btn">
-            ‹ Voltar à Loja
-        </a>
+        <a href="index.html" class="back-btn">‹ Voltar à Loja</a>
         <h1 class="page-title">Meu Carrinho</h1>
         <div style="width: 50px;"></div>
     </div>
@@ -445,12 +507,31 @@
             <!-- Lista de Produtos -->
             <div id="cartList" class="cart-list"></div>
 
+            <!-- Saldo de Pontos / Desconto -->
+            <div id="pointsBox" class="points-box" style="display: none;">
+                <div class="points-header">
+                    <span class="points-title">🎁 Usar Saldo de Pontos</span>
+                    <span class="points-badge" id="cartPointsBalance">0 Pts</span>
+                </div>
+                <div class="points-msg" id="pointsMsgText">
+                    Pode utilizar os seus pontos (1 Ponto = 1 FCFA, máximo de 5.000 pontos por compra).
+                </div>
+                <label class="points-checkbox-label" id="pointsCheckboxContainer" style="display: none;">
+                    <input type="checkbox" id="usePointsCheckbox" onchange="renderCart()">
+                    <span id="pointsLabelText">Abater pontos no total</span>
+                </label>
+            </div>
+
             <!-- Resumo dos Valores -->
             <div class="summary-card">
                 <h3 class="summary-title">Resumo da Compra</h3>
                 <div class="summary-row">
                     <span>Subtotal</span>
                     <span id="subtotalVal">0 FCFA</span>
+                </div>
+                <div class="summary-row discount-row" id="discountRow" style="display: none;">
+                    <span>Desconto de Pontos</span>
+                    <span id="discountVal">-0 FCFA</span>
                 </div>
                 <div class="summary-row">
                     <span>Taxa de Processamento</span>
@@ -473,7 +554,7 @@
 
                 <div class="form-group">
                     <label for="clientPhone">Seu Nº de WhatsApp / Contacto *</label>
-                    <input type="tel" id="clientPhone" class="form-input" placeholder="Ex: 95/96-5555555" required>
+                    <input type="tel" id="clientPhone" class="form-input" placeholder="Ex: 955288370" required>
                 </div>
 
                 <div class="payment-info-box">
@@ -481,7 +562,7 @@
                     O pagamento é feito enviando o valor total para o número <strong>955288370</strong>.
                 </div>
 
-                <!-- Novos Botões de Ação -->
+                <!-- Botões de Ação -->
                 <div class="action-container">
                     <button class="btn-site" onclick="checkoutSite()">
                         💳 Pagar pelo Site (Automático)
@@ -507,18 +588,18 @@
     </div>
 
     <script>
-        // Função para obter carrinho
+        let userPointsAvailable = 0;
+        const MAX_PONTOS_POR_COMPRA = 5000; // Máximo de 5000 pontos aplicáveis por compra
+
         function getCart() {
             return JSON.parse(localStorage.getItem('bissau_cart')) || [];
         }
 
-        // Guardar carrinho
         function saveCart(cart) {
             localStorage.setItem('bissau_cart', JSON.stringify(cart));
             renderCart();
         }
 
-        // Renderizar Produtos do Carrinho
         function renderCart() {
             const cart = getCart();
             const emptyCart = document.getElementById('emptyCart');
@@ -535,11 +616,11 @@
             cartContent.style.display = 'block';
             cartList.innerHTML = '';
 
-            let total = 0;
+            let subtotal = 0;
 
             cart.forEach((item, index) => {
                 const itemTotal = (item.price || 0) * (item.quantidade || 1);
-                total += itemTotal;
+                subtotal += itemTotal;
 
                 const itemElement = document.createElement('div');
                 itemElement.className = 'cart-item';
@@ -560,11 +641,54 @@
                 cartList.appendChild(itemElement);
             });
 
-            document.getElementById('subtotalVal').innerText = total.toLocaleString() + ' FCFA';
+            // Gestão do Desconto por Pontos (1 Ponto = 1 FCFA, Max 5000)
+            const usePointsCheckbox = document.getElementById('usePointsCheckbox');
+            const pointsCheckboxContainer = document.getElementById('pointsCheckboxContainer');
+            const pointsMsgText = document.getElementById('pointsMsgText');
+            let desconto = 0;
+
+            if (userPointsAvailable > 0) {
+                pointsCheckboxContainer.style.display = 'flex';
+                
+                // Limitar o desconto aos pontos disponíveis, ao teto de 5000 e ao subtotal da compra
+                const pontosPermitidos = Math.min(userPointsAvailable, MAX_PONTOS_POR_COMPRA, subtotal);
+                
+                document.getElementById('pointsLabelText').innerText = `Abater até ${pontosPermitidos.toLocaleString()} pontos (${pontosPermitidos.toLocaleString()} FCFA)`;
+                pointsMsgText.innerText = `Tem ${userPointsAvailable.toLocaleString()} pontos disponíveis. (Máximo de 5.000 pontos por compra).`;
+                pointsMsgText.style.color = "var(--success)";
+
+                if (usePointsCheckbox && usePointsCheckbox.checked) {
+                    desconto = pontosPermitidos;
+                }
+            } else {
+                pointsCheckboxContainer.style.display = 'none';
+                if (usePointsCheckbox) usePointsCheckbox.checked = false;
+                pointsMsgText.innerText = "Não tem pontos disponíveis de momento.";
+                pointsMsgText.style.color = "var(--text-muted)";
+            }
+
+            const total = Math.max(0, subtotal - desconto);
+
+            // Guardar dados estruturados para usar no checkout
+            localStorage.setItem('bissau_checkout_totals', JSON.stringify({
+                subtotal: subtotal,
+                desconto: desconto,
+                total: total
+            }));
+
+            document.getElementById('subtotalVal').innerText = subtotal.toLocaleString() + ' FCFA';
+            
+            const discountRow = document.getElementById('discountRow');
+            if (desconto > 0) {
+                discountRow.style.display = 'flex';
+                document.getElementById('discountVal').innerText = '-' + desconto.toLocaleString() + ' FCFA';
+            } else {
+                discountRow.style.display = 'none';
+            }
+
             document.getElementById('totalVal').innerText = total.toLocaleString() + ' FCFA';
         }
 
-        // Alterar quantidade
         window.changeQty = function(index, delta) {
             let cart = getCart();
             if (cart[index]) {
@@ -576,22 +700,20 @@
             }
         };
 
-        // Remover item
         window.removeItem = function(index) {
             let cart = getCart();
             cart.splice(index, 1);
             saveCart(cart);
         };
 
-        // Esvaziar carrinho
         window.clearCart = function() {
             if (confirm("Tem certeza que deseja esvaziar o seu carrinho?")) {
                 localStorage.removeItem('bissau_cart');
+                localStorage.removeItem('bissau_checkout_totals');
                 renderCart();
             }
         };
 
-        // NOVO: Função para avançar para a página de Checkout pelo Site
         window.checkoutSite = function() {
             const cart = getCart();
             const name = document.getElementById('clientName').value.trim();
@@ -603,22 +725,20 @@
             }
 
             if (!name || !phone) {
-                alert("Por favor, preencha o seu Nome e Número de WhatsApp para continuar para o pagamento.");
+                alert("Por favor, preencha o seu Nome e Número de WhatsApp para continuar.");
                 return;
             }
 
-            // Guardar os dados do cliente para preencher automaticamente na página de checkout
             localStorage.setItem('bissau_client_info', JSON.stringify({ name: name, phone: phone }));
-            
-            // Redirecionar para a página de checkout
             window.location.href = 'checkout.html';
         };
 
-        // Função Original: Finalizar no WhatsApp
         window.checkoutWhatsApp = function() {
             const cart = getCart();
             const name = document.getElementById('clientName').value.trim();
             const phone = document.getElementById('clientPhone').value.trim();
+            
+            const totals = JSON.parse(localStorage.getItem('bissau_checkout_totals')) || { subtotal: 0, desconto: 0, total: 0 };
 
             if (cart.length === 0) {
                 alert("O seu carrinho está vazio!");
@@ -636,60 +756,105 @@
             text += `📱 *Contacto:* ${phone}\n\n`;
             text += `📦 *ITENS DO PEDIDO:*\n`;
 
-            let total = 0;
             cart.forEach((item, idx) => {
                 const itemTotal = (item.price || 0) * (item.quantidade || 1);
-                total += itemTotal;
                 text += `${idx + 1}. *${item.nome}*\n`;
                 text += `   • Detalhe: ${item.opcao || 'Padrão'}\n`;
                 text += `   • Qtd: ${item.quantidade || 1}x | Valor: ${itemTotal.toLocaleString()} FCFA\n\n`;
             });
 
             text += `--------------------------------\n`;
-            text += `💰 *TOTAL A PAGAR:* ${total.toLocaleString()} FCFA\n`;
+            text += `💰 *Subtotal:* ${totals.subtotal.toLocaleString()} FCFA\n`;
+            if (totals.desconto > 0) {
+                text += `🎁 *Desconto (Pontos Utilizados):* -${totals.desconto.toLocaleString()} FCFA\n`;
+            }
+            text += `🔥 *TOTAL A PAGAR:* ${totals.total.toLocaleString()} FCFA\n`;
             text += `💳 *Método de Pagamento:* Orange Money (955288370)\n\n`;
             text += `Aguardando confirmação para realizar a transferência/envio do comprovativo.`;
 
             const encodedText = encodeURIComponent(text);
             const waUrl = `https://wa.me/245955288370?text=${encodedText}`;
 
-            // Guardar no histórico local de pedidos (opcional)
             const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || [];
             pedidos.push({
                 id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
                 data: new Date().toLocaleDateString('pt-PT'),
                 itens: cart,
-                total: total,
+                subtotal: totals.subtotal,
+                desconto: totals.desconto,
+                total: totals.total,
                 status: 'Pendente'
             });
             localStorage.setItem('bissau_orders', JSON.stringify(pedidos));
 
-            // Esvaziar carrinho após enviar
             localStorage.removeItem('bissau_cart');
-
+            localStorage.removeItem('bissau_checkout_totals');
             window.open(waUrl, '_blank');
         };
 
-        // Iniciar ao carregar a página
         document.addEventListener('DOMContentLoaded', renderCart);
     </script>
-<script>
-    // Esconder a barra inferior quando o teclado abre (foco num input)
-    document.addEventListener('focusin', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-            const bottomNav = document.querySelector('.bottom-nav');
-            if (bottomNav) bottomNav.style.display = 'none';
-        }
-    });
 
-    // Voltar a mostrar a barra inferior quando o teclado fecha (perda de foco)
-    document.addEventListener('focusout', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-            const bottomNav = document.querySelector('.bottom-nav');
-            if (bottomNav) bottomNav.style.display = 'flex';
-        }
-    });
-</script>
+    <!-- Firebase para Ler Saldo de Pontos -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            const pointsBox = document.getElementById('pointsBox');
+            if (user) {
+                try {
+                    const docSnap = await getDoc(doc(db, "usuarios", user.uid));
+                    if (docSnap.exists()) {
+                        userPointsAvailable = docSnap.data().pontos || 0;
+                    }
+                } catch (e) {
+                    console.error("Erro ao procurar pontos:", e);
+                }
+
+                if (userPointsAvailable > 0) {
+                    pointsBox.style.display = 'block';
+                    document.getElementById('cartPointsBalance').innerText = userPointsAvailable.toLocaleString() + ' Pts';
+                    renderCart();
+                } else {
+                    pointsBox.style.display = 'none';
+                }
+            } else {
+                pointsBox.style.display = 'none';
+            }
+        });
+    </script>
+
+    <!-- Ocultar barra inferior ao abrir o teclado virtual -->
+    <script>
+        document.addEventListener('focusin', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                const bottomNav = document.querySelector('.bottom-nav');
+                if (bottomNav) bottomNav.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('focusout', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                const bottomNav = document.querySelector('.bottom-nav');
+                if (bottomNav) bottomNav.style.display = 'flex';
+            }
+        });
+    </script>
 
 </body>
 </html>

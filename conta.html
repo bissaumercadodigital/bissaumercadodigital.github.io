@@ -2,7 +2,7 @@
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Minha Conta - Mercado Digital Bissau</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,7 +43,6 @@
             color: var(--text-main);
             line-height: 1.5;
             padding-bottom: 100px;
-            
         }
 
         @keyframes fadeIn {
@@ -110,12 +109,11 @@
         }
 
         .container {
-    padding: 1rem;
-    max-width: 600px;
-    margin: 0 auto;
-    animation: fadeIn 0.25s ease-out;
-}
-
+            padding: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.25s ease-out;
+        }
 
         /* Card de Perfil Logado */
         .profile-card {
@@ -186,6 +184,83 @@
             cursor: pointer;
             margin-bottom: 0.85rem;
             display: inline-block;
+        }
+
+        /* Card Compacto de Afiliados e Pontos */
+        .affiliate-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-highlight);
+            border-radius: 16px;
+            padding: 1.1rem;
+            margin-bottom: 1.25rem;
+            text-align: left;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .affiliate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .affiliate-title {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .points-badge {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
+        .affiliate-desc {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-bottom: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .ref-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .ref-input {
+            flex: 1;
+            padding: 9px 11px;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .btn-copy-ref {
+            background: linear-gradient(135deg, var(--orange), #d95300);
+            color: #ffffff;
+            border: none;
+            padding: 0 14px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-copy-ref:active {
+            transform: scale(0.96);
         }
 
         /* Lista de Atalhos */
@@ -307,22 +382,21 @@
 
         /* Navigation Inferior */
         .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(18, 25, 38, 0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    display: flex;
-    justify-content: space-around;
-    padding: 0.65rem 0;
-    border-top: 1px solid var(--border);
-    z-index: 1000;
-    transform: translateZ(0);
-    will-change: transform;
-}
-
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(18, 25, 38, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.65rem 0;
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+            transform: translateZ(0);
+            will-change: transform;
+        }
 
         .nav-item {
             display: flex;
@@ -347,13 +421,10 @@
 
     <!-- Top Bar -->
     <div class="top-bar">
-        <a href="index.html" class="back-btn">
-            ‹ Voltar
-        </a>
+        <a href="index.html" class="back-btn">‹ Voltar</a>
         <h1 class="page-title">Minha Conta</h1>
         <a href="carrinho.html" class="icon-cart-link">
-            🛒
-            <span class="cart-badge-count" id="cartBadge">0</span>
+            🛒 <span class="cart-badge-count" id="cartBadge">0</span>
         </a>
     </div>
 
@@ -377,6 +448,21 @@
                 <button id="btnResendEmail" class="btn-resend-verify" style="display: none;" onclick="resendVerificationEmail()">
                     📩 Reenviar E-mail de Verificação
                 </button>
+            </div>
+
+            <!-- Painel Compacto de Afiliados e Pontos -->
+            <div class="affiliate-card">
+                <div class="affiliate-header">
+                    <span class="affiliate-title">🎁 Saldo de Pontos</span>
+                    <span class="points-badge" id="userPoints">0 FCFA</span>
+                </div>
+                <p class="affiliate-desc">
+                    Convide amigos com e-mail verificado e receba <strong>1% em pontos</strong> de todas as compras efetuadas por eles!
+                </p>
+                <div class="ref-input-group">
+                    <input type="text" id="myReferralLink" class="ref-input" readonly placeholder="A gerar o seu link...">
+                    <button class="btn-copy-ref" onclick="copiarLinkConvite()">Copiar Link</button>
+                </div>
             </div>
 
             <!-- Menu de Opções -->
@@ -446,6 +532,13 @@
     </div>
 
     <script>
+        // Guardar parâmetro de convite (?ref=UID) se vier no URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const refParam = urlParams.get('ref');
+        if (refParam) {
+            localStorage.setItem('bissau_ref', refParam);
+        }
+
         function updateCartBadge() {
             try {
                 const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
@@ -460,10 +553,19 @@
             window.location.href = "index.html";
         }
 
+        function copiarLinkConvite() {
+            const input = document.getElementById('myReferralLink');
+            if (!input.value) return;
+            input.select();
+            input.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(input.value);
+            alert("✅ Link de convite copiado!");
+        }
+
         document.addEventListener('DOMContentLoaded', updateCartBadge);
     </script>
 
-    <!-- Firebase Auth Logic -->
+    <!-- Firebase Auth & Firestore Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -474,6 +576,12 @@
             sendEmailVerification,
             onAuthStateChanged 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            getDoc, 
+            setDoc 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
@@ -486,11 +594,12 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
         const googleProvider = new GoogleAuthProvider();
 
         let currentUser = null;
 
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             document.getElementById('loadingBox').style.display = 'none';
             if (user) {
                 currentUser = user;
@@ -518,6 +627,50 @@
                     verifyBadge.className = "verification-badge unverified";
                     btnResend.style.display = "inline-block";
                 }
+
+                // Gerar Link de Convite Pessoal
+                const dominioAtual = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+const referralLink = `${dominioAtual}index.html?ref=${user.uid}`;
+
+                document.getElementById('myReferralLink').value = referralLink;
+
+                // Carregar Saldo de Pontos e Registar Afiliado
+                try {
+                    const savedRef = localStorage.getItem('bissau_ref');
+                    const userRef = doc(db, "usuarios", user.uid);
+                    const docSnap = await getDoc(userRef);
+
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        const pontos = data.pontos || 0;
+                        document.getElementById('userPoints').innerText = pontos.toLocaleString() + ' FCFA';
+
+                        // Se o perfil existe mas ainda não tinha 'convidadoPor', regista agora
+                        if (!data.convidadoPor && savedRef && savedRef !== user.uid) {
+                            await setDoc(userRef, { convidadoPor: savedRef }, { merge: true });
+                            localStorage.removeItem('bissau_ref');
+                        }
+                    } else {
+                        // Criação inicial do perfil no Firestore guardando quem convidou
+                        const userData = {
+                            nome: user.displayName || 'Cliente',
+                            email: user.email,
+                            pontos: 0,
+                            criadoEm: new Date().toISOString()
+                        };
+
+                        if (savedRef && savedRef !== user.uid) {
+                            userData.convidadoPor = savedRef;
+                            localStorage.removeItem('bissau_ref');
+                        }
+
+                        await setDoc(userRef, userData, { merge: true });
+                        document.getElementById('userPoints').innerText = '0 FCFA';
+                    }
+                } catch (err) {
+                    console.error("Erro ao carregar saldo de pontos:", err);
+                }
+
             } else {
                 currentUser = null;
                 document.getElementById('userProfileBox').style.display = 'none';
@@ -558,23 +711,23 @@
             }
         };
     </script>
-<script>
-    // Esconder a barra inferior quando o teclado abre (foco num input)
-    document.addEventListener('focusin', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-            const bottomNav = document.querySelector('.bottom-nav');
-            if (bottomNav) bottomNav.style.display = 'none';
-        }
-    });
 
-    // Voltar a mostrar a barra inferior quando o teclado fecha (perda de foco)
-    document.addEventListener('focusout', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-            const bottomNav = document.querySelector('.bottom-nav');
-            if (bottomNav) bottomNav.style.display = 'flex';
-        }
-    });
-</script>
+    <!-- Script de Gestão do Teclado -->
+    <script>
+        document.addEventListener('focusin', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                const bottomNav = document.querySelector('.bottom-nav');
+                if (bottomNav) bottomNav.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('focusout', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                const bottomNav = document.querySelector('.bottom-nav');
+                if (bottomNav) bottomNav.style.display = 'flex';
+            }
+        });
+    </script>
 
 </body>
 </html>

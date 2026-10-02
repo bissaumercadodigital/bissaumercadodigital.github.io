@@ -147,7 +147,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, getDoc, increment, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
@@ -290,10 +290,37 @@
 
             try {
                 const pedidoRef = doc(db, "pedidos", docId);
+                const pedidoSnap = await getDoc(pedidoRef);
+                const pedidoData = pedidoSnap.data();
+
+                // 1. Atualizar o pedido para Concluído
                 await updateDoc(pedidoRef, {
                     status: "Concluído",
                     dadosEntregues: dadosEntrega
                 });
+
+                // 2. Creditar 1% dos pontos ao utilizador que convidou (se existir)
+                if (pedidoData && pedidoData.userId) {
+                    const compradorRef = doc(db, "usuarios", pedidoData.userId);
+                    const compradorSnap = await getDoc(compradorRef);
+
+                    if (compradorSnap.exists()) {
+                        const compradorData = compradorSnap.data();
+                        const convidadoPorUid = compradorData.convidadoPor;
+
+                        if (convidadoPorUid) {
+                            const valorTotal = pedidoData.total || 0;
+                            const pontosComissao = Math.round(valorTotal * 0.01); // 1% do valor total
+
+                            if (pontosComissao > 0) {
+                                const inviterRef = doc(db, "usuarios", convidadoPorUid);
+                                await updateDoc(inviterRef, {
+                                    pontos: increment(pontosComissao)
+                                });
+                            }
+                        }
+                    }
+                }
 
                 const msg = `Olá *${clienteNome}*! O seu pagamento foi confirmado. 🎉\n\n*Pedido:* ${orderId}\n*Seu Produto/Acesso:* \n${dadosEntrega}\n\nObrigado por comprar na Bissau Mercado Digital!`;
                 const whatsappUrl = `https://wa.me/${telefone}?text=${encodeURIComponent(msg)}`;
@@ -302,7 +329,7 @@
                 carregarPedidosPendentes();
 
             } catch (error) {
-                console.error("Erro ao aprovar: ", error);
+                console.error("Erro ao aprovar pedido: ", error);
                 alert("Erro ao aprovar pedido. Tente novamente.");
             }
         }

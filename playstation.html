@@ -43,7 +43,6 @@
             color: var(--text-main);
             line-height: 1.5;
             padding-bottom: 100px;
-            
         }
 
         @keyframes fadeIn {
@@ -51,10 +50,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+        a { text-decoration: none; color: inherit; }
 
         /* Top Bar */
         .top-bar {
@@ -110,12 +106,11 @@
         }
 
         .container {
-    padding: 1rem;
-    max-width: 600px;
-    margin: 0 auto;
-    animation: fadeIn 0.25s ease-out;
-}
-
+            padding: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.25s ease-out;
+        }
 
         /* Hero Product Card */
         .product-hero {
@@ -184,18 +179,22 @@
             margin-bottom: 0.35rem;
         }
 
-        .form-input, .form-select, .form-textarea {
-    width: 100%;
-    padding: 11px 13px;
-    background-color: var(--bg-dark);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: #ffffff;
-    font-size: 16px; /* Alterado para 16px para evitar zoom em telemóveis */
-    font-weight: 600;
-    outline: none;
-    transition: border-color 0.2s;
-}
+        .form-input, .form-select {
+            width: 100%;
+            padding: 11px 13px;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--ps-blue);
+        }
 
         /* Package Grid Selection */
         .packages-title {
@@ -228,32 +227,14 @@
 
         .pkg-card.selected {
             border-color: var(--ps-blue);
-            background-color: rgba(0, 112, 209, 0.08);
+            background-color: rgba(0, 112, 209, 0.12);
             box-shadow: 0 0 15px var(--ps-glow);
         }
 
-        .pkg-info {
-            text-align: left;
-        }
-
-        .pkg-title {
-            font-size: 0.98rem;
-            font-weight: 800;
-            color: #ffffff;
-        }
-
-        .pkg-sub {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.2rem;
-        }
-
-        .pkg-price {
-            font-size: 1rem;
-            font-weight: 800;
-            color: var(--ps-blue);
-            white-space: nowrap;
-        }
+        .pkg-info { text-align: left; }
+        .pkg-title { font-size: 0.98rem; font-weight: 800; color: #ffffff; }
+        .pkg-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+        .pkg-price { font-size: 1rem; font-weight: 800; color: var(--ps-blue); white-space: nowrap; }
 
         /* Action Buttons */
         .action-container {
@@ -299,10 +280,6 @@
             text-transform: uppercase;
         }
 
-        .btn-add-cart:active, .btn-buy-wa:active {
-            transform: scale(0.98);
-        }
-
         .toast {
             position: fixed;
             bottom: 80px;
@@ -325,24 +302,20 @@
             opacity: 1;
         }
 
-        /* Navigation Inferior */
+        /* Bottom Nav */
         .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(18, 25, 38, 0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    display: flex;
-    justify-content: space-around;
-    padding: 0.65rem 0;
-    border-top: 1px solid var(--border);
-    z-index: 1000;
-    transform: translateZ(0);
-    will-change: transform;
-}
-
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(18, 25, 38, 0.95);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.65rem 0;
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+        }
 
         .nav-item {
             display: flex;
@@ -354,26 +327,18 @@
             gap: 0.2rem;
         }
 
-        .nav-item.active {
-            color: var(--orange);
-        }
-
-        .nav-icon {
-            font-size: 1.2rem;
-        }
+        .nav-item.active { color: var(--orange); }
+        .nav-icon { font-size: 1.2rem; }
     </style>
 </head>
 <body>
 
     <!-- Top Bar -->
     <div class="top-bar">
-        <a href="index.html" class="back-btn">
-            ‹ Voltar
-        </a>
+        <a href="index.html" class="back-btn">‹ Voltar</a>
         <h1 class="page-title">PlayStation Store</h1>
         <a href="carrinho.html" class="icon-cart-link">
-            🛒
-            <span class="cart-badge-count" id="cartBadge">0</span>
+            🛒 <span class="cart-badge-count" id="cartBadge">0</span>
         </a>
     </div>
 
@@ -383,19 +348,19 @@
             <div class="product-banner"></div>
             <div class="product-hero-info">
                 <h2>PlayStation PS4 / PS5 🎮</h2>
-                <p>Assinaturas PS Plus e Cartões de Saldo (Gift Cards) com entrega do código digital oficial via WhatsApp.</p>
+                <p>Escolha o país da sua conta PSN para ver as opções em Euros (€) ou Dólares ($). Entrega digital via WhatsApp.</p>
             </div>
         </div>
 
-        <!-- Dados da Conta PSN -->
+        <!-- Região & Dados do Cliente -->
         <div class="input-card">
             <h3 class="input-card-title">1. Região da Conta & Contacto</h3>
             <div class="form-group">
-                <label for="regionSelect">Região da sua Conta PSN *</label>
-                <select id="regionSelect" class="form-select">
-                    <option value="Estados Unidos (EUA / USD)">🇺🇸 Estados Unidos (EUA / $)</option>
-                    <option value="Portugal / Europa (EUR)">🇵🇹 Portugal / Europa (EUR / €)</option>
-                    <option value="França (EUR)">🇫🇷 França / Europa (EUR / €)</option>
+                <label for="regionSelect">Selecione o País da Conta PSN *</label>
+                <select id="regionSelect" class="form-select" onchange="renderizarPacotesPorRegiao()">
+                    <option value="PT">🇵🇹 Portugal (Euros - €)</option>
+                    <option value="FR">🇫🇷 França / Europa (Euros - €)</option>
+                    <option value="US">🇺🇸 Estados Unidos (Dólares - $)</option>
                 </select>
             </div>
             <div class="form-group">
@@ -408,70 +373,19 @@
             </div>
         </div>
 
-        <!-- Seleção do Serviço / Plano -->
-        <div class="packages-title">2. Escolha o Serviço ou Gift Card</div>
-        <div class="package-grid">
-            <div class="pkg-card selected" onclick="selectPackage(this, 'PS Plus Essential (1 Mês)', 7500)">
-                <div class="pkg-info">
-                    <div class="pkg-title">⭐ PS Plus Essential — 1 Mês</div>
-                    <div class="pkg-sub">Multijogador online + Jogos mensais grátis</div>
-                </div>
-                <div class="pkg-price">7.500 FCFA</div>
-            </div>
-
-            <div class="pkg-card" onclick="selectPackage(this, 'PS Plus Essential (3 Meses)', 18000)">
-                <div class="pkg-info">
-                    <div class="pkg-title">⭐ PS Plus Essential — 3 Meses</div>
-                    <div class="pkg-sub">Acesso de 90 dias com desconto</div>
-                </div>
-                <div class="pkg-price">18.000 FCFA</div>
-            </div>
-
-            <div class="pkg-card" onclick="selectPackage(this, 'PS Plus Extra (1 Mês)', 11000)">
-                <div class="pkg-info">
-                    <div class="pkg-title">🎮 PS Plus Extra — 1 Mês</div>
-                    <div class="pkg-sub">Acesso a catálogo com centenas de jogos PS4/PS5</div>
-                </div>
-                <div class="pkg-price">11.000 FCFA</div>
-            </div>
-
-            <div class="pkg-card" onclick="selectPackage(this, 'Gift Card Saldo $10 / €10', 7000)">
-                <div class="pkg-info">
-                    <div class="pkg-title">💳 Recarga Saldo $10 / €10 </div>
-                    <div class="pkg-sub">Adiciona dinheiro à sua Carteira PSN</div>
-                </div>
-                <div class="pkg-price">7.000 FCFA</div>
-            </div>
-
-            <div class="pkg-card" onclick="selectPackage(this, 'Gift Card Saldo $25 / €25', 16500)">
-                <div class="pkg-info">
-                    <div class="pkg-title">💳 Recarga Saldo $25 / €25 </div>
-                    <div class="pkg-sub">Adiciona dinheiro à sua Carteira PSN</div>
-                </div>
-                <div class="pkg-price">16.500 FCFA</div>
-            </div>
-
-            <div class="pkg-card" onclick="selectPackage(this, 'Gift Card Saldo $50 / €50', 32000)">
-                <div class="pkg-info">
-                    <div class="pkg-title">💳 Recarga Saldo $50 / €50 </div>
-                    <div class="pkg-sub">Adiciona dinheiro à sua Carteira PSN</div>
-                </div>
-                <div class="pkg-price">32.000 FCFA</div>
-            </div>
+        <!-- Seleção de Pacotes -->
+        <div class="packages-title">2. Escolha a Opção Desejada</div>
+        <div class="package-grid" id="packageContainer">
+            <!-- Os cards são gerados dinamicamente via JS de acordo com a região selecionada -->
         </div>
 
         <!-- Botões de Ação -->
         <div class="action-container">
-            <button class="btn-add-cart" onclick="addToCart()">
-                🛒 Adicionar ao Carrinho
-            </button>
-            <button class="btn-buy-wa" onclick="buyDirectWhatsApp()">
-                💬 Comprar Directo no WhatsApp
-            </button>
+            <button class="btn-add-cart" onclick="addToCart()">🛒 Adicionar ao Carrinho</button>
+            <button class="btn-buy-wa" onclick="buyDirectWhatsApp()">💬 Comprar Directo no WhatsApp</button>
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="toast">Item adicionado ao carrinho!</div>
 
     <!-- Navegação Inferior -->
@@ -484,14 +398,65 @@
     </div>
 
     <script>
-        let selectedLabel = 'PS Plus Essential (1 Mês)';
-        let selectedPrice = 7500;
+        // Tabela de Pacotes e Preços em FCFA por Região
+        const tabelaPacotes = {
+            PT: [
+                { label: 'PS Plus Essential (1 Mês)', sub: 'Multijogador online + Jogos mensais grátis (EUR)', price: 7500 },
+                { label: 'PS Plus Essential (3 Meses)', sub: 'Acesso 90 dias com desconto (EUR)', price: 18000 },
+                { label: 'PS Plus Extra (1 Mês)', sub: 'Catálogo de centenas de jogos PS4/PS5 (EUR)', price: 11000 },
+                { label: 'Gift Card €10 EUR', sub: 'Adiciona 10€ à Carteira PSN Portugal', price: 7500 },
+                { label: 'Gift Card €20 EUR', sub: 'Adiciona 20€ à Carteira PSN Portugal', price: 14500 },
+                { label: 'Gift Card €50 EUR', sub: 'Adiciona 50€ à Carteira PSN Portugal', price: 36000 }
+            ],
+            FR: [
+                { label: 'PS Plus Essential (1 Mês - França)', sub: 'Acesso online e jogos mensais (EUR)', price: 7500 },
+                { label: 'Gift Card €10 EUR (França)', sub: 'Adiciona 10€ à Carteira PSN França', price: 7500 },
+                { label: 'Gift Card €25 EUR (França)', sub: 'Adiciona 25€ à Carteira PSN França', price: 18000 },
+                { label: 'Gift Card €50 EUR (França)', sub: 'Adiciona 50€ à Carteira PSN França', price: 36000 }
+            ],
+            US: [
+                { label: 'Gift Card $10 USD', sub: 'Adiciona $10 à Carteira PSN EUA', price: 7000 },
+                { label: 'Gift Card $25 USD', sub: 'Adiciona $25 à Carteira PSN EUA', price: 17000 },
+                { label: 'Gift Card $50 USD', sub: 'Adiciona $50 à Carteira PSN EUA', price: 34000 },
+                { label: 'Gift Card $100 USD', sub: 'Adiciona $100 à Carteira PSN EUA', price: 68000 }
+            ]
+        };
 
-        function selectPackage(element, label, price) {
-            document.querySelectorAll('.pkg-card').forEach(card => card.classList.remove('selected'));
-            element.classList.add('selected');
-            selectedLabel = label;
-            selectedPrice = price;
+        let selectedLabel = '';
+        let selectedPrice = 0;
+
+        function renderizarPacotesPorRegiao() {
+            const regiao = document.getElementById('regionSelect').value;
+            const container = document.getElementById('packageContainer');
+            const lista = tabelaPacotes[regiao] || [];
+
+            container.innerHTML = '';
+
+            lista.forEach((pkg, index) => {
+                const card = document.createElement('div');
+                card.className = `pkg-card ${index === 0 ? 'selected' : ''}`;
+                
+                if (index === 0) {
+                    selectedLabel = pkg.label;
+                    selectedPrice = pkg.price;
+                }
+
+                card.onclick = function() {
+                    document.querySelectorAll('.pkg-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    selectedLabel = pkg.label;
+                    selectedPrice = pkg.price;
+                };
+
+                card.innerHTML = `
+                    <div class="pkg-info">
+                        <div class="pkg-title">🎮 ${pkg.label}</div>
+                        <div class="pkg-sub">${pkg.sub}</div>
+                    </div>
+                    <div class="pkg-price">${pkg.price.toLocaleString()} FCFA</div>
+                `;
+                container.appendChild(card);
+            });
         }
 
         function updateCartBadge() {
@@ -508,13 +473,12 @@
             const toast = document.getElementById('toast');
             toast.innerText = message;
             toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2500);
+            setTimeout(() => { toast.classList.remove('show'); }, 2500);
         }
 
         function addToCart() {
-            const region = document.getElementById('regionSelect').value;
+            const regiaoSelect = document.getElementById('regionSelect');
+            const regionName = regiaoSelect.options[regiaoSelect.selectedIndex].text;
             const name = document.getElementById('clientName').value.trim();
             const wa = document.getElementById('clientWhatsApp').value.trim();
 
@@ -529,7 +493,7 @@
             const newItem = {
                 id: 'psn_' + Date.now(),
                 nome: 'PlayStation - ' + selectedLabel,
-                opcao: 'Região: ' + region + ' | Cliente: ' + name + ' | WA: ' + wa,
+                opcao: 'Região: ' + regionName + ' | Cliente: ' + name + ' | WA: ' + wa,
                 price: selectedPrice,
                 quantidade: 1,
                 img: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?q=80&w=200'
@@ -543,7 +507,8 @@
         }
 
         function buyDirectWhatsApp() {
-            const region = document.getElementById('regionSelect').value;
+            const regiaoSelect = document.getElementById('regionSelect');
+            const regionName = regiaoSelect.options[regiaoSelect.selectedIndex].text;
             const name = document.getElementById('clientName').value.trim();
             const wa = document.getElementById('clientWhatsApp').value.trim();
 
@@ -556,37 +521,37 @@
             let text = `🎮 *PEDIDO DIRETO - PLAYSTATION STORE*\n`;
             text += `--------------------------------\n`;
             text += `📦 *Opção:* ${selectedLabel}\n`;
-            text += `🌍 *Região:* ${region}\n`;
+            text += `🌍 *Região:* ${regionName}\n`;
             text += `💰 *Valor:* ${selectedPrice.toLocaleString()} FCFA\n`;
             text += `👤 *Nome:* ${name}\n`;
             text += `📱 *Contacto WhatsApp:* ${wa}\n`;
             text += `--------------------------------\n`;
             text += `💳 *Método:* Orange Money (955288370)\n`;
-            text += `Aguardando código e dados de pagamento.`;
+            text += `Aguardando confirmação para pagamento.`;
 
             const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
             window.open(waUrl, '_blank');
         }
 
-        document.addEventListener('DOMContentLoaded', updateCartBadge);
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarPacotesPorRegiao();
+            updateCartBadge();
+        });
+
+        // Ocultar barra inferior ao focar nos inputs
+        document.addEventListener('focusin', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                const nav = document.querySelector('.bottom-nav');
+                if (nav) nav.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('focusout', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                const nav = document.querySelector('.bottom-nav');
+                if (nav) nav.style.display = 'flex';
+            }
+        });
     </script>
-<script>
-    // Esconder a barra inferior quando o teclado abre (foco num input)
-    document.addEventListener('focusin', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-            const bottomNav = document.querySelector('.bottom-nav');
-            if (bottomNav) bottomNav.style.display = 'none';
-        }
-    });
-
-    // Voltar a mostrar a barra inferior quando o teclado fecha (perda de foco)
-    document.addEventListener('focusout', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-            const bottomNav = document.querySelector('.bottom-nav');
-            if (bottomNav) bottomNav.style.display = 'flex';
-        }
-    });
-</script>
-
 </body>
 </html>
