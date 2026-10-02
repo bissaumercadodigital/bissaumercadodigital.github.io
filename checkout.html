@@ -379,5 +379,23 @@
             }
         }
     </script>
+<script>
+    // Esconder a barra inferior quando o teclado abre (foco num input)
+    document.addEventListener('focusin', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+            const bottomNav = document.querySelector('.bottom-nav');
+            if (bottomNav) bottomNav.style.display = 'none';
+        }
+    });
+
+    // Voltar a mostrar a barra inferior quando o teclado fecha (perda de foco)
+    document.addEventListener('focusout', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+            const bottomNav = document.querySelector('.bottom-nav');
+            if (bottomNav) bottomNav.style.display = 'flex';
+        }
+    });
+</script>
+
 </body>
 </html>
