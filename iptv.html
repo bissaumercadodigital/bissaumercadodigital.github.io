@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IPTV Premium HD & 4K - Mercado Digital Bissau</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        #netlify-badge, .netlify-badge, a[href*="netlify.com"] {
+            display: none !important;
+        }
+
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #121926;
+            --bg-card-hover: #1c273e;
+            --primary: #7c3aed;
+            --primary-glow: rgba(124, 58, 237, 0.4);
+            --orange: #ff6600;
+            --orange-glow: rgba(255, 102, 0, 0.4);
+            --iptv-cyan: #06b6d4;
+            --iptv-glow: rgba(6, 182, 212, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --border: #1e293b;
+            --border-highlight: rgba(6, 182, 212, 0.35);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 100px;
+            
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(9, 13, 22, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .page-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .icon-cart-link {
+            position: relative;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-badge-count {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background-color: var(--orange);
+            color: #ffffff;
+            font-size: 0.6rem;
+            font-weight: 800;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 6px var(--orange-glow);
+        }
+
+        .container {
+    padding: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    animation: fadeIn 0.25s ease-out;
+}
+
+
+        /* Hero Product Card */
+        .product-hero {
+            background-color: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-highlight);
+            overflow: hidden;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .product-banner {
+            height: 160px;
+            background: linear-gradient(180deg, rgba(9, 13, 22, 0.2) 0%, var(--bg-card) 100%),
+                        url('https://static.ndmais.com.br/2025/05/iptv-smart-tv.jpg') center/cover no-repeat;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding: 1rem;
+        }
+
+        .product-hero-info {
+            padding: 1.1rem;
+        }
+
+        .product-hero-info h2 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.3rem;
+        }
+
+        .product-hero-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Form Inputs */
+        .input-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 1.1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .input-card-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 0.85rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 11px 13px;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 16px; /* Alterado para 16px para evitar zoom em telemóveis */
+    font-weight: 600;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+        /* Package Grid Selection */
+        .packages-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 10px;
+            margin-bottom: 1.25rem;
+        }
+
+        .pkg-card {
+            background-color: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pkg-card.selected {
+            border-color: var(--iptv-cyan);
+            background-color: rgba(6, 182, 212, 0.08);
+            box-shadow: 0 0 15px var(--iptv-glow);
+        }
+
+        .pkg-info {
+            text-align: left;
+        }
+
+        .pkg-title {
+            font-size: 0.98rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .pkg-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        .pkg-price {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--iptv-cyan);
+            white-space: nowrap;
+        }
+
+        /* Action Buttons */
+        .action-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 1.25rem;
+        }
+
+        .btn-add-cart {
+            width: 100%;
+            background: linear-gradient(135deg, var(--iptv-cyan), #0284c7);
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.88rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--iptv-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+
+        .btn-buy-wa {
+            width: 100%;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.88rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+
+        .btn-add-cart:active, .btn-buy-wa:active {
+            transform: scale(0.98);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--success);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Navigation Inferior */
+        .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(18, 25, 38, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    justify-content: space-around;
+    padding: 0.65rem 0;
+    border-top: 1px solid var(--border);
+    z-index: 1000;
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            gap: 0.2rem;
+        }
+
+        .nav-item.active {
+            color: var(--orange);
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="index.html" class="back-btn">
+            ‹ Voltar
+        </a>
+        <h1 class="page-title">IPTV Premium</h1>
+        <a href="carrinho.html" class="icon-cart-link">
+            🛒
+            <span class="cart-badge-count" id="cartBadge">0</span>
+        </a>
+    </div>
+
+    <div class="container">
+        <!-- Hero Banner -->
+        <div class="product-hero">
+            <div class="product-banner"></div>
+            <div class="product-hero-info">
+                <h2>IPTV Premium 📡</h2>
+                <p>Mais de 20.000 canais abertos e fechados, futebol ao vivo, filmes e séries em HD, Full HD e 4K com servidor anti-travamento.</p>
+            </div>
+        </div>
+
+        <!-- Dados do Dispositivo -->
+        <div class="input-card">
+            <h3 class="input-card-title">1. Dispositivo & Contacto</h3>
+            <div class="form-group">
+                <label for="deviceSelect">Onde vai assistir? *</label>
+                <select id="deviceSelect" class="form-select">
+                    <option value="Smart TV (Samsung/LG/TCL)">Smart TV (Samsung / LG / TCL / Android TV)</option>
+                    <option value="TV Box / FireStick">TV Box / Amazon Fire TV Stick</option>
+                    <option value="Telemóvel (Android/iPhone)">Telemóvel (Android / iPhone / iPad)</option>
+                    <option value="Computador / PC">Computador / Portátil / Mac</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="clientName">Seu Nome Completo *</label>
+                <input type="text" id="clientName" class="form-input" placeholder="Ex: Du Black" required>
+            </div>
+            <div class="form-group">
+                <label for="clientWhatsApp">Nº de WhatsApp para Envio do Acesso *</label>
+                <input type="tel" id="clientWhatsApp" class="form-input" placeholder="Ex: 95/96-5555555" required>
+            </div>
+        </div>
+
+        <!-- Seleção do Plano -->
+        <div class="packages-title">2. Escolha o Plano Desejado</div>
+        <div class="package-grid">
+            <div class="pkg-card selected" onclick="selectPackage(this, 'IPTV Premium (1 Mês)', 5000)">
+                <div class="pkg-info">
+                    <div class="pkg-title">📺 Plano 1 Mês</div>
+                    <div class="pkg-sub">+20.000 Canais + Filmes/Séries | 30 Dias</div>
+                </div>
+                <div class="pkg-price">5.000 FCFA</div>
+            </div>
+
+            <div class="pkg-card" onclick="selectPackage(this, 'IPTV Premium (3 Meses)', 10000)">
+                <div class="pkg-info">
+                    <div class="pkg-title">📺 Plano 3 Meses</div>
+                    <div class="pkg-sub">Economia trimestral | 90 Dias</div>
+                </div>
+                <div class="pkg-price">10.000 FCFA</div>
+            </div>
+
+            <div class="pkg-card" onclick="selectPackage(this, 'IPTV Premium (6 Meses)', 17000)">
+                <div class="pkg-info">
+                    <div class="pkg-title">📺 Plano 6 Meses</div>
+                    <div class="pkg-sub">Plano semestral popular | 180 Dias</div>
+                </div>
+                <div class="pkg-price">17.000 FCFA</div>
+            </div>
+
+            <div class="pkg-card" onclick="selectPackage(this, 'IPTV Premium (12 Meses)', 29000)">
+                <div class="pkg-info">
+                    <div class="pkg-title">👑 Plano 12 Meses (1 Anual)</div>
+                    <div class="pkg-sub">Maior desconto anual | 365 Dias</div>
+                </div>
+                <div class="pkg-price">29.000 FCFA</div>
+            </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="action-container">
+            <button class="btn-add-cart" onclick="addToCart()">
+                🛒 Adicionar ao Carrinho
+            </button>
+            <button class="btn-buy-wa" onclick="buyDirectWhatsApp()">
+                💬 Comprar Directo no WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Item adicionado ao carrinho!</div>
+
+    <!-- Navegação Inferior -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item active"><span class="nav-icon">🏠</span><span>Loja</span></a>
+        <a href="pedidos.html" class="nav-item"><span class="nav-icon">📦</span><span>Pedidos</span></a>
+        <a href="carrinho.html" class="nav-item"><span class="nav-icon">🛒</span><span>Carrinho</span></a>
+        <a href="conta.html" class="nav-item"><span class="nav-icon">👤</span><span>Conta</span></a>
+        <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Preciso%20de%20ajuda." target="_blank" class="nav-item"><span class="nav-icon">💬</span><span>Ajuda</span></a>
+    </div>
+
+    <script>
+        let selectedLabel = 'IPTV Premium (1 Mês)';
+        let selectedPrice = 5000;
+
+        function selectPackage(element, label, price) {
+            document.querySelectorAll('.pkg-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedLabel = label;
+            selectedPrice = price;
+        }
+
+        function updateCartBadge() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+                const totalItens = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
+                document.getElementById('cartBadge').innerText = totalItens;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        function addToCart() {
+            const device = document.getElementById('deviceSelect').value;
+            const name = document.getElementById('clientName').value.trim();
+            const wa = document.getElementById('clientWhatsApp').value.trim();
+
+            if (!name || !wa) {
+                alert("Por favor, preencha o seu Nome e Número de WhatsApp!");
+                document.getElementById('clientName').focus();
+                return;
+            }
+
+            const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+
+            const newItem = {
+                id: 'iptv_' + Date.now(),
+                nome: selectedLabel,
+                opcao: 'Dispositivo: ' + device + ' | Cliente: ' + name + ' | WA: ' + wa,
+                price: selectedPrice,
+                quantidade: 1,
+                img: 'https://static.ndmais.com.br/2025/05/iptv-smart-tv.jpg'
+            };
+
+            cart.push(newItem);
+            localStorage.setItem('bissau_cart', JSON.stringify(cart));
+
+            updateCartBadge();
+            showToast("✅ IPTV adicionado ao carrinho!");
+        }
+
+        function buyDirectWhatsApp() {
+            const device = document.getElementById('deviceSelect').value;
+            const name = document.getElementById('clientName').value.trim();
+            const wa = document.getElementById('clientWhatsApp').value.trim();
+
+            if (!name || !wa) {
+                alert("Por favor, preencha o seu Nome e Número de WhatsApp!");
+                document.getElementById('clientName').focus();
+                return;
+            }
+
+            let text = `📡 *PEDIDO DIRETO - IPTV PREMIUM*\n`;
+            text += `--------------------------------\n`;
+            text += `📦 *Plano:* ${selectedLabel}\n`;
+            text += `📺 *Dispositivo:* ${device}\n`;
+            text += `💰 *Valor:* ${selectedPrice.toLocaleString()} FCFA\n`;
+            text += `👤 *Nome:* ${name}\n`;
+            text += `📱 *Contacto WhatsApp:* ${wa}\n`;
+            text += `--------------------------------\n`;
+            text += `💳 *Método:* Orange Money (955288370)\n`;
+            text += `Aguardando teste/ativação da lista de canais.`;
+
+            const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
+            window.open(waUrl, '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', updateCartBadge);
+    </script>
+</body>
+</html>

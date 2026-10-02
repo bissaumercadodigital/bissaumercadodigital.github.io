@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Recarga PUBG Mobile UC - Mercado Digital Bissau</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* Esconder selos desnecessários */
+        #netlify-badge, .netlify-badge, a[href*="netlify.com"] {
+            display: none !important;
+        }
+
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #121926;
+            --bg-card-hover: #1c273e;
+            --primary: #7c3aed;
+            --primary-glow: rgba(124, 58, 237, 0.4);
+            --orange: #ff6600;
+            --orange-glow: rgba(255, 102, 0, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --border: #1e293b;
+            --border-highlight: rgba(124, 58, 237, 0.35);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 100px;
+            
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(9, 13, 22, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .page-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .icon-cart-link {
+            position: relative;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-badge-count {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background-color: var(--orange);
+            color: #ffffff;
+            font-size: 0.6rem;
+            font-weight: 800;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 6px var(--orange-glow);
+        }
+
+        .container {
+    padding: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    animation: fadeIn 0.25s ease-out;
+}
+
+
+        /* Hero Product Card */
+        .product-hero {
+            background-color: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-highlight);
+            overflow: hidden;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .product-banner {
+            height: 160px;
+            background: linear-gradient(180deg, rgba(9, 13, 22, 0.2) 0%, var(--bg-card) 100%),
+                        url('https://img.utdstc.com/icon/f39/58f/f3958fd8814bbe41a967f6aaab3ec533396d9b39b9684cb003cdf75461889bdd:600') center/cover no-repeat;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding: 1rem;
+        }
+
+        .product-hero-info {
+            padding: 1.1rem;
+        }
+
+        .product-hero-info h2 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.3rem;
+        }
+
+        .product-hero-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Form Inputs */
+        .input-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 1.1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .input-card-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 0.85rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 11px 13px;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 16px; /* Alterado para 16px para evitar zoom em telemóveis */
+    font-weight: 600;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+        /* Package Grid Selection */
+        .packages-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 1.25rem;
+        }
+
+        .pkg-card {
+            background-color: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 0.9rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .pkg-card.selected {
+            border-color: var(--orange);
+            background-color: rgba(255, 102, 0, 0.08);
+            box-shadow: 0 0 15px var(--orange-glow);
+        }
+
+        .pkg-uc {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .pkg-uc::before {
+            content: '🪙';
+            font-size: 0.9rem;
+        }
+
+        .pkg-price {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--orange);
+            margin-top: 0.3rem;
+        }
+
+        /* Action Buttons */
+        .action-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 1.25rem;
+        }
+
+        .btn-add-cart {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), #5b21b6);
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.88rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--primary-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+
+        .btn-buy-wa {
+            width: 100%;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.88rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+
+        .btn-add-cart:active, .btn-buy-wa:active {
+            transform: scale(0.98);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--success);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Navigation Inferior */
+        .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(18, 25, 38, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    justify-content: space-around;
+    padding: 0.65rem 0;
+    border-top: 1px solid var(--border);
+    z-index: 1000;
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            gap: 0.2rem;
+        }
+
+        .nav-item.active {
+            color: var(--orange);
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="index.html" class="back-btn">
+            ‹ Voltar
+        </a>
+        <h1 class="page-title">PUBG Mobile UC</h1>
+        <a href="carrinho.html" class="icon-cart-link">
+            🛒
+            <span class="cart-badge-count" id="cartBadge">0</span>
+        </a>
+    </div>
+
+    <div class="container">
+        <!-- Hero Banner -->
+        <div class="product-hero">
+            <div class="product-banner"></div>
+            <div class="product-hero-info">
+                <h2>Recarga PUBG Mobile UC 🎮</h2>
+                <p>Receba as suas moedas UC diretamente na sua conta através do seu ID de jogador. Rápido, seguro e sem complicações na Guiné-Bissau.</p>
+            </div>
+        </div>
+
+        <!-- Dados do Jogador -->
+        <div class="input-card">
+            <h3 class="input-card-title">1. Dados do Jogador</h3>
+            <div class="form-group">
+                <label for="playerId">ID de Jogador (Character ID) *</label>
+                <input type="number" id="playerId" class="form-input" placeholder="Ex: 5123456789" required>
+            </div>
+            <div class="form-group">
+                <label for="playerName">Nome no Jogo (Opcional)</label>
+                <input type="text" id="playerName" class="form-input" placeholder="Ex: du_black123">
+            </div>
+        </div>
+
+        <!-- Seleção de Pacote -->
+        <div class="packages-title">2. Escolha a Quantidade de UC</div>
+        <div class="package-grid">
+            <div class="pkg-card selected" onclick="selectPackage(this, 60, 800)">
+                <div class="pkg-uc">60 UC</div>
+                <div class="pkg-price">800 FCFA</div>
+            </div>
+            <div class="pkg-card" onclick="selectPackage(this, 325, 3500)">
+                <div class="pkg-uc">325 UC</div>
+                <div class="pkg-price">3.500 FCFA</div>
+            </div>
+            <div class="pkg-card" onclick="selectPackage(this, 660, 6500)">
+                <div class="pkg-uc">660 UC</div>
+                <div class="pkg-price">6.500 FCFA</div>
+            </div>
+            <div class="pkg-card" onclick="selectPackage(this, 1800, 15000)">
+                <div class="pkg-uc">1.800 UC</div>
+                <div class="pkg-price">15.000 FCFA</div>
+            </div>
+            <div class="pkg-card" onclick="selectPackage(this, 3850, 29500)">
+                <div class="pkg-uc">3.850 UC</div>
+                <div class="pkg-price">29.500 FCFA</div>
+            </div>
+            <div class="pkg-card" onclick="selectPackage(this, 8100, 63000)">
+                <div class="pkg-uc">8.100 UC</div>
+                <div class="pkg-price">63.000 FCFA</div>
+            </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="action-container">
+            <button class="btn-add-cart" onclick="addToCart()">
+                🛒 Adicionar ao Carrinho
+            </button>
+            <button class="btn-buy-wa" onclick="buyDirectWhatsApp()">
+                💬 Comprar Directo no WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Item adicionado ao carrinho!</div>
+
+    <!-- Navegação Inferior -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item active"><span class="nav-icon">🏠</span><span>Loja</span></a>
+        <a href="pedidos.html" class="nav-item"><span class="nav-icon">📦</span><span>Pedidos</span></a>
+        <a href="carrinho.html" class="nav-item"><span class="nav-icon">🛒</span><span>Carrinho</span></a>
+        <a href="conta.html" class="nav-item"><span class="nav-icon">👤</span><span>Conta</span></a>
+        <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Preciso%20de%20ajuda." target="_blank" class="nav-item"><span class="nav-icon">💬</span><span>Ajuda</span></a>
+    </div>
+
+    <script>
+        let selectedUC = 60;
+        let selectedPrice = 800;
+
+        function selectPackage(element, uc, price) {
+            document.querySelectorAll('.pkg-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedUC = uc;
+            selectedPrice = price;
+        }
+
+        function updateCartBadge() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+                const totalItens = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
+                document.getElementById('cartBadge').innerText = totalItens;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        function addToCart() {
+            const playerId = document.getElementById('playerId').value.trim();
+            const playerName = document.getElementById('playerName').value.trim();
+
+            if (!playerId) {
+                alert("Por favor, preencha o seu ID de Jogador do PUBG Mobile!");
+                document.getElementById('playerId').focus();
+                return;
+            }
+
+            const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+
+            const newItem = {
+                id: 'pubg_' + selectedUC + '_' + Date.now(),
+                nome: 'PUBG Mobile - ' + selectedUC + ' UC',
+                opcao: 'ID: ' + playerId + (playerName ? ' | Nome: ' + playerName : ''),
+                price: selectedPrice,
+                quantidade: 1,
+                img: 'https://img.utdstc.com/icon/f39/58f/f3958fd8814bbe41a967f6aaab3ec533396d9b39b9684cb003cdf75461889bdd:600'
+            };
+
+            cart.push(newItem);
+            localStorage.setItem('bissau_cart', JSON.stringify(cart));
+
+            updateCartBadge();
+            showToast("✅ " + selectedUC + " UC adicionado ao carrinho!");
+        }
+
+        function buyDirectWhatsApp() {
+            const playerId = document.getElementById('playerId').value.trim();
+            const playerName = document.getElementById('playerName').value.trim();
+
+            if (!playerId) {
+                alert("Por favor, preencha o seu ID de Jogador do PUBG Mobile!");
+                document.getElementById('playerId').focus();
+                return;
+            }
+
+            let text = `🎮 *PEDIDO DIRETO - PUBG MOBILE UC*\n`;
+            text += `--------------------------------\n`;
+            text += `📦 *Pacote:* ${selectedUC} UC\n`;
+            text += `💰 *Valor:* ${selectedPrice.toLocaleString()} FCFA\n`;
+            text += `🆔 *ID de Jogador:* ${playerId}\n`;
+            if (playerName) text += `👤 *Nome no Jogo:* ${playerName}\n`;
+            text += `--------------------------------\n`;
+            text += `💳 *Método:* Orange Money (955288370)\n`;
+            text += `Aguardando dados para efetuar o pagamento.`;
+
+            const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
+            window.open(waUrl, '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', updateCartBadge);
+    </script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Painel Admin - Mercado Digital Bissau</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #121926;
+            --primary: #7c3aed;
+            --orange: #ff6600;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #1e293b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); padding: 20px; padding-bottom: 100px; }
+        
+        .header { text-align: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+        .header h1 { color: var(--orange); font-weight: 800; font-size: 1.5rem; }
+        
+        .admin-container { max-width: 800px; margin: 0 auto; }
+        
+        /* Card de Login */
+        .login-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 400px;
+            margin: 50px auto 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .login-card h2 { font-size: 1.2rem; margin-bottom: 1rem; text-align: center; }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        .form-input:focus { border-color: var(--orange); }
+
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(135deg, var(--orange), #d95300);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Dashboard */
+        #dashboardArea { display: none; }
+
+        .top-admin-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .order-card {
+            background-color: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .order-header { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 10px; margin-bottom: 10px; }
+        .order-id { font-weight: 800; color: var(--primary); }
+        .order-total { font-weight: 800; color: var(--success); font-size: 1.1rem; }
+        
+        .client-info p { margin-bottom: 5px; font-size: 0.9rem; }
+        .highlight-data { background: rgba(255, 102, 0, 0.1); border: 1px solid var(--orange); padding: 5px 10px; border-radius: 6px; font-weight: 700; color: var(--orange); display: inline-block; margin-top: 5px; }
+        
+        .items-list { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 0.85rem; }
+        
+        .delivery-section { margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
+        .delivery-input { width: 100%; padding: 12px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: white; font-size: 14px; margin-bottom: 10px; }
+        
+        .btn-approve { width: 100%; background: var(--success); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; }
+        
+        #loadingMsg, #emptyMsg { text-align: center; color: var(--text-muted); margin-top: 50px; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <!-- Tela de Login -->
+    <div class="login-card" id="loginArea">
+        <h2>🔒 Login de Administrador</h2>
+        <input type="email" id="adminEmail" class="form-input" placeholder="E-mail do Administrador">
+        <input type="password" id="adminPassword" class="form-input" placeholder="Sua Senha">
+        <button onclick="fazerLogin()" class="btn-login">Entrar no Painel</button>
+        <div id="loginError" class="error-msg">Acesso negado ou credenciais inválidas.</div>
+    </div>
+
+    <!-- Área de Gestão de Pedidos -->
+    <div class="admin-container" id="dashboardArea">
+        <div class="header">
+            <h1>⚙️ Bissau Mercado Digital - ADMIN</h1>
+            <p>Gestão de Pedidos Pendentes</p>
+        </div>
+
+        <div class="top-admin-bar">
+            <span id="userLoggedEmail" style="font-size: 0.85rem; color: var(--text-muted);"></span>
+            <button onclick="fazerLogout()" class="btn-logout">Sair / Logout</button>
+        </div>
+
+        <div id="pedidosContainer">
+            <div id="loadingMsg">A carregar pedidos...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // E-mail exclusivo do administrador
+        const EMAIL_ADMIN_OFICIAL = "mamudodjalo100@gmail.com";
+
+        const loginArea = document.getElementById('loginArea');
+        const dashboardArea = document.getElementById('dashboardArea');
+        const container = document.getElementById('pedidosContainer');
+
+        // Monitorizar Estado de Sessão e Bloquear Qualquer Outro E-mail
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if (user.email.toLowerCase() === EMAIL_ADMIN_OFICIAL.toLowerCase()) {
+                    loginArea.style.display = 'none';
+                    dashboardArea.style.display = 'block';
+                    document.getElementById('userLoggedEmail').innerText = 'Logado como: ' + user.email;
+                    carregarPedidosPendentes();
+                } else {
+                    // Se tentar logar com qualquer outro e-mail
+                    alert("Acesso Negado! O e-mail " + user.email + " não tem permissões de administrador.");
+                    signOut(auth);
+                }
+            } else {
+                loginArea.style.display = 'block';
+                dashboardArea.style.display = 'none';
+            }
+        });
+
+        // Função de Login
+        window.fazerLogin = async function() {
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value.trim();
+            const errorMsg = document.getElementById('loginError');
+
+            errorMsg.style.display = 'none';
+
+            if (email.toLowerCase() !== EMAIL_ADMIN_OFICIAL.toLowerCase()) {
+                errorMsg.innerText = "Apenas o e-mail administrador tem permissão de entrada.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                console.error(error);
+                errorMsg.innerText = "E-mail ou senha incorretos!";
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        // Função de Logout
+        window.fazerLogout = function() {
+            signOut(auth);
+        }
+
+        async function carregarPedidosPendentes() {
+            try {
+                const q = query(collection(db, "pedidos"), where("status", "==", "Pendente"));
+                const querySnapshot = await getDocs(q);
+                
+                container.innerHTML = ''; 
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<div id="emptyMsg">✅ Não há pedidos pendentes no momento.</div>';
+                    return;
+                }
+
+                querySnapshot.forEach((documento) => {
+                    const pedido = documento.data();
+                    const docId = documento.id;
+                    
+                    let itensHtml = '';
+                    if (pedido.itens && Array.isArray(pedido.itens)) {
+                        pedido.itens.forEach(item => {
+                            itensHtml += `<div>- ${item.nome} (${item.opcao || ''}) | Qtd: ${item.quantidade || 1}</div>`;
+                        });
+                    }
+
+                    let telefoneCliente = (pedido.clienteTelefone || '').replace(/\D/g, '');
+                    if (telefoneCliente && !telefoneCliente.startsWith('245')) {
+                        telefoneCliente = '245' + telefoneCliente;
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = 'order-card';
+                    card.innerHTML = `
+                        <div class="order-header">
+                            <span class="order-id">${pedido.orderId || 'ORD-000000'}</span>
+                            <span class="order-total">${(pedido.total || 0).toLocaleString()} FCFA</span>
+                        </div>
+                        <div class="client-info">
+                            <p><strong>Cliente:</strong> ${pedido.clienteNome || 'Cliente'}</p>
+                            <p><strong>WhatsApp:</strong> ${telefoneCliente}</p>
+                            <p><strong>Verificar Depósito:</strong></p>
+                            <span class="highlight-data">${pedido.comprovativoFornecido}</span>
+                        </div>
+                        
+                        <div class="items-list">
+                            <strong>Itens Solicitados:</strong><br>
+                            ${itensHtml}
+                        </div>
+
+                        <div class="delivery-section">
+                            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Dados de Entrega (Conta, Senha, PIN, etc.):</label>
+                            <textarea id="dados-${docId}" class="delivery-input" rows="3" placeholder="Ex: Email: x@x.com, Senha: 123"></textarea>
+                            <button class="btn-approve" onclick="aprovarPedido('${docId}', '${telefoneCliente}', '${pedido.orderId}', '${pedido.clienteNome}')">✅ Confirmar Pagamento e Enviar Produto</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Erro ao carregar pedidos: ", error);
+                container.innerHTML = '<div id="emptyMsg" style="color: var(--danger);">Erro ao conectar ao servidor.</div>';
+            }
+        }
+
+        window.aprovarPedido = async function(docId, telefone, orderId, clienteNome) {
+            const dadosEntrega = document.getElementById(`dados-${docId}`).value.trim();
+            
+            if(dadosEntrega === '') {
+                alert("Por favor, preencha os dados do produto/conta antes de aprovar.");
+                return;
+            }
+
+            const confirmacao = confirm(`Tem certeza que verificou o depósito e deseja enviar o pedido ${orderId}?`);
+            if(!confirmacao) return;
+
+            try {
+                const pedidoRef = doc(db, "pedidos", docId);
+                await updateDoc(pedidoRef, {
+                    status: "Concluído",
+                    dadosEntregues: dadosEntrega
+                });
+
+                const msg = `Olá *${clienteNome}*! O seu pagamento foi confirmado. 🎉\n\n*Pedido:* ${orderId}\n*Seu Produto/Acesso:* \n${dadosEntrega}\n\nObrigado por comprar na Bissau Mercado Digital!`;
+                const whatsappUrl = `https://wa.me/${telefone}?text=${encodeURIComponent(msg)}`;
+
+                window.open(whatsappUrl, '_blank');
+                carregarPedidosPendentes();
+
+            } catch (error) {
+                console.error("Erro ao aprovar: ", error);
+                alert("Erro ao aprovar pedido. Tente novamente.");
+            }
+        }
+    </script>
+</body>
+</html>

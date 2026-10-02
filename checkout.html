@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Checkout - Mercado Digital Bissau</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #121926;
+            --orange: #ff6600;
+            --orange-glow: rgba(255, 102, 0, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 50px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(9, 13, 22, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .container {
+            padding: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        .checkout-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkout-header h2 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .total-display {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--orange);
+            background: rgba(255, 102, 0, 0.1);
+            border: 1px dashed var(--orange);
+            border-radius: 12px;
+            padding: 1rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        /* Botão USSD */
+        .btn-ussd {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            background: linear-gradient(135deg, var(--orange), #d95300);
+            color: #ffffff;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px var(--orange-glow);
+            margin-bottom: 2rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-ussd:active { transform: scale(0.98); }
+
+        /* Card de Verificação */
+        .verify-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .verify-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .verify-card p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 16px; /* 16px para prevenir zoom no mobile */
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input:focus { border-color: var(--orange); }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: none; /* Escondido por padrão */
+            background: rgba(239, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-confirm {
+            width: 100%;
+            background-color: var(--success);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Telas de Estado */
+        #telaProcessamento, #telaSucesso {
+            display: none;
+            text-align: center;
+            padding: 3rem 1rem;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-top: 1rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 102, 0, 0.2);
+            border-top-color: var(--orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="carrinho.html" class="back-btn">‹ Voltar</a>
+        <h1 style="font-size: 1.05rem; font-weight: 800;">Checkout</h1>
+        <div style="width: 50px;"></div>
+    </div>
+
+    <div class="container" id="telaPrincipal">
+        <div class="checkout-header">
+            <h2>Finalizar Pagamento</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Transfira o valor exato para liberar o pedido</p>
+            <div class="total-display" id="checkoutTotal">0 FCFA</div>
+        </div>
+
+        <!-- Botão para discar Orange Money -->
+        <a id="btnOrangeMoney" href="#" class="btn-ussd">
+            📱 Pagar via Orange Money Agora
+        </a>
+
+        <!-- Confirmação do Cliente -->
+        <div class="verify-card">
+            <h3>Já fez o pagamento?</h3>
+            <p>Para o sistema localizar o seu depósito, insira abaixo o <strong>ID da Transação</strong> recebido por SMS ou o <strong>Número de Telemóvel</strong> que enviou o dinheiro.</p>
+            
+            <input type="text" id="comprovativoInput" class="form-input" placeholder="Ex: 95XXXXXXX ou ID de 20 letras/números" autocomplete="off">
+            
+            <!-- Mensagem de erro que aparece se a validação falhar -->
+            <div id="errorMsg" class="error-message"></div>
+
+            <button onclick="validarPagamento()" class="btn-confirm">
+                Confirmar Pagamento
+            </button>
+        </div>
+    </div>
+
+    <!-- Tela de Processamento -->
+    <div class="container" id="telaProcessamento">
+        <div class="spinner"></div>
+        <h3 style="color: var(--orange); margin-bottom: 10px;">Enviando Pedido...</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Por favor, não feche esta página. Estamos a registar o seu pagamento no sistema.</p>
+    </div>
+
+    <!-- Tela de Sucesso -->
+    <div class="container" id="telaSucesso">
+        <span class="success-icon">✅</span>
+        <h3 style="color: var(--success); margin-bottom: 10px;">Pedido em Análise!</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">O seu comprovativo foi recebido. O seu pedido aparecerá na área de Pedidos assim que confirmado.</p>
+        <button onclick="window.location.href='pedidos.html'" class="btn-confirm" style="background-color: var(--orange); box-shadow: 0 4px 15px var(--orange-glow);">
+            Ver Meus Pedidos
+        </button>
+    </div>
+
+    <script type="module">
+        // Importações do Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Configuração do seu projeto Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        // Inicializar Firebase e Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // 1. Carregar carrinho e calcular total
+        const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+        let total = 0;
+        
+        if (cart.length === 0) {
+            window.location.href = 'index.html'; // Volta para loja se não houver carrinho
+        } else {
+            total = cart.reduce((sum, item) => sum + (item.price * item.quantidade), 0);
+            document.getElementById('checkoutTotal').innerText = total.toLocaleString() + ' FCFA';
+            
+            // Configurar link USSD
+            const linkUSSD = `tel:%23144%231*1*955288370*${total}*2%23`;
+            document.getElementById('btnOrangeMoney').href = linkUSSD;
+        }
+
+        // 2. Lógica de Validação Rigorosa (Anexada ao window para funcionar com módulos)
+        window.validarPagamento = function() {
+            const inputVal = document.getElementById('comprovativoInput').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            
+            errorMsg.style.display = 'none';
+
+            const regexTelefone = /^(95|96)\d{7}$/;
+            const isTelefone = regexTelefone.test(inputVal);
+
+            const regexID = /^[a-zA-Z0-9.]{20}$/;
+            const isTransacaoID = regexID.test(inputVal);
+
+            if (inputVal === '') {
+                window.mostrarErro("Por favor, preencha o campo com o Número ou ID da transação.");
+                return;
+            }
+
+            if (!isTelefone && !isTransacaoID) {
+                if ((inputVal.startsWith('95') || inputVal.startsWith('96')) && inputVal.length !== 9) {
+                    window.mostrarErro("O número de telemóvel está incompleto ou inválido. Deve ter exatamente 9 dígitos.");
+                } else if (inputVal.match(/^[0-9]+$/) && !inputVal.startsWith('95') && !inputVal.startsWith('96')) {
+                    window.mostrarErro("O número fornecido deve ser da rede Orange (começar com 95 ou 96).");
+                } else {
+                    window.mostrarErro("O ID da transação está inválido. Deve ter exatamente 20 caracteres (letras, números e pontos) ou insira um número válido com 9 dígitos.");
+                }
+                return;
+            }
+
+            processarEPublicarPedido(inputVal, isTelefone ? 'Telefone' : 'ID_Transacao');
+        }
+
+        window.mostrarErro = function(mensagem) {
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.innerText = mensagem;
+            errorMsg.style.display = 'block';
+        }
+
+        // 3. Gravar no Firestore e salvar no localStorage
+        async function processarEPublicarPedido(comprovativo, tipo) {
+            document.getElementById('telaPrincipal').style.display = 'none';
+            document.getElementById('telaProcessamento').style.display = 'block';
+
+            const clientInfo = JSON.parse(localStorage.getItem('bissau_client_info')) || { name: 'Cliente', phone: '' };
+            const orderIdCode = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+
+            const novoPedido = {
+                orderId: orderIdCode,
+                clienteNome: clientInfo.name,
+                clienteTelefone: clientInfo.phone,
+                comprovativoFornecido: comprovativo,
+                tipoComprovativo: tipo,
+                itens: cart,
+                total: total,
+                status: 'Pendente', 
+                dadosEntregues: '', 
+                criadoEm: serverTimestamp()
+            };
+
+            try {
+                // Guardar na base de dados (Firestore)
+                await addDoc(collection(db, "pedidos"), novoPedido);
+
+                // Guardar localmente para o utilizador ver no histórico
+                const pedidosLocais = JSON.parse(localStorage.getItem('bissau_orders')) || [];
+                pedidosLocais.push({
+                    ...novoPedido,
+                    data: new Date().toLocaleDateString('pt-PT') + ' ' + new Date().toLocaleTimeString('pt-PT', {hour: '2-digit', minute:'2-digit'})
+                });
+                localStorage.setItem('bissau_orders', JSON.stringify(pedidosLocais));
+
+                // Limpar Carrinho
+                localStorage.removeItem('bissau_cart');
+
+                // Mostrar tela de sucesso
+                document.getElementById('telaProcessamento').style.display = 'none';
+                document.getElementById('telaSucesso').style.display = 'block';
+
+            } catch (error) {
+                console.error("Erro ao salvar no Firestore:", error);
+                alert("Ocorreu um erro ao registar o seu pedido na nuvem. Tente novamente.");
+                document.getElementById('telaProcessamento').style.display = 'none';
+                document.getElementById('telaPrincipal').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

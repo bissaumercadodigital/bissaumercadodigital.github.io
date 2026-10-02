@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Meu Carrinho - Mercado Digital Bissau</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* Esconder selos desnecessários */
+        #netlify-badge, .netlify-badge, a[href*="netlify.com"] {
+            display: none !important;
+        }
+
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #121926;
+            --bg-card-hover: #1c273e;
+            --primary: #7c3aed;
+            --primary-glow: rgba(124, 58, 237, 0.4);
+            --orange: #ff6600;
+            --orange-glow: rgba(255, 102, 0, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #1e293b;
+            --border-highlight: rgba(124, 58, 237, 0.35);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 100px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(9, 13, 22, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .page-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .container {
+            padding: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        /* Cart State */
+        .empty-cart {
+            text-align: center;
+            padding: 3rem 1rem;
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin-top: 1rem;
+        }
+
+        .empty-cart-icon {
+            font-size: 3rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .empty-cart h3 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+        }
+
+        .empty-cart p {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .btn-go-shop {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--orange), #d95300);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 15px var(--orange-glow);
+        }
+
+        /* Cart Items */
+        .cart-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 1.25rem;
+        }
+
+        .cart-item {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .item-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+            background-color: var(--bg-dark);
+            flex-shrink: 0;
+        }
+
+        .item-info {
+            flex-grow: 1;
+        }
+
+        .item-title {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.2rem;
+        }
+
+        .item-detail {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .item-price {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: var(--orange);
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            padding: 4px 8px;
+            border-radius: 10px;
+        }
+
+        .btn-qty {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 800;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-val {
+            font-size: 0.82rem;
+            font-weight: 800;
+            min-width: 16px;
+            text-align: center;
+        }
+
+        .btn-remove {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Order Summary Card */
+        .summary-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .summary-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.85rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-row.total-row {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px dashed var(--border);
+        }
+
+        .summary-row.total-row span:last-child {
+            color: var(--orange);
+        }
+
+        /* Checkout Form */
+        .checkout-box {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-highlight);
+            border-radius: 16px;
+            padding: 1.1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group {
+            margin-bottom: 0.85rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 11px 13px;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--orange);
+        }
+
+        .payment-info-box {
+            background: rgba(255, 102, 0, 0.1);
+            border: 1px dashed var(--orange);
+            border-radius: 12px;
+            padding: 0.85rem;
+            margin-bottom: 1rem;
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+
+        .payment-info-box strong {
+            color: var(--orange);
+            display: block;
+            margin-bottom: 0.2rem;
+            font-size: 16px;
+        }
+
+        /* Botões de Ação Atualizados */
+        .action-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .btn-site {
+            width: 100%;
+            background: linear-gradient(135deg, var(--orange), #d95300);
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px var(--orange-glow);
+            text-transform: uppercase;
+        }
+
+        .btn-whatsapp {
+            width: 100%;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            text-transform: uppercase;
+        }
+
+        .btn-site:active, .btn-whatsapp:active {
+            transform: scale(0.98);
+        }
+
+        .btn-clear-cart {
+            width: 100%;
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 0.8rem;
+        }
+
+        /* Navigation Inferior */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(18, 25, 38, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.65rem 0;
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            gap: 0.2rem;
+        }
+
+        .nav-item.active {
+            color: var(--orange);
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="index.html" class="back-btn">
+            ‹ Voltar à Loja
+        </a>
+        <h1 class="page-title">Meu Carrinho</h1>
+        <div style="width: 50px;"></div>
+    </div>
+
+    <div class="container">
+        <!-- Estado Vazio -->
+        <div id="emptyCart" class="empty-cart" style="display: none;">
+            <span class="empty-cart-icon">🛒</span>
+            <h3>O seu carrinho está vazio</h3>
+            <p>Escolha um serviço de jogo, streaming ou criação de site para começar.</p>
+            <a href="index.html" class="btn-go-shop">VER SERVIÇOS</a>
+        </div>
+
+        <!-- Conteúdo do Carrinho -->
+        <div id="cartContent">
+            <!-- Lista de Produtos -->
+            <div id="cartList" class="cart-list"></div>
+
+            <!-- Resumo dos Valores -->
+            <div class="summary-card">
+                <h3 class="summary-title">Resumo da Compra</h3>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotalVal">0 FCFA</span>
+                </div>
+                <div class="summary-row">
+                    <span>Taxa de Processamento</span>
+                    <span style="color: var(--success);">Grátis</span>
+                </div>
+                <div class="summary-row total-row">
+                    <span>Total A Pagar</span>
+                    <span id="totalVal">0 FCFA</span>
+                </div>
+            </div>
+
+            <!-- Informações de Pagamento & Entrega -->
+            <div class="checkout-box">
+                <h3 class="summary-title">Dados para Entrega</h3>
+
+                <div class="form-group">
+                    <label for="clientName">Seu Nome Completo *</label>
+                    <input type="text" id="clientName" class="form-input" placeholder="Ex: Du Black" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="clientPhone">Seu Nº de WhatsApp / Contacto *</label>
+                    <input type="tel" id="clientPhone" class="form-input" placeholder="Ex: 95/96-5555555" required>
+                </div>
+
+                <div class="payment-info-box">
+                    <strong>💳 Pagamento por Orange Money 🇬🇼</strong>
+                    O pagamento é feito enviando o valor total para o número <strong>955288370</strong>.
+                </div>
+
+                <!-- Novos Botões de Ação -->
+                <div class="action-container">
+                    <button class="btn-site" onclick="checkoutSite()">
+                        💳 Pagar pelo Site (Automático)
+                    </button>
+                    
+                    <button class="btn-whatsapp" onclick="checkoutWhatsApp()">
+                        💬 Finalizar no WhatsApp
+                    </button>
+                </div>
+
+                <button class="btn-clear-cart" onclick="clearCart()">Esvaziar Carrinho</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navegação Inferior -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span>Loja</span></a>
+        <a href="pedidos.html" class="nav-item"><span class="nav-icon">📦</span><span>Pedidos</span></a>
+        <a href="carrinho.html" class="nav-item active"><span class="nav-icon">🛒</span><span>Carrinho</span></a>
+        <a href="conta.html" class="nav-item"><span class="nav-icon">👤</span><span>Conta</span></a>
+        <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Preciso%20de%20ajuda." target="_blank" class="nav-item"><span class="nav-icon">💬</span><span>Ajuda</span></a>
+    </div>
+
+    <script>
+        // Função para obter carrinho
+        function getCart() {
+            return JSON.parse(localStorage.getItem('bissau_cart')) || [];
+        }
+
+        // Guardar carrinho
+        function saveCart(cart) {
+            localStorage.setItem('bissau_cart', JSON.stringify(cart));
+            renderCart();
+        }
+
+        // Renderizar Produtos do Carrinho
+        function renderCart() {
+            const cart = getCart();
+            const emptyCart = document.getElementById('emptyCart');
+            const cartContent = document.getElementById('cartContent');
+            const cartList = document.getElementById('cartList');
+
+            if (cart.length === 0) {
+                emptyCart.style.display = 'block';
+                cartContent.style.display = 'none';
+                return;
+            }
+
+            emptyCart.style.display = 'none';
+            cartContent.style.display = 'block';
+            cartList.innerHTML = '';
+
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const itemTotal = (item.price || 0) * (item.quantidade || 1);
+                total += itemTotal;
+
+                const itemElement = document.createElement('div');
+                itemElement.className = 'cart-item';
+                itemElement.innerHTML = `
+                    <button class="btn-remove" onclick="removeItem(${index})" title="Remover">&times;</button>
+                    <img src="${item.img || 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=200'}" alt="${item.nome}" class="item-img">
+                    <div class="item-info">
+                        <div class="item-title">${item.nome}</div>
+                        <div class="item-detail">${item.opcao || 'Padrão'}</div>
+                        <div class="item-price">${itemTotal.toLocaleString()} FCFA</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-qty" onclick="changeQty(${index}, -1)">-</button>
+                        <span class="qty-val">${item.quantidade || 1}</span>
+                        <button class="btn-qty" onclick="changeQty(${index}, 1)">+</button>
+                    </div>
+                `;
+                cartList.appendChild(itemElement);
+            });
+
+            document.getElementById('subtotalVal').innerText = total.toLocaleString() + ' FCFA';
+            document.getElementById('totalVal').innerText = total.toLocaleString() + ' FCFA';
+        }
+
+        // Alterar quantidade
+        window.changeQty = function(index, delta) {
+            let cart = getCart();
+            if (cart[index]) {
+                cart[index].quantidade = (cart[index].quantidade || 1) + delta;
+                if (cart[index].quantidade <= 0) {
+                    cart.splice(index, 1);
+                }
+                saveCart(cart);
+            }
+        };
+
+        // Remover item
+        window.removeItem = function(index) {
+            let cart = getCart();
+            cart.splice(index, 1);
+            saveCart(cart);
+        };
+
+        // Esvaziar carrinho
+        window.clearCart = function() {
+            if (confirm("Tem certeza que deseja esvaziar o seu carrinho?")) {
+                localStorage.removeItem('bissau_cart');
+                renderCart();
+            }
+        };
+
+        // NOVO: Função para avançar para a página de Checkout pelo Site
+        window.checkoutSite = function() {
+            const cart = getCart();
+            const name = document.getElementById('clientName').value.trim();
+            const phone = document.getElementById('clientPhone').value.trim();
+
+            if (cart.length === 0) {
+                alert("O seu carrinho está vazio!");
+                return;
+            }
+
+            if (!name || !phone) {
+                alert("Por favor, preencha o seu Nome e Número de WhatsApp para continuar para o pagamento.");
+                return;
+            }
+
+            // Guardar os dados do cliente para preencher automaticamente na página de checkout
+            localStorage.setItem('bissau_client_info', JSON.stringify({ name: name, phone: phone }));
+            
+            // Redirecionar para a página de checkout
+            window.location.href = 'checkout.html';
+        };
+
+        // Função Original: Finalizar no WhatsApp
+        window.checkoutWhatsApp = function() {
+            const cart = getCart();
+            const name = document.getElementById('clientName').value.trim();
+            const phone = document.getElementById('clientPhone').value.trim();
+
+            if (cart.length === 0) {
+                alert("O seu carrinho está vazio!");
+                return;
+            }
+
+            if (!name || !phone) {
+                alert("Por favor, preencha o seu Nome e Número de WhatsApp para entrega.");
+                return;
+            }
+
+            let text = `🛒 *NOVO PEDIDO - MERCADO DIGITAL BISSAU*\n`;
+            text += `--------------------------------\n`;
+            text += `👤 *Cliente:* ${name}\n`;
+            text += `📱 *Contacto:* ${phone}\n\n`;
+            text += `📦 *ITENS DO PEDIDO:*\n`;
+
+            let total = 0;
+            cart.forEach((item, idx) => {
+                const itemTotal = (item.price || 0) * (item.quantidade || 1);
+                total += itemTotal;
+                text += `${idx + 1}. *${item.nome}*\n`;
+                text += `   • Detalhe: ${item.opcao || 'Padrão'}\n`;
+                text += `   • Qtd: ${item.quantidade || 1}x | Valor: ${itemTotal.toLocaleString()} FCFA\n\n`;
+            });
+
+            text += `--------------------------------\n`;
+            text += `💰 *TOTAL A PAGAR:* ${total.toLocaleString()} FCFA\n`;
+            text += `💳 *Método de Pagamento:* Orange Money (955288370)\n\n`;
+            text += `Aguardando confirmação para realizar a transferência/envio do comprovativo.`;
+
+            const encodedText = encodeURIComponent(text);
+            const waUrl = `https://wa.me/245955288370?text=${encodedText}`;
+
+            // Guardar no histórico local de pedidos (opcional)
+            const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || [];
+            pedidos.push({
+                id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+                data: new Date().toLocaleDateString('pt-PT'),
+                itens: cart,
+                total: total,
+                status: 'Pendente'
+            });
+            localStorage.setItem('bissau_orders', JSON.stringify(pedidos));
+
+            // Esvaziar carrinho após enviar
+            localStorage.removeItem('bissau_cart');
+
+            window.open(waUrl, '_blank');
+        };
+
+        // Iniciar ao carregar a página
+        document.addEventListener('DOMContentLoaded', renderCart);
+    </script>
+</body>
+</html>

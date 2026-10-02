@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Meus Pedidos - Mercado Digital Bissau</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        #netlify-badge, .netlify-badge, a[href*="netlify.com"] {
+            display: none !important;
+        }
+
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #121926;
+            --bg-card-hover: #1c273e;
+            --primary: #7c3aed;
+            --primary-glow: rgba(124, 58, 237, 0.4);
+            --orange: #ff6600;
+            --orange-glow: rgba(255, 102, 0, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #1e293b;
+            --border-highlight: rgba(124, 58, 237, 0.35);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 100px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(9, 13, 22, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .page-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .icon-cart-link {
+            position: relative;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-badge-count {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background-color: var(--orange);
+            color: #ffffff;
+            font-size: 0.6rem;
+            font-weight: 800;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 6px var(--orange-glow);
+        }
+
+        .container {
+            padding: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        /* State Empty Orders */
+        .empty-orders {
+            text-align: center;
+            padding: 3rem 1rem;
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin-top: 1rem;
+        }
+
+        .empty-orders-icon {
+            font-size: 3rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .empty-orders h3 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+        }
+
+        .empty-orders p {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .btn-go-shop {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--orange), #d95300);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 15px var(--orange-glow);
+        }
+
+        /* Order Cards */
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .order-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.1rem;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.65rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .order-id {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .order-date {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .status-badge {
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.pendente, .status-badge.processando {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .status-badge.concluido {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .order-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 0.85rem;
+        }
+
+        .order-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 0.82rem;
+        }
+
+        .item-name {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .item-sub {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .item-price-qty {
+            color: var(--orange);
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        /* Caixa do Produto Entregue */
+        .delivery-box {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .delivery-title {
+            color: var(--success);
+            font-size: 0.8rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .delivery-content {
+            background: var(--bg-dark);
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+            border: 1px solid var(--border);
+        }
+
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.65rem;
+            border-top: 1px dashed var(--border);
+            margin-top: 0.5rem;
+        }
+
+        .order-total-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .order-total-val {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .btn-wa-support {
+            background: rgba(37, 211, 102, 0.15);
+            color: #25d366;
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-wa-support:hover {
+            background: #25d366;
+            color: #ffffff;
+        }
+
+        /* Clear History Btn */
+        .btn-clear-history {
+            width: 100%;
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        /* Navigation Inferior */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(18, 25, 38, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.65rem 0;
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            gap: 0.2rem;
+        }
+
+        .nav-item.active {
+            color: var(--orange);
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="index.html" class="back-btn">
+            ‹ Voltar
+        </a>
+        <h1 class="page-title">Histórico de Pedidos</h1>
+        <a href="carrinho.html" class="icon-cart-link">
+            🛒
+            <span class="cart-badge-count" id="cartBadge">0</span>
+        </a>
+    </div>
+
+    <div class="container">
+        <!-- Estado Sem Pedidos -->
+        <div id="emptyOrders" class="empty-orders" style="display: none;">
+            <span class="empty-orders-icon">📦</span>
+            <h3>Nenhum pedido efetuado</h3>
+            <p>Os seus pedidos e recargas aparecerão aqui assim que realizar uma compra.</p>
+            <a href="index.html" class="btn-go-shop">FAZER RECARGA / COMPRA</a>
+        </div>
+
+        <!-- Lista de Pedidos -->
+        <div id="ordersContainer">
+            <div id="ordersList" class="orders-list"></div>
+            <button id="btnClearHistory" class="btn-clear-history" onclick="clearOrdersHistory()" style="display: none;">
+                Limpar Histórico de Pedidos
+            </button>
+        </div>
+    </div>
+
+    <!-- Navegação Inferior -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span>Loja</span></a>
+        <a href="pedidos.html" class="nav-item active"><span class="nav-icon">📦</span><span>Pedidos</span></a>
+        <a href="carrinho.html" class="nav-item"><span class="nav-icon">🛒</span><span>Carrinho</span></a>
+        <a href="conta.html" class="nav-item"><span class="nav-icon">👤</span><span>Conta</span></a>
+        <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Preciso%20de%20ajuda." target="_blank" class="nav-item"><span class="nav-icon">💬</span><span>Ajuda</span></a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        function updateCartBadge() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+                const totalItens = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
+                document.getElementById('cartBadge').innerText = totalItens;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function renderOrders() {
+            const localOrders = JSON.parse(localStorage.getItem('bissau_orders')) || [];
+            const emptyOrders = document.getElementById('emptyOrders');
+            const ordersList = document.getElementById('ordersList');
+            const btnClear = document.getElementById('btnClearHistory');
+
+            if (localOrders.length === 0) {
+                emptyOrders.style.display = 'block';
+                ordersList.innerHTML = '';
+                btnClear.style.display = 'none';
+                return;
+            }
+
+            emptyOrders.style.display = 'none';
+            btnClear.style.display = 'block';
+            ordersList.innerHTML = '';
+
+            // 1. Extrair lista de IDs dos pedidos locais
+            const orderIds = localOrders.map(o => o.orderId || o.id).filter(Boolean);
+
+            // 2. Procurar status atualizado no Firebase Firestore
+            let firestoreMap = {};
+            if (orderIds.length > 0) {
+                try {
+                    const q = query(collection(db, "pedidos"), where("orderId", "in", orderIds));
+                    const querySnapshot = await getDocs(q);
+                    querySnapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        firestoreMap[data.orderId] = data;
+                    });
+                } catch (e) {
+                    console.warn("Não foi possível sincronizar em tempo real com o Firestore:", e);
+                }
+            }
+
+            // 3. Renderizar pedidos combinando dados locais com dados da Nuvem
+            const reversedOrders = [...localOrders].reverse();
+
+            reversedOrders.forEach((order) => {
+                const displayOrderId = order.orderId || order.id || 'ORD-000000';
+                
+                // Se o pedido existir na nuvem, usa o status e os dados entregues atualizados
+                const firestoreData = firestoreMap[displayOrderId] || {};
+                const currentStatus = firestoreData.status || order.status || 'Pendente';
+                const dadosEntregues = firestoreData.dadosEntregues || order.dadosEntregues || '';
+
+                const orderCard = document.createElement('div');
+                orderCard.className = 'order-card';
+
+                const clienteNome = order.clienteNome || order.cliente || '';
+                const clienteTelefone = order.clienteTelefone || order.telefone_cliente || '';
+
+                let itemsHtml = '';
+                if (order.itens && Array.isArray(order.itens)) {
+                    order.itens.forEach(item => {
+                        const itemTotal = (item.price || 0) * (item.quantidade || 1);
+                        itemsHtml += `
+                            <div class="order-item-row">
+                                <div>
+                                    <div class="item-name">${item.nome}</div>
+                                    <div class="item-sub">${item.opcao || ''}</div>
+                                    ${clienteNome ? `<div class="item-sub">Cliente: ${clienteNome}${clienteTelefone ? '| WA: ' + clienteTelefone : ''}</div>` : ''}
+                                </div>
+                                <div class="item-price-qty">${item.quantidade || 1}x | ${itemTotal.toLocaleString()} FCFA</div>
+                            </div>
+                        `;
+                    });
+                }
+
+                const statusClass = currentStatus.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+                // Se o pedido foi concluído, gera o bloco com as credenciais/códigos
+                let deliveryHtml = '';
+                if (currentStatus === 'Concluído' && dadosEntregues) {
+                    deliveryHtml = `
+                        <div class="delivery-box">
+                            <div class="delivery-title">🎁 Seu Produto / Acesso Liberado:</div>
+                            <div class="delivery-content">${dadosEntregues}</div>
+                        </div>
+                    `;
+                }
+
+                orderCard.innerHTML = `
+                    <div class="order-header">
+                        <div>
+                            <div class="order-id">${displayOrderId}</div>
+                            <div class="order-date">${order.data || 'Data recente'}</div>
+                        </div>
+                        <span class="status-badge ${statusClass}">${currentStatus}</span>
+                    </div>
+
+                    <div class="order-items">
+                        ${itemsHtml}
+                    </div>
+
+                    ${deliveryHtml}
+
+                    <div class="order-footer">
+                        <div>
+                            <div class="order-total-label">Total</div>
+                            <div class="order-total-val">${(order.total || 0).toLocaleString()} FCFA</div>
+                        </div>
+                        <button class="btn-wa-support" onclick="contactSupportOrder('${displayOrderId}')">
+                            💬 Suporte
+                        </button>
+                    </div>
+                `;
+
+                ordersList.appendChild(orderCard);
+            });
+        }
+
+        window.contactSupportOrder = function(orderId) {
+            const text = `Ol%C3%A1!%20Gostaria%20de%20saber%20o%20estado%20do%20meu%20pedido%20*${orderId}*.`;
+            window.open(`https://wa.me/245955288370?text=${text}`, '_blank');
+        };
+
+        window.clearOrdersHistory = function() {
+            if (confirm("Deseja realmente apagar o seu histórico local de pedidos?")) {
+                localStorage.removeItem('bissau_orders');
+                renderOrders();
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartBadge();
+            renderOrders();
+        });
+    </script>
+</body>
+</html>
