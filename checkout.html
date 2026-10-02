@@ -93,6 +93,18 @@
             border-radius: 12px;
             padding: 1rem;
             display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .discount-info-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
             margin-bottom: 1rem;
         }
 
@@ -143,7 +155,7 @@
             border: 1px solid var(--border);
             border-radius: 10px;
             color: #ffffff;
-            font-size: 16px; /* 16px para prevenir zoom no mobile */
+            font-size: 16px;
             font-weight: 600;
             outline: none;
             transition: border-color 0.2s;
@@ -157,7 +169,7 @@
             font-size: 0.8rem;
             font-weight: 600;
             margin-bottom: 1rem;
-            display: none; /* Escondido por padrão */
+            display: none;
             background: rgba(239, 68, 68, 0.1);
             padding: 10px;
             border-radius: 8px;
@@ -219,6 +231,8 @@
             <h2>Finalizar Pagamento</h2>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Transfira o valor exato para liberar o pedido</p>
             <div class="total-display" id="checkoutTotal">0 FCFA</div>
+            <br>
+            <div id="discountBadge" class="discount-info-badge" style="display: none;"></div>
         </div>
 
         <!-- Botão para discar Orange Money -->
@@ -233,7 +247,6 @@
             
             <input type="text" id="comprovativoInput" class="form-input" placeholder="Ex: 95XXXXXXX ou ID de 20 letras/números" autocomplete="off">
             
-            <!-- Mensagem de erro que aparece se a validação falhar -->
             <div id="errorMsg" class="error-message"></div>
 
             <button onclick="validarPagamento()" class="btn-confirm">
@@ -260,12 +273,10 @@
     </div>
 
     <script type="module">
-        // Importações do Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Configuração do seu projeto Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
             authDomain: "mercado-digital-bissau.firebaseapp.com",
@@ -275,27 +286,45 @@
             appId: "1:171260734990:web:130c33169923af3437165f"
         };
 
-        // Inicializar Firebase, Auth e Firestore
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // 1. Carregar carrinho e calcular total
+        // 1. Carregar carrinho e resumo dos valores com cupão/desconto
         const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+        const checkoutTotals = JSON.parse(localStorage.getItem('bissau_checkout_totals')) || null;
+
+        let subtotal = 0;
+        let desconto = 0;
         let total = 0;
-        
+
         if (cart.length === 0) {
-            window.location.href = 'index.html'; // Volta para loja se não houver carrinho
+            window.location.href = 'index.html';
         } else {
-            total = cart.reduce((sum, item) => sum + (item.price * item.quantidade), 0);
+            if (checkoutTotals) {
+                subtotal = checkoutTotals.subtotal || 0;
+                desconto = checkoutTotals.desconto || 0;
+                total = checkoutTotals.total || 0;
+            } else {
+                subtotal = cart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantidade || 1)), 0);
+                desconto = 0;
+                total = subtotal;
+            }
+
             document.getElementById('checkoutTotal').innerText = total.toLocaleString() + ' FCFA';
             
-            // Configurar link USSD
+            if (desconto > 0) {
+                const discountBadge = document.getElementById('discountBadge');
+                discountBadge.style.display = 'inline-block';
+                discountBadge.innerText = `🎁 Cupão de Pontos Aplicado: -${desconto.toLocaleString()} FCFA`;
+            }
+            
+            // Configurar código USSD com o valor líquido a pagar
             const linkUSSD = `tel:%23144%231*1*955288370*${total}*2%23`;
             document.getElementById('btnOrangeMoney').href = linkUSSD;
         }
 
-        // 2. Lógica de Validação Rigorosa (Anexada ao window para funcionar com módulos)
+        // 2. Lógica de Validação
         window.validarPagamento = function() {
             const inputVal = document.getElementById('comprovativoInput').value.trim();
             const errorMsg = document.getElementById('errorMsg');
@@ -333,7 +362,7 @@
             errorMsg.style.display = 'block';
         }
 
-        // 3. Gravar no Firestore e salvar no localStorage
+        // 3. Gravar no Firestore e Abater Pontos Usados do Utilizador
         async function processarEPublicarPedido(comprovativo, tipo) {
             document.getElementById('telaPrincipal').style.display = 'none';
             document.getElementById('telaProcessamento').style.display = 'block';
@@ -341,17 +370,18 @@
             const clientInfo = JSON.parse(localStorage.getItem('bissau_client_info')) || { name: 'Cliente', phone: '' };
             const orderIdCode = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
 
-            // Identificar utilizador logado para atribuir comissões de afiliados
             const currentUser = auth.currentUser;
 
             const novoPedido = {
                 orderId: orderIdCode,
-                userId: currentUser ? currentUser.uid : null, // ID necessário para creditar pontos ao afiliado
+                userId: currentUser ? currentUser.uid : null,
                 clienteNome: clientInfo.name,
                 clienteTelefone: clientInfo.phone,
                 comprovativoFornecido: comprovativo,
                 tipoComprovativo: tipo,
                 itens: cart,
+                subtotal: subtotal,
+                desconto: desconto,
                 total: total,
                 status: 'Pendente', 
                 dadosEntregues: '', 
@@ -359,10 +389,25 @@
             };
 
             try {
-                // Guardar na base de dados (Firestore)
+                // Guardar pedido no Firestore
                 await addDoc(collection(db, "pedidos"), novoPedido);
 
-                // Guardar localmente para o utilizador ver no histórico
+                // Se o utilizador utilizou pontos, abater do saldo dele no Firestore
+                if (currentUser && desconto > 0) {
+                    try {
+                        const userDocRef = doc(db, "usuarios", currentUser.uid);
+                        const userSnap = await getDoc(userDocRef);
+                        if (userSnap.exists()) {
+                            const saldoAtual = userSnap.data().pontos || 0;
+                            const novoSaldo = Math.max(0, saldoAtual - desconto);
+                            await updateDoc(userDocRef, { pontos: novoSaldo });
+                        }
+                    } catch (e) {
+                        console.error("Erro ao abater pontos do utilizador:", e);
+                    }
+                }
+
+                // Guardar localmente
                 const pedidosLocais = JSON.parse(localStorage.getItem('bissau_orders')) || [];
                 pedidosLocais.push({
                     ...novoPedido,
@@ -370,8 +415,9 @@
                 });
                 localStorage.setItem('bissau_orders', JSON.stringify(pedidosLocais));
 
-                // Limpar Carrinho
+                // Limpar Carrinho e Totais Temporários
                 localStorage.removeItem('bissau_cart');
+                localStorage.removeItem('bissau_checkout_totals');
 
                 // Mostrar tela de sucesso
                 document.getElementById('telaProcessamento').style.display = 'none';
@@ -386,7 +432,6 @@
         }
     </script>
 <script>
-    // Esconder a barra inferior quando o teclado abre (foco num input)
     document.addEventListener('focusin', (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
             const bottomNav = document.querySelector('.bottom-nav');
@@ -394,7 +439,6 @@
         }
     });
 
-    // Voltar a mostrar a barra inferior quando o teclado fecha (perda de foco)
     document.addEventListener('focusout', (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
             const bottomNav = document.querySelector('.bottom-nav');
