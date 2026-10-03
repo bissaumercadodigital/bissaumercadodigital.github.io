@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Renovação de Assinatura - Mercado Digital Bissau</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #121926;
+            --primary: #7c3aed;
+            --orange: #ff6600;
+            --orange-glow: rgba(255, 102, 0, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #1e293b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); padding: 20px; padding-bottom: 100px; }
+
+        .container { max-width: 500px; margin: 20px auto; }
+        
+        .card-renovacao {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .icon-box {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 { font-weight: 800; font-size: 1.3rem; margin-bottom: 0.5rem; }
+        p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem; }
+
+        .service-details {
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-details p { margin-bottom: 0.4rem; color: #ffffff; }
+
+        .badge-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .badge-warning { background: rgba(255, 102, 0, 0.2); color: var(--orange); border: 1px solid var(--orange); }
+        .badge-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+
+        .btn-renew {
+            width: 100%;
+            background: linear-gradient(135deg, var(--orange), #d95300);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--orange-glow);
+            text-transform: uppercase;
+        }
+
+        .loading-state { font-size: 0.9rem; color: var(--text-muted); text-align: center; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="loadingBox" class="loading-state">A carregar os dados da sua assinatura...</div>
+
+        <div id="renewCard" class="card-renovacao" style="display: none;">
+            <div class="icon-box">📺</div>
+            <h2>Renovação de Assinatura</h2>
+            <p>Mantenha o seu acesso ativo sem perder as suas configurações!</p>
+
+            <div id="statusBadgeContainer"></div>
+
+            <div class="service-details">
+                <p><strong>Cliente:</strong> <span id="clientNameText">-</span></p>
+                <p><strong>Serviço:</strong> <span id="serviceNameText">-</span></p>
+                <p><strong>Validade Restante:</strong> <span id="daysLeftText">-</span></p>
+            </div>
+
+            <button class="btn-renew" onclick="efetuarRenovacao()">🔄 RENOVAR ASSINATURA AGORA</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let itemParaCarrinho = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const assinaturaId = urlParams.get('id');
+
+            if (!assinaturaId) {
+                document.getElementById('loadingBox').innerText = "❌ ID de assinatura inválido ou não fornecido.";
+                return;
+            }
+
+            try {
+                const docSnap = await getDoc(doc(db, "assinaturas", assinaturaId));
+
+                if (!docSnap.exists()) {
+                    document.getElementById('loadingBox').innerText = "❌ Assinatura não encontrada.";
+                    return;
+                }
+
+                const ass = docSnap.data();
+                document.getElementById('clientNameText').innerText = ass.clienteNome || 'Cliente';
+                document.getElementById('serviceNameText').innerText = ass.servicoNome || 'Serviço Digital';
+
+                let diasRestantesText = "Vitalício";
+                let statusBadgeHtml = '<span class="badge-status badge-warning">Serviço Vitalício</span>';
+
+                if (ass.dataFim) {
+                    const agora = new Date();
+                    const dataFim = new Date(ass.dataFim);
+                    const diffTime = dataFim - agora;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (diffDays <= 0) {
+                        diasRestantesText = "Expirado";
+                        statusBadgeHtml = '<span class="badge-status badge-danger">⚠️ ASSINATURA EXPIRADA</span>';
+                    } else {
+                        diasRestantesText = `${diffDays} Dia(s)`;
+                        statusBadgeHtml = `<span class="badge-status badge-warning">⏳ Expira em ${diffDays} dia(s)</span>`;
+                    }
+                }
+
+                document.getElementById('daysLeftText').innerText = diasRestantesText;
+                document.getElementById('statusBadgeContainer').innerHTML = statusBadgeHtml;
+
+                // Preparar o item para inserção direta no carrinho
+                itemParaCarrinho = {
+                    nome: `Renovação: ${ass.servicoNome}`,
+                    opcao: `Renovação de Conta (${ass.clienteNome})`,
+                    price: ass.itemDetalhe && ass.itemDetalhe[0] ? (ass.itemDetalhe[0].price || 0) : 0,
+                    quantidade: 1,
+                    img: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=200'
+                };
+
+                document.getElementById('loadingBox').style.display = 'none';
+                document.getElementById('renewCard').style.display = 'block';
+
+            } catch (e) {
+                console.error(e);
+                document.getElementById('loadingBox').innerText = "❌ Erro ao carregar informações da renovação.";
+            }
+        });
+
+        window.efetuarRenovacao = function() {
+            if (!itemParaCarrinho) return;
+
+            // Inserir item no carrinho local
+            let cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+            cart.push(itemParaCarrinho);
+            localStorage.setItem('bissau_cart', JSON.stringify(cart));
+
+            // Redirecionar diretamente para o carrinho/checkout
+            window.location.href = 'carrinho.html';
+        };
+    </script>
+</body>
+</html>
