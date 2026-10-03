@@ -121,15 +121,15 @@
             flex-shrink: 0;
         }
 
-        /* Badge de Pontos em Tempo Real */
+        /* Badge de Pontos em Tempo Real junto ao GW */
         .points-badge-top {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 4px;
             background: rgba(16, 185, 129, 0.12);
             border: 1px solid rgba(16, 185, 129, 0.3);
             color: var(--success);
-            padding: 4px 8px;
+            padding: 3px 8px;
             border-radius: 12px;
             font-size: 0.72rem;
             font-weight: 800;
@@ -158,14 +158,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-        }
-
-        .icon-cart-link {
-            position: relative;
-            font-size: 1.15rem;
-            display: flex;
-            align-items: center;
-            padding: 4px;
         }
 
         .profile-avatar-top {
@@ -794,6 +786,10 @@
             <div class="brand-logo-group">
                 <span class="brand-logo">MERCADO DIGITAL</span>
                 <span class="location-badge">GW</span>
+                <!-- Pontos posicionados logo a seguir ao GW -->
+                <a href="conta.html" id="topPointsContainer" class="points-badge-top" title="Seu Saldo de Pontos" style="display: none;">
+                     <span id="topUserPoints">0</span>
+                </a>
             </div>
 
             <div class="user-action-area">
@@ -804,12 +800,6 @@
 
                 <!-- Logado -->
                 <div id="userTopBar" class="user-logged-menu" style="display: none;">
-                    <a href="conta.html" class="points-badge-top" title="Seu Saldo de Pontos">
-                         <span id="topUserPoints">0</span>
-                    </a>
-                    <a href="carrinho.html" class="icon-cart-link" title="Meu Carrinho">
-                        🛒
-                    </a>
                     <a href="conta.html" title="Minha Conta">
                         <img src="https://ui-avatars.com/api/?name=User&background=ff6600&color=fff" alt="Perfil" id="topAvatarImg" class="profile-avatar-top">
                     </a>
@@ -1174,10 +1164,12 @@
         onAuthStateChanged(auth, (user) => {
             const guestTopBar = document.getElementById('guestTopBar');
             const userTopBar = document.getElementById('userTopBar');
+            const topPointsContainer = document.getElementById('topPointsContainer');
 
             if (user) {
                 guestTopBar.style.display = 'none';
                 userTopBar.style.display = 'flex';
+                if (topPointsContainer) topPointsContainer.style.display = 'inline-flex';
 
                 if (user.photoURL) {
                     document.getElementById('topAvatarImg').src = user.photoURL;
@@ -1191,7 +1183,7 @@
                         const pontos = docSnap.data().pontos || 0;
                         document.getElementById('topUserPoints').innerText = pontos.toLocaleString();
                     } else {
-                        document.getElementById('topUserPoints').innerText = "0";
+                        document.getElementById('topUserPoints').innerText = "P:0";
                     }
                 }, (err) => {
                     console.error("Erro ao ouvir pontos:", err);
@@ -1200,6 +1192,7 @@
             } else {
                 guestTopBar.style.display = 'block';
                 userTopBar.style.display = 'none';
+                if (topPointsContainer) topPointsContainer.style.display = 'none';
                 if (unsubscribePoints) unsubscribePoints();
             }
         });
