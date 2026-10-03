@@ -4,1451 +4,202 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mercado Digital - Jogos, Recargas, Streaming & Websites</title>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <style>
-        /* Esconder o selo da Netlify */
-        #netlify-badge, .netlify-badge, a[href*="netlify.com"] {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
-        }
-
-        /* Variáveis de Cores - Tema Dark Esports / Digital */
+        #netlify-badge, .netlify-badge, a[href*="netlify.com"] { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
         :root {
-            --bg-dark: #090d16;
-            --bg-card: #121926;
-            --bg-card-hover: #1c273e;
-            --primary: #7c3aed;
-            --primary-glow: rgba(124, 58, 237, 0.4);
-            --orange: #ff6600;
-            --orange-glow: rgba(255, 102, 0, 0.4);
-            --blue-dev: #06b6d4;
-            --blue-dev-glow: rgba(6, 182, 212, 0.4);
-            --text-main: #ffffff;
-            --text-muted: #94a3b8;
-            --success: #10b981;
-            --danger: #ef4444;
-            --border: #1e293b;
-            --border-highlight: rgba(124, 58, 237, 0.35);
-        }
-
-        /* Reset Global & Animações */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            line-height: 1.5;
-            padding-bottom: 100px;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.2s ease;
-        }
-
-        /* 1. Cabeçalho Fixo & Área de Utilizador Organizada */
-        .top-bar {
-            background: rgba(9, 13, 22, 0.92);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 0.85rem 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .brand-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 0.65rem;
-            gap: 8px;
-        }
-
-        .brand-logo-group {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: nowrap;
-        }
-
-        .brand-logo {
-            font-size: 1.05rem;
-            font-weight: 800;
-            letter-spacing: 0.3px;
-            background: linear-gradient(135deg, #ffffff 0%, var(--orange) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            white-space: nowrap;
-        }
-
-        .location-badge {
-            font-size: 0.7rem;
-            font-weight: 700;
-            background: rgba(255, 102, 0, 0.15);
-            color: var(--orange);
-            padding: 3px 8px;
-            border-radius: 20px;
-            border: 1px solid var(--orange-glow);
-            white-space: nowrap;
-        }
-
-        /* Área de Login / Perfil */
-        .user-action-area {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-
-        /* Badge de Pontos em Tempo Real junto ao GW */
-        .points-badge-top {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: var(--success);
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.72rem;
-            font-weight: 800;
-            white-space: nowrap;
-        }
-
-        .btn-auth-header {
-            background: linear-gradient(135deg, var(--orange), #d95300);
-            color: #ffffff;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 18px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 0 10px var(--orange-glow);
-            transition: transform 0.2s;
-            white-space: nowrap;
-        }
-
-        .btn-auth-header:active {
-            transform: scale(0.95);
-        }
-
-        .user-logged-menu {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .profile-avatar-top {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 2px solid var(--orange);
-            object-fit: cover;
-            background-color: var(--bg-card);
-        }
-
-        .btn-logout-header {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            padding: 4px 8px;
-            border-radius: 10px;
-            font-size: 0.68rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .btn-logout-header:hover {
-            background: var(--danger);
-            color: #ffffff;
-        }
-
-        .search-container {
-            display: flex;
-            align-items: center;
-            background-color: var(--bg-card);
-            padding: 0.65rem 0.85rem;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .search-container:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 12px var(--primary-glow);
-        }
-
-        .search-container svg {
-            width: 18px;
-            height: 18px;
-            fill: var(--text-muted);
-            margin-right: 0.5rem;
-            flex-shrink: 0;
-        }
-
-        .search-container input {
-            border: none;
-            background: transparent;
-            width: 100%;
-            font-size: 0.88rem;
-            color: #ffffff;
-            outline: none;
-            font-weight: 500;
-        }
-
-        .search-container input::placeholder {
-            color: var(--text-muted);
-        }
-
-        /* 2. Banner Principal */
-        .hero-banner-main {
-            margin: 1rem 1rem 1.25rem 1rem;
-            border-radius: 20px;
-            background: linear-gradient(135deg, rgba(124, 58, 237, 0.9), rgba(255, 102, 0, 0.8)),
-                        url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop') center/cover no-repeat;
-            padding: 1.5rem 1.15rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-highlight);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-banner-main h2 {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: #ffffff;
-            line-height: 1.25;
-            margin-bottom: 0.4rem;
-        }
-
-        .hero-banner-main p {
-            font-size: 0.82rem;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 1rem;
-            max-width: 90%;
-        }
-
-        .hero-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background-color: #ffffff;
-            color: #000000;
-            padding: 9px 16px;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 0.82rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: transform 0.2s, background-color 0.2s;
-        }
-
-        .hero-btn:hover {
-            background-color: #f1f5f9;
-        }
-
-        .hero-btn:active {
-            transform: scale(0.96);
-        }
-
-        /* 3. Categorias Rápidas */
-        .categories {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-            padding: 0 1rem 1rem 1rem;
-        }
-
-        .cat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.3rem;
-            font-size: 0.68rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            background-color: var(--bg-card);
-            padding: 9px 2px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .cat-item:hover {
-            border-color: var(--primary);
-            color: #ffffff;
-            background-color: var(--bg-card-hover);
-            transform: translateY(-2px);
-        }
-
-        .cat-icon {
-            font-size: 1.15rem;
-        }
-
-        /* 4. Secções de Produtos */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.85rem 1rem 0.5rem 1rem;
-        }
-
-        .section-header h2 {
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .section-header h2::before {
-            content: "";
-            display: inline-block;
-            width: 4px;
-            height: 16px;
-            background-color: var(--orange);
-            border-radius: 4px;
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            padding: 0 1rem 1.25rem 1rem;
-        }
-
-        @media (min-width: 600px) {
-            .product-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        .card {
-            background-color: var(--bg-card);
-            border-radius: 16px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid var(--border);
-            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            position: relative;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: var(--border-highlight);
-            box-shadow: 0 8px 20px var(--primary-glow);
-        }
-
-        .card.card-dev:hover {
-            border-color: var(--blue-dev);
-            box-shadow: 0 8px 20px var(--blue-dev-glow);
-        }
-
-        .card-banner {
-            height: 105px;
-            width: 100%;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-        }
-
-        .card-banner::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, transparent 40%, var(--bg-card) 100%);
-        }
-
-        .card-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(4px);
-            color: var(--orange);
-            font-size: 0.62rem;
-            font-weight: 800;
-            padding: 3px 7px;
-            border-radius: 8px;
-            border: 1px solid var(--orange-glow);
-            z-index: 2;
-        }
-
-        .card-badge.badge-dev {
-            color: var(--blue-dev);
-            border-color: var(--blue-dev-glow);
-        }
-
-        .card-badge.badge-out {
-            color: var(--danger);
-            border-color: var(--danger);
-            background: rgba(239, 68, 68, 0.2);
-        }
-
-        .card-info {
-            padding: 0.75rem;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            justify-content: space-between;
-        }
-
-        .card-info h3 {
-            font-size: 0.9rem;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 0.2rem;
-        }
-
-        .card-info p {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            margin-bottom: 0.75rem;
-            line-height: 1.35;
-        }
-
-        .card-action-btn {
-            background: linear-gradient(135deg, var(--primary), #5b21b6);
-            color: #ffffff;
-            text-align: center;
-            padding: 8px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: block;
-            width: 100%;
-        }
-
-        .card-action-btn.btn-dev {
-            background: linear-gradient(135deg, var(--blue-dev), #0284c7);
-            color: #ffffff;
-        }
-
-        .card-action-btn.btn-disabled {
-            background: rgba(239, 68, 68, 0.2);
-            color: var(--danger);
-            border: 1px solid var(--danger);
-            cursor: not-allowed;
-        }
-
-        /* 5. Banner Orange Money */
-        .payment-banner {
-            margin: 0.5rem 1rem 1.5rem 1rem;
-            background: linear-gradient(135deg, #1f140e 0%, #121826 100%);
-            border-radius: 16px;
-            padding: 1.1rem;
-            border: 1px solid var(--orange-glow);
-            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.15);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .payment-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .payment-icon-box {
-            width: 38px;
-            height: 38px;
-            background-color: var(--orange);
-            color: #ffffff;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            font-weight: 800;
-            flex-shrink: 0;
-            box-shadow: 0 0 12px var(--orange-glow);
-        }
-
-        .payment-details h3 {
-            font-size: 0.9rem;
-            color: #ffffff;
-            font-weight: 800;
-        }
-
-        .payment-details p {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
-
-        .phone-highlight {
-            background-color: rgba(255, 102, 0, 0.15);
-            color: var(--orange);
-            padding: 7px 10px;
-            border-radius: 10px;
-            font-weight: 800;
-            font-size: 0.9rem;
-            text-align: center;
-            border: 1px dashed var(--orange);
-            letter-spacing: 1px;
-        }
-
-        /* 6. Barra de Navegação Inferior (4 Opções) */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(18, 25, 38, 0.95);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            display: flex;
-            justify-content: space-around;
-            padding: 0.65rem 0;
-            border-top: 1px solid var(--border);
-            z-index: 1000;
-            transform: translateZ(0);
-            will-change: transform;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            gap: 0.2rem;
-            transition: color 0.2s;
-            flex: 1;
-            text-align: center;
-        }
-
-        .nav-item.active, .nav-item:hover {
-            color: var(--orange);
-        }
-
-        .nav-icon-wrapper {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav-icon {
-            font-size: 1.25rem;
-            line-height: 1;
-        }
-
-        .nav-badge-count {
-            position: absolute;
-            top: -5px;
-            right: -8px;
-            background: linear-gradient(135deg, var(--orange), #ff3300);
-            color: #ffffff;
-            font-size: 0.62rem;
-            font-weight: 800;
-            min-width: 16px;
-            height: 16px;
-            padding: 0 4px;
-            border-radius: 10px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 8px var(--orange-glow);
-            border: 1.5px solid var(--bg-card);
-        }
-
-        .whatsapp-float {
-            position: fixed;
-            bottom: 72px;
-            right: 14px;
-            width: 50px;
-            height: 50px;
-            background-color: #25d366;
-            color: #ffffff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
-            z-index: 99;
-            transition: transform 0.2s;
-        }
-
-        .whatsapp-float:active {
-            transform: scale(0.9);
-        }
-
-        .whatsapp-float svg {
-            width: 26px;
-            height: 26px;
-            fill: #ffffff;
-        }
-
-        /* 7. Modal de Autenticação */
-        .auth-modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            padding: 1.25rem;
-        }
-
-        .auth-modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .auth-modal-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-highlight);
-            border-radius: 20px;
-            width: 100%;
-            max-width: 400px;
-            padding: 1.35rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-            position: relative;
-        }
-
-        .auth-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.15rem;
-        }
-
-        .auth-modal-title {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #ffffff;
-        }
-
-        .auth-close-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: #ffffff;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .auth-tabs {
-            display: flex;
-            background-color: var(--bg-dark);
-            padding: 4px;
-            border-radius: 12px;
-            margin-bottom: 1.15rem;
-            border: 1px solid var(--border);
-        }
-
-        .auth-tab-btn {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 8px;
-            font-size: 0.82rem;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .auth-tab-btn.active {
-            background-color: var(--primary);
-            color: #ffffff;
-            box-shadow: 0 0 10px var(--primary-glow);
-        }
-
-        .auth-form-group {
-            margin-bottom: 0.9rem;
-        }
-
-        .auth-form-group label {
-            display: block;
-            font-size: 0.78rem;
-            font-weight: 700;
-            margin-bottom: 0.35rem;
-            color: var(--text-muted);
-        }
-
-        .auth-input {
-            width: 100%;
-            padding: 11px 13px;
-            font-size: 0.88rem;
-            font-weight: 600;
-            color: #ffffff;
-            background-color: var(--bg-dark);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .auth-input:focus {
-            border-color: var(--orange);
-        }
-
-        .btn-submit-auth {
-            width: 100%;
-            background: linear-gradient(135deg, var(--orange), #d95300);
-            color: #ffffff;
-            border: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 4px 15px var(--orange-glow);
-            margin-top: 0.4rem;
-            text-transform: uppercase;
-        }
-
-        .btn-google-auth {
-            width: 100%;
-            background-color: #ffffff;
-            color: #1f1f1f;
-            border: none;
-            padding: 11px;
-            border-radius: 12px;
-            font-size: 0.88rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 0.9rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-        }
-
-        .btn-google-auth:active {
-            transform: scale(0.98);
-        }
-
-        .divider-or {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.72rem;
-            margin: 0.85rem 0;
-            font-weight: 700;
-        }
-
-        .divider-or::before, .divider-or::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .divider-or::before { margin-right: .75em; }
-        .divider-or::after { margin-left: .75em; }
-
-        .auth-notice {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            text-align: center;
-            margin-top: 0.85rem;
-            line-height: 1.4;
-        }
+            --bg-dark: #090d16; --bg-card: #121926; --bg-card-hover: #1c273e;
+            --primary: #7c3aed; --primary-glow: rgba(124, 58, 237, 0.4);
+            --orange: #ff6600; --orange-glow: rgba(255, 102, 0, 0.4);
+            --blue-dev: #06b6d4; --blue-dev-glow: rgba(6, 182, 212, 0.4);
+            --text-main: #ffffff; --text-muted: #94a3b8; --success: #10b981;
+            --danger: #ef4444; --border: #1e293b; --border-highlight: rgba(124, 58, 237, 0.35);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.5; padding-bottom: 100px; -webkit-font-smoothing: antialiased; }
+        a { text-decoration: none; color: inherit; transition: all 0.2s ease; }
+        .top-bar { background: rgba(9, 13, 22, 0.92); backdrop-filter: blur(12px); padding: 0.85rem 1rem; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
+        .brand-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.65rem; gap: 8px; }
+        .brand-logo-group { display: flex; align-items: center; gap: 6px; }
+        .brand-logo { font-size: 1.05rem; font-weight: 800; background: linear-gradient(135deg, #ffffff 0%, var(--orange) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .location-badge { font-size: 0.7rem; font-weight: 700; background: rgba(255, 102, 0, 0.15); color: var(--orange); padding: 3px 8px; border-radius: 20px; border: 1px solid var(--orange-glow); }
+        .user-action-area { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .points-badge-top { display: inline-flex; align-items: center; gap: 4px; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--success); padding: 3px 8px; border-radius: 12px; font-size: 0.72rem; font-weight: 800; }
+        .btn-auth-header { background: linear-gradient(135deg, var(--orange), #d95300); color: #ffffff; border: none; padding: 6px 12px; border-radius: 18px; font-size: 0.75rem; font-weight: 800; cursor: pointer; }
+        .user-logged-menu { display: flex; align-items: center; gap: 8px; }
+        .profile-avatar-top { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--orange); object-fit: cover; }
+        .btn-logout-header { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.4); padding: 4px 8px; border-radius: 10px; font-size: 0.68rem; font-weight: 700; cursor: pointer; }
+        .search-container { display: flex; align-items: center; background-color: var(--bg-card); padding: 0.65rem 0.85rem; border-radius: 12px; border: 1px solid var(--border); }
+        .search-container svg { width: 18px; height: 18px; fill: var(--text-muted); margin-right: 0.5rem; flex-shrink: 0; }
+        .search-container input { border: none; background: transparent; width: 100%; font-size: 0.88rem; color: #ffffff; outline: none; font-weight: 500; }
+        .hero-banner-main { margin: 1rem; border-radius: 20px; background: linear-gradient(135deg, rgba(124, 58, 237, 0.9), rgba(255, 102, 0, 0.8)); padding: 1.5rem 1.15rem; border: 1px solid var(--border-highlight); }
+        .hero-banner-main h2 { font-size: 1.25rem; font-weight: 800; color: #ffffff; margin-bottom: 0.4rem; }
+        .hero-banner-main p { font-size: 0.82rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 1rem; }
+        .hero-btn { display: inline-flex; align-items: center; gap: 8px; background-color: #ffffff; color: #000000; padding: 9px 16px; border-radius: 12px; font-weight: 800; font-size: 0.82rem; }
+        .categories { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 0 1rem 1rem 1rem; }
+        .cat-item { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; font-size: 0.68rem; color: var(--text-muted); font-weight: 600; background-color: var(--bg-card); padding: 9px 2px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1rem 0.5rem 1rem; }
+        .section-header h2 { font-size: 1.05rem; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 8px; }
+        .section-header h2::before { content: ""; display: inline-block; width: 4px; height: 16px; background-color: var(--orange); border-radius: 4px; }
+        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 1rem 1.25rem 1rem; }
+        @media (min-width: 600px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
+        .card { background-color: var(--bg-card); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative; }
+        .card-banner { height: 105px; width: 100%; background-size: cover; background-position: center; position: relative; }
+        .card-badge { position: absolute; top: 8px; right: 8px; background: rgba(0, 0, 0, 0.75); color: var(--orange); font-size: 0.62rem; font-weight: 800; padding: 3px 7px; border-radius: 8px; border: 1px solid rgba(255, 102, 0, 0.4); z-index: 2; }
+        .card-info { padding: 0.75rem; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
+        .card-info h3 { font-size: 0.9rem; font-weight: 800; color: #ffffff; margin-bottom: 0.2rem; }
+        .card-info p { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+        .card-action-btn { background: linear-gradient(135deg, var(--primary), #5b21b6); color: #ffffff; text-align: center; padding: 8px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: block; width: 100%; }
+        .payment-banner { margin: 0.5rem 1rem 1.5rem 1rem; background: linear-gradient(135deg, #1f140e 0%, #121826 100%); border-radius: 16px; padding: 1.1rem; border: 1px solid rgba(255, 102, 0, 0.4); display: flex; flex-direction: column; gap: 8px; }
+        .payment-header { display: flex; align-items: center; gap: 10px; }
+        .payment-icon-box { width: 38px; height: 38px; background-color: var(--orange); color: #ffffff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+        .phone-highlight { background-color: rgba(255, 102, 0, 0.15); color: var(--orange); padding: 7px 10px; border-radius: 10px; font-weight: 800; font-size: 0.9rem; text-align: center; border: 1px dashed var(--orange); }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(18, 25, 38, 0.95); backdrop-filter: blur(12px); display: flex; justify-content: space-around; padding: 0.65rem 0; border-top: 1px solid var(--border); z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; color: var(--text-muted); font-weight: 600; gap: 0.2rem; flex: 1; text-align: center; }
+        .nav-item.active { color: var(--orange); }
+        .nav-icon-wrapper { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+        .nav-icon { font-size: 1.25rem; line-height: 1; }
+        .nav-badge-count { position: absolute; top: -5px; right: -8px; background: linear-gradient(135deg, var(--orange), #ff3300); color: #ffffff; font-size: 0.62rem; font-weight: 800; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 10px; display: none; align-items: center; justify-content: center; border: 1.5px solid var(--bg-card); }
+        .whatsapp-float { position: fixed; bottom: 72px; right: 14px; width: 50px; height: 50px; background-color: #25d366; color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4); z-index: 99; }
+        .whatsapp-float svg { width: 26px; height: 26px; fill: #ffffff; }
     </style>
 </head>
 <body>
-
-    <!-- 1. Cabeçalho Fixo -->
     <div class="top-bar">
         <div class="brand-header">
             <div class="brand-logo-group">
                 <span class="brand-logo">MERCADO DIGITAL</span>
                 <span class="location-badge">GW</span>
-                <!-- Pontos posicionados logo a seguir ao GW -->
-                <a href="conta.html" id="topPointsContainer" class="points-badge-top" title="Seu Saldo de Pontos" style="display: none;">
-                     <span id="topUserPoints">0</span>
-                </a>
+                <a href="conta.html" id="topPointsContainer" class="points-badge-top" style="display: none;"><span id="topUserPoints">0</span></a>
             </div>
-
             <div class="user-action-area">
-                <!-- Convidado -->
-                <div id="guestTopBar">
-                    <button class="btn-auth-header" onclick="openAuthModal('login')">ENTRAR</button>
-                </div>
-
-                <!-- Logado -->
+                <div id="guestTopBar"><button class="btn-auth-header" onclick="window.location.href='conta.html'">ENTRAR</button></div>
                 <div id="userTopBar" class="user-logged-menu" style="display: none;">
-                    <a href="conta.html" title="Minha Conta">
-                        <img src="https://ui-avatars.com/api/?name=User&background=ff6600&color=fff" alt="Perfil" id="topAvatarImg" class="profile-avatar-top">
-                    </a>
-                    <button class="btn-logout-header" onclick="handleLogout()" title="Sair da Conta">Sair</button>
+                    <a href="conta.html"><img src="https://ui-avatars.com/api/?name=User&background=ff6600&color=fff" id="topAvatarImg" class="profile-avatar-top"></a>
+                    <button class="btn-logout-header" onclick="handleLogout()">Sair</button>
                 </div>
             </div>
         </div>
-
         <div class="search-container">
             <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            <input type="text" id="searchInput" onkeyup="filtrarProdutos()" placeholder="Pesquisar PUBG, Netflix, Criar Site, IPTV...">
+            <input type="text" id="searchInput" onkeyup="filtrarProdutos()" placeholder="Pesquisar PUBG, Netflix, Criar Site...">
         </div>
     </div>
 
-    <!-- 2. Hero Banner -->
     <div class="hero-banner-main">
         <h2>Recargas, Streaming & Websites</h2>
         <p>Acessos digitais instantâneos e criação de websites profissionais na Guiné-Bissau.</p>
-        <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" class="hero-btn">
-            💬 ATENDIMENTO WHATSAPP
-        </a>
+        <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Vim%20pelo%20site." target="_blank" class="hero-btn">💬 ATENDIMENTO WHATSAPP</a>
     </div>
 
-    <!-- 3. Categorias Rápidas -->
     <div class="categories">
         <a href="#jogos-section" class="cat-item"><span class="cat-icon">🎮</span><span>Jogos</span></a>
         <a href="#streaming-section" class="cat-item"><span class="cat-icon">🎬</span><span>Streaming</span></a>
         <a href="#websites-section" class="cat-item"><span class="cat-icon">💻</span><span>Websites</span></a>
         <a href="#edicao-section" class="cat-item"><span class="cat-icon">🎨</span><span>Edição</span></a>
-        <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Preciso%20de%20suporte." target="_blank" class="cat-item"><span class="cat-icon">🎧</span><span>Suporte</span></a>
+        <a href="https://wa.me/245955288370" target="_blank" class="cat-item"><span class="cat-icon">🎧</span><span>Suporte</span></a>
     </div>
 
-    <!-- 4. Jogos -->
-    <div class="section-header" id="jogos-section">
-        <h2>Jogos e Moedas Digitais</h2>
-    </div>
+    <div class="section-header" id="jogos-section"><h2>Jogos e Moedas Digitais</h2></div>
     <div class="product-grid" id="gridJogos">
         <a href="pubg.html" class="card product-card" data-title="pubg mobile uc moedas">
-            <div class="card-banner" style="background-image: url('https://img.utdstc.com/icon/f39/58f/f3958fd8814bbe41a967f6aaab3ec533396d9b39b9684cb003cdf75461889bdd:600');">
-                <span class="card-badge">UC</span>
-            </div>
-            <div class="card-info">
-                <h3>PUBG MOBILE</h3>
-                <p>Moedas UC diretas por ID de jogador.</p>
-                <span class="card-action-btn btn-dev">Ver Opções</span>
-            </div>
+            <div class="card-banner" style="background-image: url('https://img.utdstc.com/icon/f39/58f/f3958fd8814bbe41a967f6aaab3ec533396d9b39b9684cb003cdf75461889bdd:600');"><span class="card-badge">UC</span></div>
+            <div class="card-info"><h3>PUBG MOBILE</h3><p>Moedas UC diretas por ID.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
-
         <a href="freefire.html" class="card product-card" data-title="free fire diamantes ff">
-            <div class="card-banner" style="background-image: url('https://play-lh.googleusercontent.com/cK-U0_B9GrnSy26SNISDuvU_hL4VggyqJ1J5V2oiuyVEfiGo7fzegdBjk0ejXPg3PKK5sPwumdLBbWv8KkBKLQ=w240-h480-rw');">
-                <span class="card-badge">DIAMANTES💎</span>
-            </div>
-            <div class="card-info">
-                <h3>FREE FIRE</h3>
-                <p>Recarga instantânea por ID.</p>
-                <span class="card-action-btn btn-dev">Ver Opções</span>
-            </div>
+            <div class="card-banner" style="background-image: url('https://play-lh.googleusercontent.com/cK-U0_B9GrnSy26SNISDuvU_hL4VggyqJ1J5V2oiuyVEfiGo7fzegdBjk0ejXPg3PKK5sPwumdLBbWv8KkBKLQ=w240-h480-rw');"><span class="card-badge">DIAMANTES💎</span></div>
+            <div class="card-info"><h3>FREE FIRE</h3><p>Recarga instantânea por ID.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
-
-        <a href="playstation.html" class="card product-card" data-title="playstation ps plus store gift card ps4 ps5">
-            <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1606813907291-d86efa9b94db?q=80&w=600&auto=format&fit=crop');">
-                <span class="card-badge">PS4 / PS5</span>
-            </div>
-            <div class="card-info">
-                <h3>PLAYSTATION</h3>
-                <p>Assinatura PS Plus e Gift Cards.</p>
-                <span class="card-action-btn btn-dev">Ver Opções</span>
-            </div>
+        <a href="playstation.html" class="card product-card" data-title="playstation ps plus store">
+            <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1606813907291-d86efa9b94db?q=80&w=600');"><span class="card-badge">PS4 / PS5</span></div>
+            <div class="card-info"><h3>PLAYSTATION</h3><p>Assinatura PS Plus e Gift Cards.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
-
-        <a href="efootball.html" class="card product-card" data-title="efootball 2027 moedas konami pes mobile android ios">
-            <div class="card-banner" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNYn4nxb33ZToK-vN5DRyzHXcpRLHemIxihtBo5gEvZgyCLcA-FwUhAKk&s=10');">
-                <span class="card-badge">2027 MOBILE</span>
-            </div>
-            <div class="card-info">
-                <h3>eFOOTBALL 2027</h3>
-                <p>Moedas para Android e iPhone.</p>
-                <span class="card-action-btn btn-dev">Ver Opções</span>
-            </div>
+        <a href="efootball.html" class="card product-card" data-title="efootball 2027 moedas">
+            <div class="card-banner" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNYn4nxb33ZToK-vN5DRyzHXcpRLHemIxihtBo5gEvZgyCLcA-FwUhAKk&s=10');"><span class="card-badge">2027 MOBILE</span></div>
+            <div class="card-info"><h3>eFOOTBALL 2027</h3><p>Moedas para Android e iPhone.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
     </div>
 
-    <!-- 5. Streaming -->
-    <div class="section-header" id="streaming-section">
-        <h2>Streaming e TV</h2>
-    </div>
+    <div class="section-header" id="streaming-section"><h2>Streaming e TV</h2></div>
     <div class="product-grid" id="gridStreaming">
-        <a href="primevideo.html" class="card product-card" data-title="prime video amazon filmes series">
-            <div class="card-banner" style="background-image: url('https://m.media-amazon.com/images/G/01/primevideo/seo/primevideo-seo-logo.png');">
-                <span class="card-badge">4K ULTRA HD</span>
-            </div>
-            <div class="card-info">
-                <h3>PRIME VIDEO</h3>
-                <p>Filmes, séries e futebol sem anúncios.</p>
-                <span class="card-action-btn btn-dev">Ver Opções</span>
-            </div>
+        <a href="primevideo.html" class="card product-card" data-title="prime video amazon">
+            <div class="card-banner" style="background-image: url('https://m.media-amazon.com/images/G/01/primevideo/seo/primevideo-seo-logo.png');"><span class="card-badge">4K ULTRA HD</span></div>
+            <div class="card-info"><h3>PRIME VIDEO</h3><p>Filmes e séries sem anúncios.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
-
-        <a href="netflix.html" class="card product-card" data-title="netflix 4k ultra hd filmes series">
-            <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=600&auto=format&fit=crop');">
-                <span class="card-badge">4K ULTRA HD</span>
-            </div>
-            <div class="card-info">
-                <h3>NETFLIX</h3>
-                <p>Acesso telas Premium em HD e 4K.</p>
-                <span class="card-action-btn btn-dev">Ver Opções</span>
-            </div>
+        <a href="netflix.html" class="card product-card" data-title="netflix 4k ultra hd">
+            <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=600');"><span class="card-badge">4K ULTRA HD</span></div>
+            <div class="card-info"><h3>NETFLIX</h3><p>Acesso telas Premium em HD e 4K.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
-
-        <a href="iptv.html" class="card product-card" data-title="iptv canais ao vivo futebol desporto tv box smart tv">
-            <div class="card-banner" style="background-image: url('https://static.ndmais.com.br/2025/05/iptv-smart-tv.jpg');">
-                <span class="card-badge">+20.000 CANAIS</span>
-            </div>
-            <div class="card-info">
-                <h3>IPTV PREMIUM</h3>
-                <p>Todos os canais abertos e fechados ao vivo.</p>
-                <span class="card-action-btn btn-dev">Ver Opções</span>
-            </div>
+        <a href="iptv.html" class="card product-card" data-title="iptv canais ao vivo">
+            <div class="card-banner" style="background-image: url('https://static.ndmais.com.br/2025/05/iptv-smart-tv.jpg');"><span class="card-badge">+20.000 CANAIS</span></div>
+            <div class="card-info"><h3>IPTV PREMIUM</h3><p>Canais abertos e fechados ao vivo.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
     </div>
 
-    <!-- 6. Design e Edição -->
-    <div class="section-header" id="edicao-section">
-        <h2>Design e Edição</h2>
-    </div>
+    <div class="section-header" id="edicao-section"><h2>Design e Edição</h2></div>
     <div class="product-grid" id="gridEdicao">
-        <a href="canva.html" class="card product-card" data-title="canva pro premium design fotos edicao ia">
-            <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=600&auto=format&fit=crop');">
-                <span class="card-badge">PRO IA</span>
-            </div>
-            <div class="card-info">
-                <h3>CANVA PRO</h3>
-                <p>Ferramentas de design e IA ilimitadas.</p>
-                <span class="card-action-btn btn-dev">Ver Opções</span>
-            </div>
+        <a href="canva.html" class="card product-card" data-title="canva pro premium">
+            <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=600');"><span class="card-badge">PRO IA</span></div>
+            <div class="card-info"><h3>CANVA PRO</h3><p>Ferramentas de design e IA.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
     </div>
 
-    <!-- 7. Websites -->
-    <div class="section-header" id="websites-section">
-        <h2>Criação de Websites & Lojas</h2>
-    </div>
+    <div class="section-header" id="websites-section"><h2>Criação de Websites & Lojas</h2></div>
     <div class="product-grid" id="gridWebsites">
-        <a href="sites.html" class="card product-card card-dev" data-title="criar site website loja virtual portfolio landing page desenvolvimento programador">
-            <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=600&auto=format&fit=crop');">
-                <span class="card-badge badge-dev">WEB DEV</span>
-            </div>
-            <div class="card-info">
-                <h3>CRIAÇÃO DE SITES</h3>
-                <p>Websites profissionais, Lojas Virtuais e Landing Pages responsivas.</p>
-                <span class="card-action-btn btn-dev">Ver Opções</span>
-            </div>
+        <a href="sites.html" class="card product-card" data-title="criar site website loja virtual">
+            <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=600');"><span class="card-badge">WEB DEV</span></div>
+            <div class="card-info"><h3>CRIAÇÃO DE SITES</h3><p>Websites profissionais e lojas.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
     </div>
 
-    <!-- Container Dinâmico extra para Produtos gerados via Admin -->
-    <div class="section-header" id="outros-section" style="display: none;">
-        <h2>Outros Serviços & Produtos</h2>
-    </div>
-    <div class="product-grid" id="gridOutros" style="display: none;"></div>
-
-    <!-- 8. Pagamento Orange Money -->
     <div class="payment-banner">
         <div class="payment-header">
             <div class="payment-icon-box">OM</div>
-            <div class="payment-details">
-                <h3>Pagamento via Orange Money 🇬🇼</h3>
-                <p>Forma oficial e rápida de pagamento na Guiné-Bissau.</p>
-            </div>
+            <div><h3>Pagamento via Orange Money</h3><p>Forma oficial e rápida na Guiné-Bissau. 🇬🇼</p></div>
         </div>
         <div class="phone-highlight">📱 (245) 955288370</div>
     </div>
 
-    <!-- Botão WhatsApp Flutuante -->
-    <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20um%20pedido%20no%20Mercado%20Digital." target="_blank" class="whatsapp-float" title="Falar no WhatsApp">
+    <a href="https://wa.me/245955288370" target="_blank" class="whatsapp-float">
         <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.887 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
     </a>
 
-    <!-- 9. Barra de Navegação Inferior (4 Opções com Contadores) -->
     <div class="bottom-nav">
-        <a href="index.html" class="nav-item active">
-            <div class="nav-icon-wrapper">
-                <span class="nav-icon">🏠</span>
-            </div>
-            <span>Loja</span>
-        </a>
-        <a href="pedidos.html" class="nav-item">
-            <div class="nav-icon-wrapper">
-                <span class="nav-icon">📦</span>
-                <span class="nav-badge-count" id="pedidosBadge">0</span>
-            </div>
-            <span>Pedidos</span>
-        </a>
-        <a href="carrinho.html" class="nav-item">
-            <div class="nav-icon-wrapper">
-                <span class="nav-icon">🛒</span>
-                <span class="nav-badge-count" id="cartBadge">0</span>
-            </div>
-            <span>Carrinho</span>
-        </a>
-        <a href="conta.html" class="nav-item">
-            <div class="nav-icon-wrapper">
-                <span class="nav-icon">👤</span>
-            </div>
-            <span>Conta</span>
-        </a>
+        <a href="index.html" class="nav-item active"><div class="nav-icon-wrapper"><span class="nav-icon">🏠</span></div><span>Loja</span></a>
+        <a href="pedidos.html" class="nav-item"><div class="nav-icon-wrapper"><span class="nav-icon">📦</span><span class="nav-badge-count" id="pedidosBadge">0</span></div><span>Pedidos</span></a>
+        <a href="carrinho.html" class="nav-item"><div class="nav-icon-wrapper"><span class="nav-icon">🛒</span><span class="nav-badge-count" id="cartBadge">0</span></div><span>Carrinho</span></a>
+        <a href="conta.html" class="nav-item"><div class="nav-icon-wrapper"><span class="nav-icon">👤</span></div><span>Conta</span></a>
     </div>
 
-    <!-- 10. Modal Autenticação -->
-    <div id="authModal" class="auth-modal-overlay">
-        <div class="auth-modal-card">
-            <div class="auth-modal-header">
-                <h3 class="auth-modal-title" id="authModalTitle">Acessar Conta</h3>
-                <button class="auth-close-btn" onclick="closeAuthModal()">&times;</button>
-            </div>
-
-            <button type="button" class="btn-google-auth" onclick="handleGoogleLogin()">
-                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.18v3.15C3.15 21.32 7.22 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.61H1.18C.43 8.12 0 9.99 0 12s.43 3.88 1.18 5.39l4.09-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.22 0 3.15 2.68 1.18 6.61l4.09 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
-                Continuar com o Google
-            </button>
-
-            <div class="divider-or">ou com e-mail</div>
-
-            <div class="auth-tabs">
-                <button class="auth-tab-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')">ENTRAR</button>
-                <button class="auth-tab-btn" id="tabRegisterBtn" onclick="switchAuthTab('register')">CRIAR CONTA</button>
-            </div>
-
-            <form id="formLogin" onsubmit="handleLogin(event)">
-                <div class="auth-form-group">
-                    <label for="loginEmail">E-mail</label>
-                    <input type="email" id="loginEmail" class="auth-input" placeholder="seuemail@gmail.com" required>
-                </div>
-                <div class="auth-form-group">
-                    <label for="loginPass">Palavra-passe</label>
-                    <input type="password" id="loginPass" class="auth-input" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn-submit-auth">ENTRAR NO SITE</button>
-            </form>
-
-            <form id="formRegister" style="display: none;" onsubmit="handleRegister(event)">
-                <div class="auth-form-group">
-                    <label for="regName">Nome Completo</label>
-                    <input type="text" id="regName" class="auth-input" placeholder="Seu nome" required>
-                </div>
-                <div class="auth-form-group">
-                    <label for="regEmail">E-mail</label>
-                    <input type="email" id="regEmail" class="auth-input" placeholder="seuemail@gmail.com" required>
-                </div>
-                <div class="auth-form-group">
-                    <label for="regPass">Palavra-passe</label>
-                    <input type="password" id="regPass" class="auth-input" placeholder="Mínimo 6 caracteres" required>
-                </div>
-                <div class="auth-form-group">
-                    <label for="regPassConfirm">Confirmar Palavra-passe</label>
-                    <input type="password" id="regPassConfirm" class="auth-input" placeholder="Repita a palavra-passe" required>
-                </div>
-                <button type="submit" class="btn-submit-auth">CRIAR CONTA & ENVIAR CÓDIGO</button>
-            </form>
-
-            <p class="auth-notice">
-                Se preferir continuar sem conta, pode fechar este aviso e efetuar a compra direta via WhatsApp.
-            </p>
-        </div>
-    </div>
-
-    <!-- Scripts Utilitários (Carrinho, Pesquisa e Contadores) -->
     <script>
         function atualizarContadoresNav() {
             try {
-                // 1. Contador do Carrinho
                 const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
                 const totalCarrinho = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
                 const cartBadge = document.getElementById('cartBadge');
-                
                 if (cartBadge) {
-                    if (totalCarrinho > 0) {
-                        cartBadge.innerText = totalCarrinho > 99 ? '99+' : totalCarrinho;
-                        cartBadge.style.display = 'flex';
-                    } else {
-                        cartBadge.style.display = 'none';
-                    }
+                    cartBadge.innerText = totalCarrinho > 99 ? '99+' : totalCarrinho;
+                    cartBadge.style.display = totalCarrinho > 0 ? 'flex' : 'none';
                 }
-
-                // 2. Contador de Pedidos
                 const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
                 const totalPedidos = pedidos.length;
                 const pedidosBadge = document.getElementById('pedidosBadge');
-
                 if (pedidosBadge) {
-                    if (totalPedidos > 0) {
-                        pedidosBadge.innerText = totalPedidos > 99 ? '99+' : totalPedidos;
-                        pedidosBadge.style.display = 'flex';
-                    } else {
-                        pedidosBadge.style.display = 'none';
-                    }
+                    pedidosBadge.innerText = totalPedidos > 99 ? '99+' : totalPedidos;
+                    pedidosBadge.style.display = totalPedidos > 0 ? 'flex' : 'none';
                 }
-            } catch (e) {
-                console.error("Erro ao atualizar contadores:", e);
-            }
+            } catch (e) { console.error(e); }
         }
-
         function filtrarProdutos() {
             const input = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('.product-card');
-
-            cards.forEach(card => {
-                const searchKeywords = (card.getAttribute('data-title') || '').toLowerCase();
-                const cardTitle = card.querySelector('h3') ? card.querySelector('h3').innerText.toLowerCase() : '';
-
-                if (searchKeywords.includes(input) || cardTitle.includes(input)) {
-                    card.style.display = "flex";
-                } else {
-                    card.style.display = "none";
-                }
+            document.querySelectorAll('.product-card').forEach(card => {
+                const kw = (card.getAttribute('data-title') || '').toLowerCase();
+                card.style.display = kw.includes(input) ? 'flex' : 'none';
             });
         }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            atualizarContadoresNav();
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const refCode = urlParams.get('ref');
-            
-            if (refCode) {
-                localStorage.setItem('bissau_referrer_uid', refCode);
-            }
-        });
+        window.addEventListener('DOMContentLoaded', atualizarContadoresNav);
     </script>
-
-    <!-- Script de Autenticação Firebase & Leitura em Tempo Real do Firestore -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { 
-            getAuth, 
-            signInWithEmailAndPassword, 
-            createUserWithEmailAndPassword, 
-            sendEmailVerification,
-            updateProfile,
-            GoogleAuthProvider,
-            signInWithPopup,
-            signOut,
-            onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            setDoc,
-            onSnapshot,
-            collection
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
-            authDomain: "mercado-digital-bissau.firebaseapp.com",
-            projectId: "mercado-digital-bissau",
-            storageBucket: "mercado-digital-bissau.firebasestorage.app",
-            messagingSenderId: "171260734990",
-            appId: "1:171260734990:web:130c33169923af3437165f"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const googleProvider = new GoogleAuthProvider();
-
-        let unsubscribePoints = null;
-
-        // Leitura Dinâmica e em Tempo Real de Produtos no Firestore
-        function escutarProdutosFirestore() {
-            const gridJogos = document.getElementById('gridJogos');
-            const gridStreaming = document.getElementById('gridStreaming');
-            const gridEdicao = document.getElementById('gridEdicao');
-            const gridWebsites = document.getElementById('gridWebsites');
-            const gridOutros = document.getElementById('gridOutros');
-            const outrosSection = document.getElementById('outros-section');
-
-            onSnapshot(collection(db, "produtos"), (querySnapshot) => {
-                if (gridOutros) gridOutros.innerHTML = '';
-
-                querySnapshot.forEach((docSnap) => {
-                    const prod = docSnap.data();
-                    const prodId = docSnap.id;
-                    const isEsgotado = prod.esgotado || false;
-                    const categoria = (prod.categoria || '').toLowerCase();
-                    const nomeLower = (prod.nome || '').toLowerCase();
-
-                    let linkDestino = prod.paginaDestino || '#';
-                    if (linkDestino === '#' || !linkDestino) {
-                        if (nomeLower.includes('pubg')) linkDestino = 'pubg.html';
-                        else if (nomeLower.includes('free fire')) linkDestino = 'freefire.html';
-                        else if (nomeLower.includes('playstation') || nomeLower.includes('ps4') || nomeLower.includes('ps5')) linkDestino = 'playstation.html';
-                        else if (nomeLower.includes('efootball') || nomeLower.includes('pes')) linkDestino = 'efootball.html';
-                        else if (nomeLower.includes('prime video')) linkDestino = 'primevideo.html';
-                        else if (nomeLower.includes('netflix')) linkDestino = 'netflix.html';
-                        else if (nomeLower.includes('iptv') || nomeLower.includes('unitv')) linkDestino = 'iptv.html';
-                        else if (nomeLower.includes('canva')) linkDestino = 'canva.html';
-                        else if (nomeLower.includes('site') || nomeLower.includes('website') || nomeLower.includes('loja')) linkDestino = 'sites.html';
-                        else linkDestino = `produto.html?id=${prodId}`;
-                    }
-
-                    const existingCard = document.querySelector(`.product-card[href="${linkDestino}"]`);
-                    if (existingCard) {
-                        const badge = existingCard.querySelector('.card-badge');
-                        const btnAction = existingCard.querySelector('.card-action-btn');
-                        
-                        if (isEsgotado) {
-                            existingCard.setAttribute('data-url', linkDestino);
-                            existingCard.setAttribute('href', 'javascript:void(0)');
-                            if (badge) {
-                                badge.innerText = '🔴 ESGOTADO';
-                                badge.className = 'card-badge badge-out';
-                            }
-                            if (btnAction) {
-                                btnAction.innerText = 'Esgotado';
-                                btnAction.className = 'card-action-btn btn-disabled';
-                            }
-                        } else {
-                            const originalUrl = existingCard.getAttribute('data-url') || linkDestino;
-                            existingCard.setAttribute('href', originalUrl);
-                            if (badge) {
-                                badge.innerText = prod.badge || 'DISPONÍVEL';
-                                badge.className = 'card-badge';
-                            }
-                            if (btnAction) {
-                                btnAction.innerText = 'Ver Opções';
-                                btnAction.className = 'card-action-btn btn-dev';
-                            }
-                        }
-                    } else {
-                        const cardHtml = document.createElement('a');
-                        cardHtml.href = isEsgotado ? 'javascript:void(0)' : linkDestino;
-                        cardHtml.className = 'card product-card';
-                        cardHtml.setAttribute('data-title', `${prod.nome} ${prod.categoria} ${prod.badge}`);
-
-                        cardHtml.innerHTML = `
-                            <div class="card-banner" style="background-image: url('${prod.imagem}');">
-                                <span class="card-badge ${isEsgotado ? 'badge-out' : ''}">${isEsgotado ? '🔴 ESGOTADO' : (prod.badge || 'NOVO')}</span>
-                            </div>
-                            <div class="card-info">
-                                <h3>${prod.nome}</h3>
-                                <p>${prod.descricao || ''}</p>
-                                <span class="card-action-btn ${isEsgotado ? 'btn-disabled' : 'btn-dev'}">${isEsgotado ? 'Esgotado' : 'Ver Opções'}</span>
-                            </div>
-                        `;
-
-                        if (categoria.includes('jogo') && gridJogos) gridJogos.appendChild(cardHtml);
-                        else if ((categoria.includes('stream') || categoria.includes('iptv')) && gridStreaming) gridStreaming.appendChild(cardHtml);
-                        else if ((categoria.includes('edicao') || categoria.includes('design')) && gridEdicao) gridEdicao.appendChild(cardHtml);
-                        else if ((categoria.includes('site') || categoria.includes('web')) && gridWebsites) gridWebsites.appendChild(cardHtml);
-                        else {
-                            if (outrosSection) outrosSection.style.display = 'flex';
-                            if (gridOutros) {
-                                gridOutros.style.display = 'grid';
-                                gridOutros.appendChild(cardHtml);
-                            }
-                        }
-                    }
-                });
-            }, (err) => {
-                console.error("Erro ao escutar produtos no Firestore:", err);
-            });
-        }
-
-        onAuthStateChanged(auth, (user) => {
-            const guestTopBar = document.getElementById('guestTopBar');
-            const userTopBar = document.getElementById('userTopBar');
-            const topPointsContainer = document.getElementById('topPointsContainer');
-
-            if (user) {
-                guestTopBar.style.display = 'none';
-                userTopBar.style.display = 'flex';
-                if (topPointsContainer) topPointsContainer.style.display = 'inline-flex';
-
-                if (user.photoURL) {
-                    document.getElementById('topAvatarImg').src = user.photoURL;
-                } else if (user.displayName) {
-                    document.getElementById('topAvatarImg').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName)}&background=ff6600&color=fff`;
-                }
-
-                const userRef = doc(db, "usuarios", user.uid);
-                unsubscribePoints = onSnapshot(userRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        const pontos = docSnap.data().pontos || 0;
-                        document.getElementById('topUserPoints').innerText = pontos.toLocaleString();
-                    } else {
-                        document.getElementById('topUserPoints').innerText = "P:0";
-                    }
-                }, (err) => {
-                    console.error("Erro ao ouvir pontos:", err);
-                });
-
-            } else {
-                guestTopBar.style.display = 'block';
-                userTopBar.style.display = 'none';
-                if (topPointsContainer) topPointsContainer.style.display = 'none';
-                if (unsubscribePoints) unsubscribePoints();
-            }
-        });
-
-        escutarProdutosFirestore();
-
-        window.handleGoogleLogin = async function() {
-            try {
-                const result = await signInWithPopup(auth, googleProvider);
-                const user = result.user;
-                
-                const referrerUid = localStorage.getItem('bissau_referrer_uid');
-                if (referrerUid && referrerUid !== user.uid) {
-                    await setDoc(doc(db, "usuarios", user.uid), {
-                        nome: user.displayName || 'Cliente Google',
-                        email: user.email,
-                        convidadoPor: referrerUid,
-                        criadoEm: new Date().toISOString()
-                    }, { merge: true });
-                }
-
-                alert("Login com Google efetuado com sucesso!");
-                closeAuthModal();
-            } catch (error) {
-                if (error.code === 'auth/unauthorized-domain') {
-                    alert("Atenção: O domínio da sua loja precisa de estar na lista de domínios autorizados no Console do Firebase.");
-                } else {
-                    alert("Erro ao entrar com o Google: " + error.message);
-                }
-            }
-        };
-
-        window.handleLogin = async function(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const pass = document.getElementById('loginPass').value;
-
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-                alert("Login efetuado com sucesso!");
-                closeAuthModal();
-            } catch (error) {
-                alert("Erro ao fazer login: " + error.message);
-            }
-        };
-
-        window.handleRegister = async function(e) {
-            e.preventDefault();
-            const name = document.getElementById('regName').value;
-            const email = document.getElementById('regEmail').value;
-            const pass = document.getElementById('regPass').value;
-            const passConfirm = document.getElementById('regPassConfirm').value;
-
-            if (pass !== passConfirm) {
-                alert("As palavras-passes não coincidem!");
-                return;
-            }
-
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                const user = userCredential.user;
-
-                await updateProfile(user, { displayName: name });
-                await sendEmailVerification(user);
-
-                const referrerUid = localStorage.getItem('bissau_referrer_uid');
-                await setDoc(doc(db, "usuarios", user.uid), {
-                    nome: name,
-                    email: email,
-                    convidadoPor: referrerUid || null,
-                    criadoEm: new Date().toISOString()
-                }, { merge: true });
-
-                alert("Conta criada com sucesso! Enviamos um e-mail de verificação para o seu Gmail.");
-                closeAuthModal();
-            } catch (error) {
-                alert("Erro ao criar conta: " + error.message);
-            }
-        };
-
-        window.handleLogout = async function() {
-            try {
-                await signOut(auth);
-                alert("Sessão terminada com sucesso!");
-            } catch (error) {
-                alert("Erro ao sair da conta: " + error.message);
-            }
-        };
-    </script>
-
-    <!-- Script de Gestão do Modal de Login -->
-    <script>
-        function openAuthModal(tab = 'login') {
-            document.getElementById('authModal').classList.add('active');
-            switchAuthTab(tab);
-        }
-
-        function closeAuthModal() {
-            document.getElementById('authModal').classList.remove('active');
-        }
-
-        function switchAuthTab(tab) {
-            const formLogin = document.getElementById('formLogin');
-            const formRegister = document.getElementById('formRegister');
-            const tabLoginBtn = document.getElementById('tabLoginBtn');
-            const tabRegisterBtn = document.getElementById('tabRegisterBtn');
-            const modalTitle = document.getElementById('authModalTitle');
-
-            if (tab === 'login') {
-                formLogin.style.display = 'block';
-                formRegister.style.display = 'none';
-                tabLoginBtn.classList.add('active');
-                tabRegisterBtn.classList.remove('active');
-                modalTitle.innerText = 'Acessar Conta';
-            } else {
-                formLogin.style.display = 'none';
-                formRegister.style.display = 'block';
-                tabLoginBtn.classList.remove('active');
-                tabRegisterBtn.classList.add('active');
-                modalTitle.innerText = 'Criar Nova Conta';
-            }
-        }
-    </script>
-
-    <!-- Ocultar barra inferior ao abrir o teclado virtual -->
-    <script>
-        document.addEventListener('focusin', (e) => {
-            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
-                const bottomNav = document.querySelector('.bottom-nav');
-                if (bottomNav) bottomNav.style.display = 'none';
-            }
-        });
-
-        document.addEventListener('focusout', (e) => {
-            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
-                const bottomNav = document.querySelector('.bottom-nav');
-                if (bottomNav) bottomNav.style.display = 'flex';
-            }
-        });
-    </script>
-
 </body>
 </html>
