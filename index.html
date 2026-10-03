@@ -168,23 +168,6 @@
             padding: 4px;
         }
 
-        .cart-badge-count {
-            position: absolute;
-            top: -4px;
-            right: -6px;
-            background-color: var(--orange);
-            color: #ffffff;
-            font-size: 0.6rem;
-            font-weight: 800;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 6px var(--orange-glow);
-        }
-
         .profile-avatar-top {
             width: 30px;
             height: 30px;
@@ -528,7 +511,7 @@
             letter-spacing: 1px;
         }
 
-        /* 6. Barra de Navegação Inferior */
+        /* 6. Barra de Navegação Inferior (4 Opções) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -550,19 +533,48 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             color: var(--text-muted);
             font-weight: 600;
             gap: 0.2rem;
             transition: color 0.2s;
+            flex: 1;
+            text-align: center;
         }
 
         .nav-item.active, .nav-item:hover {
             color: var(--orange);
         }
 
+        .nav-icon-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .nav-icon {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        .nav-badge-count {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: linear-gradient(135deg, var(--orange), #ff3300);
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 8px var(--orange-glow);
+            border: 1.5px solid var(--bg-card);
         }
 
         .whatsapp-float {
@@ -797,7 +809,6 @@
                     </a>
                     <a href="carrinho.html" class="icon-cart-link" title="Meu Carrinho">
                         🛒
-                        <span class="cart-badge-count" id="cartBadge">0</span>
                     </a>
                     <a href="conta.html" title="Minha Conta">
                         <img src="https://ui-avatars.com/api/?name=User&background=ff6600&color=fff" alt="Perfil" id="topAvatarImg" class="profile-avatar-top">
@@ -968,16 +979,37 @@
 
     <!-- Botão WhatsApp Flutuante -->
     <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20um%20pedido%20no%20Mercado%20Digital." target="_blank" class="whatsapp-float" title="Falar no WhatsApp">
-        <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.887 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
     </a>
 
-    <!-- 9. Barra de Navegação Inferior -->
+    <!-- 9. Barra de Navegação Inferior (4 Opções com Contadores) -->
     <div class="bottom-nav">
-        <a href="index.html" class="nav-item active"><span class="nav-icon">🏠</span><span>Loja</span></a>
-        <a href="pedidos.html" class="nav-item"><span class="nav-icon">📦</span><span>Pedidos</span></a>
-        <a href="carrinho.html" class="nav-item"><span class="nav-icon">🛒</span><span>Carrinho</span></a>
-        <a href="conta.html" class="nav-item"><span class="nav-icon">👤</span><span>Conta</span></a>
-        <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Preciso%20de%20ajuda." target="_blank" class="nav-item"><span class="nav-icon">💬</span><span>Ajuda</span></a>
+        <a href="index.html" class="nav-item active">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">🏠</span>
+            </div>
+            <span>Loja</span>
+        </a>
+        <a href="pedidos.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">📦</span>
+                <span class="nav-badge-count" id="pedidosBadge">0</span>
+            </div>
+            <span>Pedidos</span>
+        </a>
+        <a href="carrinho.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">🛒</span>
+                <span class="nav-badge-count" id="cartBadge">0</span>
+            </div>
+            <span>Carrinho</span>
+        </a>
+        <a href="conta.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">👤</span>
+            </div>
+            <span>Conta</span>
+        </a>
     </div>
 
     <!-- 10. Modal Autenticação -->
@@ -1038,16 +1070,39 @@
         </div>
     </div>
 
-    <!-- Scripts Utilitários (Carrinho, Pesquisa e Captura do Link de Afiliado) -->
+    <!-- Scripts Utilitários (Carrinho, Pesquisa e Contadores) -->
     <script>
-        function atualizarContadorCarrinho() {
+        function atualizarContadoresNav() {
             try {
+                // 1. Contador do Carrinho
                 const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
-                const totalItens = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
-                const badge = document.getElementById('cartBadge');
-                if (badge) badge.innerText = totalItens;
+                const totalCarrinho = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
+                const cartBadge = document.getElementById('cartBadge');
+                
+                if (cartBadge) {
+                    if (totalCarrinho > 0) {
+                        cartBadge.innerText = totalCarrinho > 99 ? '99+' : totalCarrinho;
+                        cartBadge.style.display = 'flex';
+                    } else {
+                        cartBadge.style.display = 'none';
+                    }
+                }
+
+                // 2. Contador de Pedidos
+                const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
+                const totalPedidos = pedidos.length;
+                const pedidosBadge = document.getElementById('pedidosBadge');
+
+                if (pedidosBadge) {
+                    if (totalPedidos > 0) {
+                        pedidosBadge.innerText = totalPedidos > 99 ? '99+' : totalPedidos;
+                        pedidosBadge.style.display = 'flex';
+                    } else {
+                        pedidosBadge.style.display = 'none';
+                    }
+                }
             } catch (e) {
-                console.error("Erro ao ler carrinho:", e);
+                console.error("Erro ao atualizar contadores:", e);
             }
         }
 
@@ -1067,9 +1122,8 @@
             });
         }
 
-        // Captura do parâmetro ?ref=UID da URL
         window.addEventListener('DOMContentLoaded', () => {
-            atualizarContadorCarrinho();
+            atualizarContadoresNav();
 
             const urlParams = new URLSearchParams(window.location.search);
             const refCode = urlParams.get('ref');
@@ -1097,7 +1151,6 @@
         import { 
             getFirestore, 
             doc, 
-            getDoc,
             setDoc,
             onSnapshot
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -1132,7 +1185,6 @@
                     document.getElementById('topAvatarImg').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName)}&background=ff6600&color=fff`;
                 }
 
-                // Escutar Saldo de Pontos em Tempo Real via Firestore
                 const userRef = doc(db, "usuarios", user.uid);
                 unsubscribePoints = onSnapshot(userRef, (docSnap) => {
                     if (docSnap.exists()) {
@@ -1157,7 +1209,6 @@
                 const result = await signInWithPopup(auth, googleProvider);
                 const user = result.user;
                 
-                // Gravar vínculo de convite no Firestore se existir
                 const referrerUid = localStorage.getItem('bissau_referrer_uid');
                 if (referrerUid && referrerUid !== user.uid) {
                     await setDoc(doc(db, "usuarios", user.uid), {
@@ -1212,7 +1263,6 @@
                 await updateProfile(user, { displayName: name });
                 await sendEmailVerification(user);
 
-                // Gravar o vínculo de convite no Firestore
                 const referrerUid = localStorage.getItem('bissau_referrer_uid');
                 await setDoc(doc(db, "usuarios", user.uid), {
                     nome: name,

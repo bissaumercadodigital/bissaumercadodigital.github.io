@@ -91,23 +91,6 @@
             align-items: center;
         }
 
-        .cart-badge-count {
-            position: absolute;
-            top: -6px;
-            right: -8px;
-            background-color: var(--orange);
-            color: #ffffff;
-            font-size: 0.6rem;
-            font-weight: 800;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 6px var(--orange-glow);
-        }
-
         .container {
             padding: 1rem;
             max-width: 600px;
@@ -380,7 +363,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
-        /* Navigation Inferior */
+        /* Navigation Inferior (4 Opções) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -402,18 +385,48 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             color: var(--text-muted);
             font-weight: 600;
             gap: 0.2rem;
+            transition: color 0.2s;
+            flex: 1;
+            text-align: center;
         }
 
-        .nav-item.active {
+        .nav-item.active, .nav-item:hover {
             color: var(--orange);
         }
 
+        .nav-icon-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .nav-icon {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        .nav-badge-count {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: linear-gradient(135deg, var(--orange), #ff3300);
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 8px var(--orange-glow);
+            border: 1.5px solid var(--bg-card);
         }
     </style>
 </head>
@@ -424,7 +437,7 @@
         <a href="index.html" class="back-btn">‹ Voltar</a>
         <h1 class="page-title">Minha Conta</h1>
         <a href="carrinho.html" class="icon-cart-link">
-            🛒 <span class="cart-badge-count" id="cartBadge">0</span>
+            🛒
         </a>
     </div>
 
@@ -522,30 +535,74 @@
         </div>
     </div>
 
-    <!-- Navegação Inferior -->
+    <!-- Navegação Inferior (4 Opções com Contadores) -->
     <div class="bottom-nav">
-        <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span>Loja</span></a>
-        <a href="pedidos.html" class="nav-item"><span class="nav-icon">📦</span><span>Pedidos</span></a>
-        <a href="carrinho.html" class="nav-item"><span class="nav-icon">🛒</span><span>Carrinho</span></a>
-        <a href="conta.html" class="nav-item active"><span class="nav-icon">👤</span><span>Conta</span></a>
-        <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Preciso%20de%20ajuda." target="_blank" class="nav-item"><span class="nav-icon">💬</span><span>Ajuda</span></a>
+        <a href="index.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">🏠</span>
+            </div>
+            <span>Loja</span>
+        </a>
+        <a href="pedidos.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">📦</span>
+                <span class="nav-badge-count" id="pedidosBadge">0</span>
+            </div>
+            <span>Pedidos</span>
+        </a>
+        <a href="carrinho.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">🛒</span>
+                <span class="nav-badge-count" id="cartBadge">0</span>
+            </div>
+            <span>Carrinho</span>
+        </a>
+        <a href="conta.html" class="nav-item active">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">👤</span>
+            </div>
+            <span>Conta</span>
+        </a>
     </div>
 
     <script>
-        // Guardar parâmetro de convite (?ref=UID) se vier no URL
         const urlParams = new URLSearchParams(window.location.search);
         const refParam = urlParams.get('ref');
         if (refParam) {
             localStorage.setItem('bissau_ref', refParam);
         }
 
-        function updateCartBadge() {
+        function atualizarContadoresNav() {
             try {
+                // 1. Contador do Carrinho
                 const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
-                const totalItens = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
-                document.getElementById('cartBadge').innerText = totalItens;
+                const totalCarrinho = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
+                const cartBadge = document.getElementById('cartBadge');
+                
+                if (cartBadge) {
+                    if (totalCarrinho > 0) {
+                        cartBadge.innerText = totalCarrinho > 99 ? '99+' : totalCarrinho;
+                        cartBadge.style.display = 'flex';
+                    } else {
+                        cartBadge.style.display = 'none';
+                    }
+                }
+
+                // 2. Contador de Pedidos
+                const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
+                const totalPedidos = pedidos.length;
+                const pedidosBadge = document.getElementById('pedidosBadge');
+
+                if (pedidosBadge) {
+                    if (totalPedidos > 0) {
+                        pedidosBadge.innerText = totalPedidos > 99 ? '99+' : totalPedidos;
+                        pedidosBadge.style.display = 'flex';
+                    } else {
+                        pedidosBadge.style.display = 'none';
+                    }
+                }
             } catch (e) {
-                console.error(e);
+                console.error("Erro ao atualizar contadores da navegação:", e);
             }
         }
 
@@ -562,7 +619,7 @@
             alert("✅ Link de convite copiado!");
         }
 
-        document.addEventListener('DOMContentLoaded', updateCartBadge);
+        document.addEventListener('DOMContentLoaded', atualizarContadoresNav);
     </script>
 
     <!-- Firebase Auth & Firestore Logic -->
@@ -628,13 +685,11 @@
                     btnResend.style.display = "inline-block";
                 }
 
-                // Gerar Link de Convite Pessoal
                 const dominioAtual = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
-const referralLink = `${dominioAtual}index.html?ref=${user.uid}`;
+                const referralLink = `${dominioAtual}index.html?ref=${user.uid}`;
 
                 document.getElementById('myReferralLink').value = referralLink;
 
-                // Carregar Saldo de Pontos e Registar Afiliado
                 try {
                     const savedRef = localStorage.getItem('bissau_ref');
                     const userRef = doc(db, "usuarios", user.uid);
@@ -645,13 +700,11 @@ const referralLink = `${dominioAtual}index.html?ref=${user.uid}`;
                         const pontos = data.pontos || 0;
                         document.getElementById('userPoints').innerText = pontos.toLocaleString() + ' FCFA';
 
-                        // Se o perfil existe mas ainda não tinha 'convidadoPor', regista agora
                         if (!data.convidadoPor && savedRef && savedRef !== user.uid) {
                             await setDoc(userRef, { convidadoPor: savedRef }, { merge: true });
                             localStorage.removeItem('bissau_ref');
                         }
                     } else {
-                        // Criação inicial do perfil no Firestore guardando quem convidou
                         const userData = {
                             nome: user.displayName || 'Cliente',
                             email: user.email,
@@ -712,7 +765,7 @@ const referralLink = `${dominioAtual}index.html?ref=${user.uid}`;
         };
     </script>
 
-    <!-- Script de Gestão do Teclado -->
+    <!-- Script de Gestão do Teclado Virtual -->
     <script>
         document.addEventListener('focusin', (e) => {
             if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {

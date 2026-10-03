@@ -91,23 +91,6 @@
             align-items: center;
         }
 
-        .cart-badge-count {
-            position: absolute;
-            top: -6px;
-            right: -8px;
-            background-color: var(--orange);
-            color: #ffffff;
-            font-size: 0.6rem;
-            font-weight: 800;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 6px var(--orange-glow);
-        }
-
         .container {
             padding: 1rem;
             max-width: 600px;
@@ -350,18 +333,48 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             color: var(--text-muted);
             font-weight: 600;
             gap: 0.2rem;
+            transition: color 0.2s;
+            flex: 1;
+            text-align: center;
         }
 
-        .nav-item.active {
+        .nav-item.active, .nav-item:hover {
             color: var(--orange);
         }
 
+        .nav-icon-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .nav-icon {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        .nav-badge-count {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: linear-gradient(135deg, var(--orange), #ff3300);
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 8px var(--orange-glow);
+            border: 1.5px solid var(--bg-card);
         }
     </style>
 </head>
@@ -375,7 +388,6 @@
         <h1 class="page-title">Histórico de Pedidos</h1>
         <a href="carrinho.html" class="icon-cart-link">
             🛒
-            <span class="cart-badge-count" id="cartBadge">0</span>
         </a>
     </div>
 
@@ -397,14 +409,69 @@
         </div>
     </div>
 
-    <!-- Navegação Inferior -->
+    <!-- Navegação Inferior (4 Opções) -->
     <div class="bottom-nav">
-        <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span>Loja</span></a>
-        <a href="pedidos.html" class="nav-item active"><span class="nav-icon">📦</span><span>Pedidos</span></a>
-        <a href="carrinho.html" class="nav-item"><span class="nav-icon">🛒</span><span>Carrinho</span></a>
-        <a href="conta.html" class="nav-item"><span class="nav-icon">👤</span><span>Conta</span></a>
-        <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Preciso%20de%20ajuda." target="_blank" class="nav-item"><span class="nav-icon">💬</span><span>Ajuda</span></a>
+        <a href="index.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">🏠</span>
+            </div>
+            <span>Loja</span>
+        </a>
+        <a href="pedidos.html" class="nav-item active">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">📦</span>
+                <span class="nav-badge-count" id="pedidosBadge">0</span>
+            </div>
+            <span>Pedidos</span>
+        </a>
+        <a href="carrinho.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">🛒</span>
+                <span class="nav-badge-count" id="cartBadge">0</span>
+            </div>
+            <span>Carrinho</span>
+        </a>
+        <a href="conta.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">👤</span>
+            </div>
+            <span>Conta</span>
+        </a>
     </div>
+
+    <script>
+        function atualizarContadoresNav() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+                const totalCarrinho = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
+                const cartBadge = document.getElementById('cartBadge');
+                
+                if (cartBadge) {
+                    if (totalCarrinho > 0) {
+                        cartBadge.innerText = totalCarrinho > 99 ? '99+' : totalCarrinho;
+                        cartBadge.style.display = 'flex';
+                    } else {
+                        cartBadge.style.display = 'none';
+                    }
+                }
+
+                const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
+                const totalPedidos = pedidos.length;
+                const pedidosBadge = document.getElementById('pedidosBadge');
+
+                if (pedidosBadge) {
+                    if (totalPedidos > 0) {
+                        pedidosBadge.innerText = totalPedidos > 99 ? '99+' : totalPedidos;
+                        pedidosBadge.style.display = 'flex';
+                    } else {
+                        pedidosBadge.style.display = 'none';
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -422,18 +489,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        function updateCartBadge() {
-            try {
-                const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
-                const totalItens = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
-                document.getElementById('cartBadge').innerText = totalItens;
-            } catch (e) {
-                console.error(e);
-            }
-        }
-
         async function renderOrders() {
-            const localOrders = JSON.parse(localStorage.getItem('bissau_orders')) || [];
+            const localOrders = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
             const emptyOrders = document.getElementById('emptyOrders');
             const ordersList = document.getElementById('ordersList');
             const btnClear = document.getElementById('btnClearHistory');
@@ -449,10 +506,8 @@
             btnClear.style.display = 'block';
             ordersList.innerHTML = '';
 
-            // 1. Extrair lista de IDs dos pedidos locais
             const orderIds = localOrders.map(o => o.orderId || o.id).filter(Boolean);
 
-            // 2. Procurar status atualizado no Firebase Firestore
             let firestoreMap = {};
             if (orderIds.length > 0) {
                 try {
@@ -467,13 +522,10 @@
                 }
             }
 
-            // 3. Renderizar pedidos combinando dados locais com dados da Nuvem
             const reversedOrders = [...localOrders].reverse();
 
             reversedOrders.forEach((order) => {
                 const displayOrderId = order.orderId || order.id || 'ORD-000000';
-                
-                // Se o pedido existir na nuvem, usa o status e os dados entregues atualizados
                 const firestoreData = firestoreMap[displayOrderId] || {};
                 const currentStatus = firestoreData.status || order.status || 'Pendente';
                 const dadosEntregues = firestoreData.dadosEntregues || order.dadosEntregues || '';
@@ -503,7 +555,6 @@
 
                 const statusClass = currentStatus.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-                // Se o pedido foi concluído, gera o bloco com as credenciais/códigos
                 let deliveryHtml = '';
                 if (currentStatus === 'Concluído' && dadosEntregues) {
                     deliveryHtml = `
@@ -552,32 +603,32 @@
         window.clearOrdersHistory = function() {
             if (confirm("Deseja realmente apagar o seu histórico local de pedidos?")) {
                 localStorage.removeItem('bissau_orders');
+                localStorage.removeItem('bissau_pedidos');
                 renderOrders();
+                atualizarContadoresNav();
             }
         };
 
         document.addEventListener('DOMContentLoaded', () => {
-            updateCartBadge();
+            atualizarContadoresNav();
             renderOrders();
         });
     </script>
-<script>
-    // Esconder a barra inferior quando o teclado abre (foco num input)
-    document.addEventListener('focusin', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-            const bottomNav = document.querySelector('.bottom-nav');
-            if (bottomNav) bottomNav.style.display = 'none';
-        }
-    });
+    <script>
+        document.addEventListener('focusin', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                const bottomNav = document.querySelector('.bottom-nav');
+                if (bottomNav) bottomNav.style.display = 'none';
+            }
+        });
 
-    // Voltar a mostrar a barra inferior quando o teclado fecha (perda de foco)
-    document.addEventListener('focusout', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-            const bottomNav = document.querySelector('.bottom-nav');
-            if (bottomNav) bottomNav.style.display = 'flex';
-        }
-    });
-</script>
+        document.addEventListener('focusout', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                const bottomNav = document.querySelector('.bottom-nav');
+                if (bottomNav) bottomNav.style.display = 'flex';
+            }
+        });
+    </script>
 
 </body>
 </html>

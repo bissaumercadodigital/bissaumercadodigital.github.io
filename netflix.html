@@ -2,7 +2,7 @@
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Netflix 4K Ultra HD - Mercado Digital Bissau</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,7 +41,6 @@
             color: var(--text-main);
             line-height: 1.5;
             padding-bottom: 100px;
-            
         }
 
         @keyframes fadeIn {
@@ -98,22 +97,22 @@
             color: #ffffff;
             font-size: 0.6rem;
             font-weight: 800;
-            width: 16px;
+            min-width: 16px;
             height: 16px;
-            border-radius: 50%;
-            display: flex;
+            padding: 0 4px;
+            border-radius: 10px;
+            display: none;
             align-items: center;
             justify-content: center;
             box-shadow: 0 0 6px var(--orange-glow);
         }
 
         .container {
-    padding: 1rem;
-    max-width: 600px;
-    margin: 0 auto;
-    animation: fadeIn 0.25s ease-out;
-}
-
+            padding: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.25s ease-out;
+        }
 
         /* Hero Product Card */
         .product-hero {
@@ -183,17 +182,17 @@
         }
 
         .form-input, .form-select, .form-textarea {
-    width: 100%;
-    padding: 11px 13px;
-    background-color: var(--bg-dark);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: #ffffff;
-    font-size: 16px; /* Alterado para 16px para evitar zoom em telemóveis */
-    font-weight: 600;
-    outline: none;
-    transition: border-color 0.2s;
-}
+            width: 100%;
+            padding: 11px 13px;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.2s;
+        }
 
         /* Package Grid Selection */
         .packages-title {
@@ -325,39 +324,67 @@
 
         /* Navigation Inferior */
         .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(18, 25, 38, 0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    display: flex;
-    justify-content: space-around;
-    padding: 0.65rem 0;
-    border-top: 1px solid var(--border);
-    z-index: 1000;
-    transform: translateZ(0);
-    will-change: transform;
-}
-
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(18, 25, 38, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.65rem 0;
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+            transform: translateZ(0);
+            will-change: transform;
+        }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             color: var(--text-muted);
             font-weight: 600;
             gap: 0.2rem;
+            flex: 1;
+            text-align: center;
         }
 
-        .nav-item.active {
+        .nav-item.active, .nav-item:hover {
             color: var(--orange);
         }
 
+        .nav-icon-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .nav-icon {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        .nav-badge-count {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: linear-gradient(135deg, var(--orange), #ff3300);
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 8px var(--orange-glow);
+            border: 1.5px solid var(--bg-card);
         }
     </style>
 </head>
@@ -371,7 +398,7 @@
         <h1 class="page-title">Netflix Premium</h1>
         <a href="carrinho.html" class="icon-cart-link">
             🛒
-            <span class="cart-badge-count" id="cartBadge">0</span>
+            <span class="cart-badge-count" id="topCartBadge">0</span>
         </a>
     </div>
 
@@ -405,7 +432,7 @@
                 <div class="pkg-info">
                     <div class="pkg-title">📺 1 Mês / 1 tela 4K Ultra HD</div>
                     <div class="pkg-sub">Conta Compartilhada sem PIN | 30 Dias</div>
-<div class="pkg-sub">Garantia de 25 Dias | ✅</div>
+                    <div class="pkg-sub">Garantia de 25 Dias | ✅</div>
                 </div>
                 <div class="pkg-price">2.000 FCFA</div>
             </div>
@@ -414,7 +441,7 @@
                 <div class="pkg-info">
                     <div class="pkg-title">📺 3 Meses / 1 tela 4K Ultra HD</div>
                     <div class="pkg-sub">Perfil Privado com PIN | 90 Dias</div>
-<div class="pkg-sub">Garantia de 90 Dias | ✅</div>
+                    <div class="pkg-sub">Garantia de 90 Dias | ✅</div>
                 </div>
                 <div class="pkg-price">7.500 FCFA</div>
             </div>
@@ -442,17 +469,34 @@
     <!-- Toast Notification -->
     <div id="toast" class="toast">Item adicionado ao carrinho!</div>
 
-    <!-- Navegação Inferior -->
+    <!-- Navegação Inferior (4 Opções) -->
     <div class="bottom-nav">
-        <a href="index.html" class="nav-item active"><span class="nav-icon">🏠</span><span>Loja</span></a>
-        <a href="pedidos.html" class="nav-item"><span class="nav-icon">📦</span><span>Pedidos</span></a>
-        <a href="carrinho.html" class="nav-item"><span class="nav-icon">🛒</span><span>Carrinho</span></a>
-        <a href="conta.html" class="nav-item"><span class="nav-icon">👤</span><span>Conta</span></a>
-        <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Preciso%20de%20ajuda." target="_blank" class="nav-item"><span class="nav-icon">💬</span><span>Ajuda</span></a>
+        <a href="index.html" class="nav-item">
+            <div class="nav-icon-wrapper"><span class="nav-icon">🏠</span></div>
+            <span>Loja</span>
+        </a>
+        <a href="pedidos.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">📦</span>
+                <span class="nav-badge-count" id="pedidosBadge">0</span>
+            </div>
+            <span>Pedidos</span>
+        </a>
+        <a href="carrinho.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">🛒</span>
+                <span class="nav-badge-count" id="cartBadge">0</span>
+            </div>
+            <span>Carrinho</span>
+        </a>
+        <a href="conta.html" class="nav-item">
+            <div class="nav-icon-wrapper"><span class="nav-icon">👤</span></div>
+            <span>Conta</span>
+        </a>
     </div>
 
     <script>
-        let selectedLabel = '1 Tela / Ecrã Ultra HD (1 Mês)';
+        let selectedLabel = '1 tela / Ecrã Ultra HD (1 Mês)';
         let selectedPrice = 2000;
 
         function selectPackage(element, label, price) {
@@ -462,11 +506,41 @@
             selectedPrice = price;
         }
 
-        function updateCartBadge() {
+        function updateNavBadges() {
             try {
+                // 1. Carrinho
                 const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
-                const totalItens = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
-                document.getElementById('cartBadge').innerText = totalItens;
+                const totalCarrinho = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
+                
+                const cartBadge = document.getElementById('cartBadge');
+                const topCartBadge = document.getElementById('topCartBadge');
+
+                if (cartBadge) {
+                    if (totalCarrinho > 0) {
+                        cartBadge.innerText = totalCarrinho > 99 ? '99+' : totalCarrinho;
+                        cartBadge.style.display = 'flex';
+                    } else {
+                        cartBadge.style.display = 'none';
+                    }
+                }
+                if (topCartBadge) {
+                    topCartBadge.innerText = totalCarrinho;
+                    topCartBadge.style.display = totalCarrinho > 0 ? 'flex' : 'none';
+                }
+
+                // 2. Pedidos
+                const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
+                const totalPedidos = pedidos.length;
+                const pedidosBadge = document.getElementById('pedidosBadge');
+
+                if (pedidosBadge) {
+                    if (totalPedidos > 0) {
+                        pedidosBadge.innerText = totalPedidos > 99 ? '99+' : totalPedidos;
+                        pedidosBadge.style.display = 'flex';
+                    } else {
+                        pedidosBadge.style.display = 'none';
+                    }
+                }
             } catch (e) {
                 console.error(e);
             }
@@ -505,7 +579,7 @@
             cart.push(newItem);
             localStorage.setItem('bissau_cart', JSON.stringify(cart));
 
-            updateCartBadge();
+            updateNavBadges();
             showToast("✅ Netflix adicionado ao carrinho!");
         }
 
@@ -533,25 +607,22 @@
             window.open(waUrl, '_blank');
         }
 
-        document.addEventListener('DOMContentLoaded', updateCartBadge);
-    </script>
-<script>
-    // Esconder a barra inferior quando o teclado abre (foco num input)
-    document.addEventListener('focusin', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-            const bottomNav = document.querySelector('.bottom-nav');
-            if (bottomNav) bottomNav.style.display = 'none';
-        }
-    });
+        document.addEventListener('DOMContentLoaded', updateNavBadges);
 
-    // Voltar a mostrar a barra inferior quando o teclado fecha (perda de foco)
-    document.addEventListener('focusout', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-            const bottomNav = document.querySelector('.bottom-nav');
-            if (bottomNav) bottomNav.style.display = 'flex';
-        }
-    });
-</script>
+        document.addEventListener('focusin', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                const bottomNav = document.querySelector('.bottom-nav');
+                if (bottomNav) bottomNav.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('focusout', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                const bottomNav = document.querySelector('.bottom-nav');
+                if (bottomNav) bottomNav.style.display = 'flex';
+            }
+        });
+    </script>
 
 </body>
 </html>
