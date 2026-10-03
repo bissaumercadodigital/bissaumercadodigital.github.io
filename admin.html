@@ -122,7 +122,7 @@
             cursor: pointer;
         }
 
-        /* Card de Registo Manual */
+        /* Card de Registo Manual & Formulários */
         .manual-add-card {
             background-color: var(--bg-card);
             border: 1px dashed var(--orange);
@@ -170,11 +170,12 @@
         .delivery-input { width: 100%; padding: 12px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: white; font-size: 14px; margin-bottom: 10px; }
         
         .btn-approve { width: 100%; background: var(--success); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; }
+        .btn-add-opt { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem; margin-bottom: 12px; }
         .btn-whatsapp-remind { background: #25d366; color: white; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 5px; }
         .btn-delete-sub { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); padding: 6px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 4px; }
         .btn-delete-sub:hover { background: var(--danger); color: white; }
 
-        /* Estilos da Tabela de Assinaturas */
+        /* Estilos da Tabela */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -225,7 +226,9 @@
         
         .actions-cell { display: flex; gap: 6px; align-items: center; }
 
-        #loadingMsg, #emptyMsg, #loadingMsgAssinaturas { text-align: center; color: var(--text-muted); padding: 30px; font-weight: 600; }
+        .opcao-row { display: flex; gap: 10px; margin-bottom: 8px; }
+
+        #loadingMsg, #emptyMsg, #loadingMsgAssinaturas, #loadingMsgProdutos { text-align: center; color: var(--text-muted); padding: 30px; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -241,7 +244,7 @@
     <div class="admin-container" id="dashboardArea">
         <div class="header">
             <h1>⚙️ Bissau Mercado Digital - ADMIN</h1>
-            <p>Gestão de Pedidos e Assinaturas</p>
+            <p>Gestão de Pedidos, Assinaturas e Produtos</p>
         </div>
 
         <div class="top-admin-bar">
@@ -249,20 +252,23 @@
             <button onclick="fazerLogout()" class="btn-logout">Sair / Logout</button>
         </div>
 
+        <!-- Abas de Navegação -->
         <div class="admin-tabs">
             <button class="tab-btn active" id="tabPedidosBtn" onclick="trocarAba('pedidos')">📦 Pedidos Pendentes</button>
             <button class="tab-btn" id="tabAssinaturasBtn" onclick="trocarAba('assinaturas')">📺 Assinaturas Ativas</button>
+            <button class="tab-btn" id="tabProdutosBtn" onclick="trocarAba('produtos')">🛍️ Cadastrar Produtos</button>
         </div>
 
+        <!-- Conteúdo dos Pedidos -->
         <div id="secPedidos">
             <div id="pedidosContainer">
                 <div id="loadingMsg">A carregar pedidos...</div>
             </div>
         </div>
 
+        <!-- Conteúdo das Assinaturas -->
         <div id="secAssinaturas" style="display: none;">
             
-            <!-- Formulário de Registo Manual -->
             <div class="manual-add-card">
                 <h3>➕ Registo Manual de Assinatura (Cliente WhatsApp)</h3>
                 
@@ -294,7 +300,6 @@
                 <button class="btn-approve" onclick="registarAssinaturaManual()">⚡ Ativar Assinatura Manual e Adicionar à Tabela</button>
             </div>
 
-            <!-- Tabela de Assinaturas Ativas -->
             <div class="table-responsive">
                 <table class="custom-table">
                     <thead>
@@ -316,12 +321,74 @@
             </div>
 
         </div>
+
+        <!-- Conteúdo de Gestão de Produtos (CMS) -->
+        <div id="secProdutos" style="display: none;">
+            
+            <div class="manual-add-card">
+                <h3>➕ Criar Novo Produto / Jogo para o Site</h3>
+                
+                <div class="grid-2">
+                    <input type="text" id="prodNome" class="form-input" placeholder="Nome do Produto/Jogo (Ex: UniTV, Battlefield)">
+                    <select id="prodTipo" class="form-select">
+                        <option value="assinatura">📺 Assinatura Recorrente (Streaming/Serviço)</option>
+                        <option value="jogo">🎮 Jogo / Recarga de Moedas Digitais</option>
+                    </select>
+                </div>
+
+                <div class="grid-2">
+                    <input type="text" id="prodCategoria" class="form-input" placeholder="Categoria (Ex: IPTV, Streaming, Jogos)">
+                    <input type="text" id="prodBadge" class="form-input" placeholder="Badge/Etiqueta (Ex: HOT, 4K ULTRA, POPULAR)">
+                </div>
+
+                <input type="url" id="prodImagem" class="form-input" placeholder="URL da Imagem/Banner (Link da Imagem na Web)">
+                <textarea id="prodDescricao" class="delivery-input" rows="2" placeholder="Descrição curta do produto/jogo..."></textarea>
+
+                <label style="font-size: 0.85rem; font-weight: 700; color: var(--orange); display: block; margin-bottom: 8px;">
+                    💰 Opções de Pacotes e Preços (FCFA):
+                </label>
+                
+                <div id="opcoesContainer">
+                    <div class="opcao-row">
+                        <input type="text" class="form-input opt-nome" placeholder="Pacote/Duração (Ex: 1 Mês ou 100 Moedas)">
+                        <input type="number" class="form-input opt-preco" placeholder="Preço (FCFA)">
+                    </div>
+                </div>
+
+                <button type="button" class="btn-add-opt" onclick="adicionarLinhaOpcao()">➕ Adicionar Mais Uma Opção/Preço</button>
+
+                <button class="btn-approve" onclick="salvarProduto()">🚀 Publicar Produto no Site</button>
+            </div>
+
+            <!-- Lista de Produtos Cadastrados -->
+            <h3 style="margin-bottom: 15px; color: var(--orange);">📋 Produtos Publicados no Site</h3>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Imagem</th>
+                            <th>Nome do Produto</th>
+                            <th>Tipo</th>
+                            <th>Categoria</th>
+                            <th>Pacotes / Preços</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="produtosTableBody">
+                        <tr>
+                            <td colspan="6" id="loadingMsgProdutos">A carregar produtos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, setDoc, deleteDoc, getDoc, increment, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, setDoc, deleteDoc, getDoc, increment, query, where, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
@@ -342,6 +409,7 @@
         const dashboardArea = document.getElementById('dashboardArea');
         const containerPedidos = document.getElementById('pedidosContainer');
         const assinaturasTableBody = document.getElementById('assinaturasTableBody');
+        const produtosTableBody = document.getElementById('produtosTableBody');
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -351,6 +419,7 @@
                     document.getElementById('userLoggedEmail').innerText = 'Logado como: ' + user.email;
                     carregarPedidosPendentes();
                     carregarAssinaturas();
+                    carregarProdutos();
                 } else {
                     alert("Acesso Negado! O e-mail " + user.email + " não tem permissões de administrador.");
                     signOut(auth);
@@ -390,21 +459,31 @@
         window.trocarAba = function(aba) {
             const secPedidos = document.getElementById('secPedidos');
             const secAssinaturas = document.getElementById('secAssinaturas');
+            const secProdutos = document.getElementById('secProdutos');
             const tabPedidosBtn = document.getElementById('tabPedidosBtn');
             const tabAssinaturasBtn = document.getElementById('tabAssinaturasBtn');
+            const tabProdutosBtn = document.getElementById('tabProdutosBtn');
+
+            secPedidos.style.display = 'none';
+            secAssinaturas.style.display = 'none';
+            secProdutos.style.display = 'none';
+
+            tabPedidosBtn.classList.remove('active');
+            tabAssinaturasBtn.classList.remove('active');
+            tabProdutosBtn.classList.remove('active');
 
             if (aba === 'pedidos') {
                 secPedidos.style.display = 'block';
-                secAssinaturas.style.display = 'none';
                 tabPedidosBtn.classList.add('active');
-                tabAssinaturasBtn.classList.remove('active');
                 carregarPedidosPendentes();
-            } else {
-                secPedidos.style.display = 'none';
+            } else if (aba === 'assinaturas') {
                 secAssinaturas.style.display = 'block';
-                tabPedidosBtn.remove('active');
                 tabAssinaturasBtn.classList.add('active');
                 carregarAssinaturas();
+            } else if (aba === 'produtos') {
+                secProdutos.style.display = 'block';
+                tabProdutosBtn.classList.add('active');
+                carregarProdutos();
             }
         };
 
@@ -415,6 +494,131 @@
                 inputCustom.style.display = 'block';
             } else {
                 inputCustom.style.display = 'none';
+            }
+        };
+
+        window.adicionarLinhaOpcao = function() {
+            const container = document.getElementById('opcoesContainer');
+            const row = document.createElement('div');
+            row.className = 'opcao-row';
+            row.innerHTML = `
+                <input type="text" class="form-input opt-nome" placeholder="Pacote/Duração (Ex: 3 Meses ou 500 Moedas)">
+                <input type="number" class="form-input opt-preco" placeholder="Preço (FCFA)">
+            `;
+            container.appendChild(row);
+        };
+
+        window.salvarProduto = async function() {
+            const nome = document.getElementById('prodNome').value.trim();
+            const tipo = document.getElementById('prodTipo').value;
+            const categoria = document.getElementById('prodCategoria').value.trim();
+            const badge = document.getElementById('prodBadge').value.trim();
+            const imagem = document.getElementById('prodImagem').value.trim();
+            const descricao = document.getElementById('prodDescricao').value.trim();
+
+            const nomesOpcoes = document.querySelectorAll('.opt-nome');
+            const precosOpcoes = document.querySelectorAll('.opt-preco');
+            
+            let opcoes = [];
+            for (let i = 0; i < nomesOpcoes.length; i++) {
+                const optNome = nomesOpcoes[i].value.trim();
+                const optPreco = parseFloat(precosOpcoes[i].value) || 0;
+                if (optNome && optPreco > 0) {
+                    opcoes.push({ rotulo: optNome, preco: optPreco });
+                }
+            }
+
+            if (!nome || !imagem || opcoes.length === 0) {
+                alert("Preencha o Nome do Produto, a URL da Imagem e pelo menos 1 Opção de Preço!");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "produtos"), {
+                    nome: nome,
+                    tipo: tipo,
+                    categoria: categoria || (tipo === 'assinatura' ? 'Streaming' : 'Jogos'),
+                    badge: badge || 'NOVO',
+                    imagem: imagem,
+                    descricao: descricao,
+                    opcoes: opcoes,
+                    createdAt: new Date().toISOString()
+                });
+
+                alert("Produto publicado com sucesso!");
+
+                document.getElementById('prodNome').value = '';
+                document.getElementById('prodCategoria').value = '';
+                document.getElementById('prodBadge').value = '';
+                document.getElementById('prodImagem').value = '';
+                document.getElementById('prodDescricao').value = '';
+                document.getElementById('opcoesContainer').innerHTML = `
+                    <div class="opcao-row">
+                        <input type="text" class="form-input opt-nome" placeholder="Pacote/Duração (Ex: 1 Mês ou 100 Moedas)">
+                        <input type="number" class="form-input opt-preco" placeholder="Preço (FCFA)">
+                    </div>
+                `;
+
+                carregarProdutos();
+
+            } catch (error) {
+                console.error("Erro ao publicar produto: ", error);
+                alert("Erro ao publicar produto. Verifique a conexão.");
+            }
+        };
+
+        async function carregarProdutos() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "produtos"));
+                produtosTableBody.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    produtosTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">🛍️ Nenhum produto publicado ainda.</td></tr>';
+                    return;
+                }
+
+                querySnapshot.forEach((documento) => {
+                    const prod = documento.data();
+                    const prodId = documento.id;
+
+                    let listaOpcoesText = '';
+                    if (prod.opcoes && Array.isArray(prod.opcoes)) {
+                        prod.opcoes.forEach(o => {
+                            listaOpcoesText += `<div>• ${o.rotulo}: <strong>${o.preco.toLocaleString()} FCFA</strong></div>`;
+                        });
+                    }
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><img src="${prod.imagem}" alt="${prod.nome}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 8px;"></td>
+                        <td><strong>${prod.nome}</strong></td>
+                        <td><span class="days-badge">${prod.tipo === 'assinatura' ? '📺 Assinatura' : '🎮 Jogo'}</span></td>
+                        <td>${prod.categoria || '-'}</td>
+                        <td style="font-size: 0.8rem;">${listaOpcoesText}</td>
+                        <td>
+                            <button class="btn-delete-sub" onclick="deletarProduto('${prodId}', '${prod.nome}')">🗑️ Eliminar</button>
+                        </td>
+                    `;
+                    produtosTableBody.appendChild(tr);
+                });
+
+            } catch (error) {
+                console.error("Erro ao carregar produtos: ", error);
+                produtosTableBody.innerHTML = '<tr><td colspan="6" style="color: var(--danger); text-align:center;">Erro ao carregar lista de produtos.</td></tr>';
+            }
+        }
+
+        window.deletarProduto = async function(prodId, prodNome) {
+            const confirmacao = confirm(`Tem certeza que deseja apagar o produto "${prodNome}" do site?`);
+            if (!confirmacao) return;
+
+            try {
+                await deleteDoc(doc(db, "produtos", prodId));
+                alert("Produto eliminado!");
+                carregarProdutos();
+            } catch (error) {
+                console.error("Erro ao apagar produto: ", error);
+                alert("Erro ao eliminar o produto.");
             }
         };
 
