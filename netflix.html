@@ -22,11 +22,13 @@
             --primary-glow: rgba(124, 58, 237, 0.4);
             --orange: #ff6600;
             --orange-glow: rgba(255, 102, 0, 0.4);
+            --netflix-red: #e50914;
+            --netflix-glow: rgba(229, 9, 20, 0.4);
             --text-main: #ffffff;
             --text-muted: #94a3b8;
             --success: #10b981;
             --border: #1e293b;
-            --border-highlight: rgba(124, 58, 237, 0.35);
+            --border-highlight: rgba(229, 9, 20, 0.35);
         }
 
         * {
@@ -194,6 +196,10 @@
             transition: border-color 0.2s;
         }
 
+        .form-input:focus {
+            border-color: var(--netflix-red);
+        }
+
         /* Package Grid Selection */
         .packages-title {
             font-size: 0.95rem;
@@ -224,9 +230,9 @@
         }
 
         .pkg-card.selected {
-            border-color: var(--orange);
-            background-color: rgba(255, 102, 0, 0.08);
-            box-shadow: 0 0 15px var(--orange-glow);
+            border-color: var(--netflix-red);
+            background-color: rgba(229, 9, 20, 0.08);
+            box-shadow: 0 0 15px var(--netflix-glow);
         }
 
         .pkg-info {
@@ -248,7 +254,7 @@
         .pkg-price {
             font-size: 1rem;
             font-weight: 800;
-            color: var(--orange);
+            color: var(--netflix-red);
             white-space: nowrap;
         }
 
@@ -262,7 +268,7 @@
 
         .btn-add-cart {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary), #5b21b6);
+            background: linear-gradient(135deg, var(--netflix-red), #b20710);
             color: #ffffff;
             border: none;
             padding: 13px;
@@ -270,7 +276,7 @@
             font-weight: 800;
             font-size: 0.88rem;
             cursor: pointer;
-            box-shadow: 0 4px 15px var(--primary-glow);
+            box-shadow: 0 4px 15px var(--netflix-glow);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -392,9 +398,7 @@
 
     <!-- Top Bar -->
     <div class="top-bar">
-        <a href="index.html" class="back-btn">
-            ‹ Voltar
-        </a>
+        <a href="index.html" class="back-btn">‹ Voltar</a>
         <h1 class="page-title">Netflix Premium</h1>
         <a href="carrinho.html" class="icon-cart-link">
             🛒
@@ -495,20 +499,36 @@
         </a>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
         let selectedLabel = '1 tela / Ecrã Ultra HD (1 Mês)';
         let selectedPrice = 2000;
 
-        function selectPackage(element, label, price) {
+        window.selectPackage = function(element, label, price) {
             document.querySelectorAll('.pkg-card').forEach(card => card.classList.remove('selected'));
             element.classList.add('selected');
             selectedLabel = label;
             selectedPrice = price;
-        }
+        };
 
         function updateNavBadges() {
             try {
-                // 1. Carrinho
                 const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
                 const totalCarrinho = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
                 
@@ -528,7 +548,6 @@
                     topCartBadge.style.display = totalCarrinho > 0 ? 'flex' : 'none';
                 }
 
-                // 2. Pedidos
                 const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
                 const totalPedidos = pedidos.length;
                 const pedidosBadge = document.getElementById('pedidosBadge');
@@ -555,7 +574,7 @@
             }, 2500);
         }
 
-        function addToCart() {
+        window.addToCart = function() {
             const name = document.getElementById('clientName').value.trim();
             const wa = document.getElementById('clientWhatsApp').value.trim();
 
@@ -573,17 +592,17 @@
                 opcao: 'Cliente: ' + name + ' | WA: ' + wa,
                 price: selectedPrice,
                 quantidade: 1,
-                img: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=200'
+                img: 'https://assets.nflxext.com/ffe/siteui/vlv3/9d3533b2-0e2b-40b2-95e0-ecd7979cc8bc/207e3a0a-49dc-48df-845f-4a50e932ef25/GW-pt-20240311-popsignuptwoweeks-perspective_alpha_website_small.jpg'
             };
 
             cart.push(newItem);
             localStorage.setItem('bissau_cart', JSON.stringify(cart));
 
             updateNavBadges();
-            showToast("✅ Netflix adicionado ao carrinho!");
-        }
+            showToast("✅ Netflix adicionada ao carrinho!");
+        };
 
-        function buyDirectWhatsApp() {
+        window.buyDirectWhatsApp = async function() {
             const name = document.getElementById('clientName').value.trim();
             const wa = document.getElementById('clientWhatsApp').value.trim();
 
@@ -591,6 +610,46 @@
                 alert("Por favor, preencha o seu Nome e Número de WhatsApp!");
                 document.getElementById('clientName').focus();
                 return;
+            }
+
+            const orderIdCode = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+            const currentUser = auth.currentUser;
+
+            try {
+                await addDoc(collection(db, "pedidos"), {
+                    orderId: orderIdCode,
+                    userId: currentUser ? currentUser.uid : null,
+                    clienteNome: name,
+                    clienteTelefone: wa,
+                    comprovativoFornecido: "WhatsApp Direto",
+                    tipoComprovativo: "WhatsApp",
+                    itens: [{
+                        nome: 'Netflix 4K - ' + selectedLabel,
+                        opcao: 'Cliente: ' + name,
+                        price: selectedPrice,
+                        quantidade: 1
+                    }],
+                    subtotal: selectedPrice,
+                    desconto: 0,
+                    total: selectedPrice,
+                    status: 'Pendente',
+                    dadosEntregues: '',
+                    criadoEm: serverTimestamp()
+                });
+
+                const pedidosLocais = JSON.parse(localStorage.getItem('bissau_orders')) || [];
+                pedidosLocais.push({
+                    orderId: orderIdCode,
+                    id: orderIdCode,
+                    data: new Date().toLocaleDateString('pt-PT'),
+                    itens: [{ nome: 'Netflix 4K - ' + selectedLabel, opcao: 'Cliente: ' + name, price: selectedPrice, quantidade: 1 }],
+                    total: selectedPrice,
+                    status: 'Pendente'
+                });
+                localStorage.setItem('bissau_orders', JSON.stringify(pedidosLocais));
+
+            } catch (err) {
+                console.error("Erro ao salvar no Firestore:", err);
             }
 
             let text = `🎬 *PEDIDO DIRETO - NETFLIX 4K ULTRA HD*\n`;
@@ -605,7 +664,7 @@
 
             const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
             window.open(waUrl, '_blank');
-        }
+        };
 
         document.addEventListener('DOMContentLoaded', updateNavBadges);
 

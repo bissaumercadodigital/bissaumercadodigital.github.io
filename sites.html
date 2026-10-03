@@ -419,7 +419,7 @@
             <h3 class="input-card-title">1. Informações do Seu Negócio</h3>
             <div class="form-group">
                 <label for="clientName">Seu Nome / Nome da Empresa *</label>
-                <input type="text" id="clientName" class="form-input" placeholder="Ex: Mercado Digital Bissau" required>
+                <input type="text" id="clientName" class="form-input" placeholder="Ex: Du Black" required>
             </div>
             <div class="form-group">
                 <label for="clientWhatsApp">Nº de WhatsApp para Contacto *</label>
@@ -507,16 +507,33 @@
         </a>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
         let selectedLabel = 'Landing Page de Vendas';
         let selectedPrice = 35000;
 
-        function selectPackage(element, label, price) {
+        window.selectPackage = function(element, label, price) {
             document.querySelectorAll('.pkg-card').forEach(card => card.classList.remove('selected'));
             element.classList.add('selected');
             selectedLabel = label;
             selectedPrice = price;
-        }
+        };
 
         function updateNavBadges() {
             try {
@@ -567,7 +584,7 @@
             }, 2500);
         }
 
-        function addToCart() {
+        window.addToCart = function() {
             const name = document.getElementById('clientName').value.trim();
             const wa = document.getElementById('clientWhatsApp').value.trim();
             const desc = document.getElementById('projectDesc').value.trim();
@@ -594,9 +611,9 @@
 
             updateNavBadges();
             showToast("✅ Serviço adicionado ao carrinho!");
-        }
+        };
 
-        function buyDirectWhatsApp() {
+        window.buyDirectWhatsApp = async function() {
             const name = document.getElementById('clientName').value.trim();
             const wa = document.getElementById('clientWhatsApp').value.trim();
             const desc = document.getElementById('projectDesc').value.trim();
@@ -605,6 +622,46 @@
                 alert("Por favor, preencha o seu Nome/Empresa e Número de WhatsApp!");
                 document.getElementById('clientName').focus();
                 return;
+            }
+
+            const orderIdCode = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+            const currentUser = auth.currentUser;
+
+            try {
+                await addDoc(collection(db, "pedidos"), {
+                    orderId: orderIdCode,
+                    userId: currentUser ? currentUser.uid : null,
+                    clienteNome: name,
+                    clienteTelefone: wa,
+                    comprovativoFornecido: "WhatsApp Direto",
+                    tipoComprovativo: "WhatsApp",
+                    itens: [{
+                        nome: 'Desenvolvimento Web - ' + selectedLabel,
+                        opcao: 'Cliente: ' + name + (desc ? ' | Desc: ' + desc : ''),
+                        price: selectedPrice,
+                        quantidade: 1
+                    }],
+                    subtotal: selectedPrice,
+                    desconto: 0,
+                    total: selectedPrice,
+                    status: 'Pendente',
+                    dadosEntregues: '',
+                    criadoEm: serverTimestamp()
+                });
+
+                const pedidosLocais = JSON.parse(localStorage.getItem('bissau_orders')) || [];
+                pedidosLocais.push({
+                    orderId: orderIdCode,
+                    id: orderIdCode,
+                    data: new Date().toLocaleDateString('pt-PT'),
+                    itens: [{ nome: 'Desenvolvimento Web - ' + selectedLabel, opcao: 'Cliente: ' + name, price: selectedPrice, quantidade: 1 }],
+                    total: selectedPrice,
+                    status: 'Pendente'
+                });
+                localStorage.setItem('bissau_orders', JSON.stringify(pedidosLocais));
+
+            } catch (err) {
+                console.error("Erro ao salvar no Firestore:", err);
             }
 
             let text = `💻 *SOLICITAÇÃO DE WEBSITE - MERCADO DIGITAL*\n`;
@@ -619,7 +676,7 @@
 
             const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
             window.open(waUrl, '_blank');
-        }
+        };
 
         document.addEventListener('DOMContentLoaded', updateNavBadges);
 
