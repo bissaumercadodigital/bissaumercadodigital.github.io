@@ -1143,7 +1143,7 @@
         });
     </script>
 
-    <!-- Script de Autenticação Firebase & Leitura do Firestore -->
+    <!-- Script de Autenticação Firebase & Leitura em Tempo Real do Firestore -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -1162,8 +1162,7 @@
             doc, 
             setDoc,
             onSnapshot,
-            collection,
-            getDocs
+            collection
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -1182,18 +1181,18 @@
 
         let unsubscribePoints = null;
 
-        // Leitura Dinâmica de Produtos no Firestore
-        async function carregarProdutosDoFirestore() {
-            try {
-                const querySnapshot = await getDocs(collection(db, "produtos"));
-                if (querySnapshot.empty) return;
+        // Leitura Dinâmica e em Tempo Real de Produtos no Firestore
+        function escutarProdutosFirestore() {
+            const gridJogos = document.getElementById('gridJogos');
+            const gridStreaming = document.getElementById('gridStreaming');
+            const gridEdicao = document.getElementById('gridEdicao');
+            const gridWebsites = document.getElementById('gridWebsites');
+            const gridOutros = document.getElementById('gridOutros');
+            const outrosSection = document.getElementById('outros-section');
 
-                const gridJogos = document.getElementById('gridJogos');
-                const gridStreaming = document.getElementById('gridStreaming');
-                const gridEdicao = document.getElementById('gridEdicao');
-                const gridWebsites = document.getElementById('gridWebsites');
-                const gridOutros = document.getElementById('gridOutros');
-                const outrosSection = document.getElementById('outros-section');
+            onSnapshot(collection(db, "produtos"), (querySnapshot) => {
+                // Se houver produtos criados via admin, limpa o container de outros produtos dinâmicos
+                if (gridOutros) gridOutros.innerHTML = '';
 
                 querySnapshot.forEach((docSnap) => {
                     const prod = docSnap.data();
@@ -1217,13 +1216,14 @@
                         else linkDestino = `produto.html?id=${prodId}`;
                     }
 
-                    // Se o produto estiver no Firestore, atualiza estado de Esgotado nos cards existentes ou cria novos
+                    // Se o produto estático existir no HTML, atualiza o seu estado (Ex: Esgotado) em tempo real
                     const existingCard = document.querySelector(`.product-card[href="${linkDestino}"]`);
                     if (existingCard) {
                         const badge = existingCard.querySelector('.card-badge');
                         const btnAction = existingCard.querySelector('.card-action-btn');
                         
                         if (isEsgotado) {
+                            existingCard.setAttribute('data-url', linkDestino);
                             existingCard.setAttribute('href', 'javascript:void(0)');
                             if (badge) {
                                 badge.innerText = '🔴 ESGOTADO';
@@ -1233,9 +1233,20 @@
                                 btnAction.innerText = 'Esgotado';
                                 btnAction.className = 'card-action-btn btn-disabled';
                             }
+                        } else {
+                            const originalUrl = existingCard.getAttribute('data-url') || linkDestino;
+                            existingCard.setAttribute('href', originalUrl);
+                            if (badge) {
+                                badge.innerText = prod.badge || 'DISPONÍVEL';
+                                badge.className = 'card-badge';
+                            }
+                            if (btnAction) {
+                                btnAction.innerText = 'Ver Opções';
+                                btnAction.className = 'card-action-btn btn-dev';
+                            }
                         }
                     } else {
-                        // Se for um novo produto cadastrado pelo painel Admin
+                        // Se for um novo produto criado manualmente no Admin
                         const cardHtml = document.createElement('a');
                         cardHtml.href = isEsgotado ? 'javascript:void(0)' : linkDestino;
                         cardHtml.className = 'card product-card';
@@ -1252,10 +1263,10 @@
                             </div>
                         `;
 
-                        if (categoria.includes('jogo')) gridJogos.appendChild(cardHtml);
-                        else if (categoria.includes('stream') || categoria.includes('iptv')) gridStreaming.appendChild(cardHtml);
-                        else if (categoria.includes('edicao') || categoria.includes('design')) gridEdicao.appendChild(cardHtml);
-                        else if (categoria.includes('site') || categoria.includes('web')) gridWebsites.appendChild(cardHtml);
+                        if (categoria.includes('jogo') && gridJogos) gridJogos.appendChild(cardHtml);
+                        else if ((categoria.includes('stream') || categoria.includes('iptv')) && gridStreaming) gridStreaming.appendChild(cardHtml);
+                        else if ((categoria.includes('edicao') || categoria.includes('design')) && gridEdicao) gridEdicao.appendChild(cardHtml);
+                        else if ((categoria.includes('site') || categoria.includes('web')) && gridWebsites) gridWebsites.appendChild(cardHtml);
                         else {
                             if (outrosSection) outrosSection.style.display = 'flex';
                             if (gridOutros) {
@@ -1265,10 +1276,9 @@
                         }
                     }
                 });
-
-            } catch (err) {
-                console.error("Erro ao carregar produtos do Firestore:", err);
-            }
+            }, (err) => {
+                console.error("Erro ao escutar produtos no Firestore:", err);
+            });
         }
 
         onAuthStateChanged(auth, (user) => {
@@ -1307,8 +1317,8 @@
             }
         });
 
-        // Inicializar a leitura dos produtos do Firestore ao carregar a página
-        carregarProdutosDoFirestore();
+        // Iniciar escuta dos produtos em tempo real ao carregar o site
+        escutarProdutosFirestore();
 
         window.handleGoogleLogin = async function() {
             try {
