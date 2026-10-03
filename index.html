@@ -174,6 +174,91 @@
     </div>
 
     <script>
+    <!-- Script de Autenticação Firebase & Atualização da Top-Bar -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getAuth, 
+            signOut, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            onSnapshot 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let unsubscribePoints = null;
+
+        // Monitora o estado da conta (Logado vs Convidado)
+        onAuthStateChanged(auth, (user) => {
+            const guestTopBar = document.getElementById('guestTopBar');
+            const userTopBar = document.getElementById('userTopBar');
+            const topPointsContainer = document.getElementById('topPointsContainer');
+
+            if (user) {
+                // Usuário LOGADO: esconde o botão "ENTRAR" e mostra foto, botão Sair e Pontos
+                if (guestTopBar) guestTopBar.style.display = 'none';
+                if (userTopBar) userTopBar.style.display = 'flex';
+                if (topPointsContainer) topPointsContainer.style.display = 'inline-flex';
+
+                // Define foto de perfil
+                const avatarImg = document.getElementById('topAvatarImg');
+                if (avatarImg) {
+                    if (user.photoURL) {
+                        avatarImg.src = user.photoURL;
+                    } else {
+                        avatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=ff6600&color=fff`;
+                    }
+                }
+
+                // Escuta os pontos no Firestore em tempo real
+                const userRef = doc(db, "usuarios", user.uid);
+                unsubscribePoints = onSnapshot(userRef, (docSnap) => {
+                    const topUserPoints = document.getElementById('topUserPoints');
+                    if (topUserPoints) {
+                        if (docSnap.exists()) {
+                            const pontos = docSnap.data().pontos || 0;
+                            topUserPoints.innerText = pontos.toLocaleString() + ' Pts';
+                        } else {
+                            topUserPoints.innerText = '0 Pts';
+                        }
+                    }
+                });
+
+            } else {
+                // Usuário NÃO LOGADO (Convidado): mostra apenas o botão "ENTRAR"
+                if (guestTopBar) guestTopBar.style.display = 'block';
+                if (userTopBar) userTopBar.style.display = 'none';
+                if (topPointsContainer) topPointsContainer.style.display = 'none';
+                if (unsubscribePoints) unsubscribePoints();
+            }
+        });
+
+        // Função para Sair da Conta
+        window.handleLogout = async function() {
+            try {
+                await signOut(auth);
+                alert("Sessão terminada com sucesso!");
+            } catch (error) {
+                alert("Erro ao sair: " + error.message);
+            }
+        };
+    </script>
+
         function atualizarContadoresNav() {
             try {
                 const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
