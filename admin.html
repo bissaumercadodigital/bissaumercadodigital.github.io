@@ -377,8 +377,14 @@
                     const docId = documento.id;
                     
                     let itensHtml = '';
+                    let isJogo = false;
+
                     if (pedido.itens && Array.isArray(pedido.itens)) {
                         pedido.itens.forEach(item => {
+                            const nomeLower = (item.nome || '').toLowerCase();
+                            if (nomeLower.includes('diamantes') || nomeLower.includes('free fire') || nomeLower.includes('pubg') || nomeLower.includes('uc') || nomeLower.includes('efootball') || nomeLower.includes('moedas')) {
+                                isJogo = true;
+                            }
                             itensHtml += `<div>- ${item.nome} (${item.opcao || ''}) | Qtd: ${item.quantidade || 1}</div>`;
                         });
                     }
@@ -408,17 +414,18 @@
                         </div>
 
                         <div class="delivery-section">
-                            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Duração / Validade do Serviço:</label>
+                            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Tipo de Produto / Validade:</label>
                             <select id="validade-${docId}" class="form-select">
+                                ${isJogo ? `<option value="-1" selected>🎮 Compra Única / Moedas de Jogo (Sem Expiração)</option>` : ''}
                                 <option value="30">30 Dias (1 Mês)</option>
                                 <option value="90">90 Dias (3 Meses)</option>
                                 <option value="365">365 Dias (1 Ano)</option>
                                 <option value="0">Vitalício / Sem Expiração</option>
                             </select>
 
-                            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Dados de Entrega (Conta, Senha, PIN, etc.):</label>
-                            <textarea id="dados-${docId}" class="delivery-input" rows="3" placeholder="Ex: Email: x@x.com, Senha: 123"></textarea>
-                            <button class="btn-approve" onclick="aprovarPedido('${docId}', '${telefoneCliente}', '${pedido.orderId}', '${pedido.clienteNome}')">✅ Confirmar Pagamento e Ativar Serviço</button>
+                            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Dados de Entrega (ID do Jogo, Comprovativo ou Acesso):</label>
+                            <textarea id="dados-${docId}" class="delivery-input" rows="3" placeholder="Ex: ID Creditado com sucesso! ou Email: x@x.com, Senha: 123"></textarea>
+                            <button class="btn-approve" onclick="aprovarPedido('${docId}', '${telefoneCliente}', '${pedido.orderId}', '${pedido.clienteNome}')">✅ Confirmar Pagamento e Entregar</button>
                         </div>
                     `;
                     containerPedidos.appendChild(card);
@@ -434,11 +441,11 @@
             const diasValidade = parseInt(document.getElementById(`validade-${docId}`).value);
             
             if(dadosEntrega === '') {
-                alert("Por favor, preencha os dados do produto/conta antes de aprovar.");
+                alert("Por favor, preencha os dados do produto/mensagem de entrega antes de aprovar.");
                 return;
             }
 
-            const confirmacao = confirm(`Tem certeza que verificou o depósito e deseja ativar este serviço por ${diasValidade === 0 ? 'tempo Vitalício' : diasValidade + ' dias'}?`);
+            const confirmacao = confirm(`Tem certeza que deseja confirmar a entrega deste pedido?`);
             if(!confirmacao) return;
 
             try {
@@ -446,36 +453,40 @@
                 const pedidoSnap = await getDoc(pedidoRef);
                 const pedidoData = pedidoSnap.data();
 
-                const dataInicio = new Date();
-                let dataFim = null;
-
-                if (diasValidade > 0) {
-                    dataFim = new Date();
-                    dataFim.setDate(dataFim.getDate() + diasValidade);
-                }
-
                 await updateDoc(pedidoRef, {
                     status: "Concluído",
                     dadosEntregues: dadosEntrega
                 });
 
-                const servicoNome = (pedidoData.itens && pedidoData.itens[0]) ? pedidoData.itens[0].nome : 'Assinatura Digital';
-                const assinaturaRef = doc(collection(db, "assinaturas"));
+                const servicoNome = (pedidoData.itens && pedidoData.itens[0]) ? pedidoData.itens[0].nome : 'Produto Digital';
 
-                await setDoc(assinaturaRef, {
-                    pedidoId: orderId,
-                    userId: pedidoData.userId || null,
-                    clienteNome: clienteNome,
-                    clienteTelefone: telefone,
-                    servicoNome: servicoNome,
-                    dadosEntrega: dadosEntrega,
-                    dataInicio: dataInicio.toISOString(),
-                    dataFim: dataFim ? dataFim.toISOString() : null,
-                    diasContratados: diasValidade,
-                    status: "Ativa",
-                    itemDetalhe: pedidoData.itens || []
-                });
+                // Apenas grava na coleção de assinaturas se NÃO for Compra Única (-1)
+                if (diasValidade !== -1) {
+                    const dataInicio = new Date();
+                    let dataFim = null;
 
+                    if (diasValidade > 0) {
+                        dataFim = new Date();
+                        dataFim.setDate(dataFim.getDate() + diasValidade);
+                    }
+
+                    const assinaturaRef = doc(collection(db, "assinaturas"));
+                    await setDoc(assinaturaRef, {
+                        pedidoId: orderId,
+                        userId: pedidoData.userId || null,
+                        clienteNome: clienteNome,
+                        clienteTelefone: telefone,
+                        servicoNome: servicoNome,
+                        dadosEntrega: dadosEntrega,
+                        dataInicio: dataInicio.toISOString(),
+                        dataFim: dataFim ? dataFim.toISOString() : null,
+                        diasContratados: diasValidade,
+                        status: "Ativa",
+                        itemDetalhe: pedidoData.itens || []
+                    });
+                }
+
+                // Creditar 1% dos pontos ao sistema de afiliados caso exista
                 if (pedidoData && pedidoData.userId) {
                     const compradorRef = doc(db, "usuarios", pedidoData.userId);
                     const compradorSnap = await getDoc(compradorRef);
@@ -498,7 +509,7 @@
                     }
                 }
 
-                const msg = `Olá *${clienteNome}*! A sua assinatura foi ativada com sucesso! 🎉\n\n*Serviço:* ${servicoNome}\n*Duração:* ${diasValidade === 0 ? 'Vitalício' : diasValidade + ' Dias'}\n*Seu Acesso:* \n${dadosEntrega}\n\nObrigado por comprar na Bissau Mercado Digital!`;
+                const msg = `Olá *${clienteNome}*! O seu pedido foi entregue com sucesso! 🎉\n\n*Serviço:* ${servicoNome}\n*Detalhes/Acesso:* \n${dadosEntrega}\n\nObrigado por comprar na Bissau Mercado Digital!`;
                 const whatsappUrl = `https://wa.me/${telefone}?text=${encodeURIComponent(msg)}`;
 
                 window.open(whatsappUrl, '_blank');
