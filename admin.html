@@ -175,6 +175,30 @@
         .btn-delete-sub { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); padding: 6px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 4px; }
         .btn-delete-sub:hover { background: var(--danger); color: white; }
 
+        .btn-status-toggle {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.78rem;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-status-toggle.available {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        .btn-status-toggle.out-of-stock {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
         /* Estilos da Tabela */
         .table-responsive {
             width: 100%;
@@ -371,12 +395,13 @@
                             <th>Tipo</th>
                             <th>Categoria</th>
                             <th>Pacotes / Preços</th>
+                            <th>Stock / Estado</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody id="produtosTableBody">
                         <tr>
-                            <td colspan="6" id="loadingMsgProdutos">A carregar produtos...</td>
+                            <td colspan="7" id="loadingMsgProdutos">A carregar produtos...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -542,6 +567,7 @@
                     imagem: imagem,
                     descricao: descricao,
                     opcoes: opcoes,
+                    esgotado: false,
                     createdAt: new Date().toISOString()
                 });
 
@@ -567,19 +593,33 @@
             }
         };
 
+        window.toggleEsgotado = async function(prodId, estadoAtual) {
+            try {
+                const prodRef = doc(db, "produtos", prodId);
+                await updateDoc(prodRef, {
+                    esgotado: !estadoAtual
+                });
+                carregarProdutos();
+            } catch (error) {
+                console.error("Erro ao alterar estado do produto: ", error);
+                alert("Erro ao atualizar o estado de stock do produto.");
+            }
+        };
+
         async function carregarProdutos() {
             try {
                 const querySnapshot = await getDocs(collection(db, "produtos"));
                 produtosTableBody.innerHTML = '';
 
                 if (querySnapshot.empty) {
-                    produtosTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">🛍️ Nenhum produto publicado ainda.</td></tr>';
+                    produtosTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">🛍️️ Nenhum produto publicado ainda.</td></tr>';
                     return;
                 }
 
                 querySnapshot.forEach((documento) => {
                     const prod = documento.data();
                     const prodId = documento.id;
+                    const isEsgotado = prod.esgotado || false;
 
                     let listaOpcoesText = '';
                     if (prod.opcoes && Array.isArray(prod.opcoes)) {
@@ -596,6 +636,11 @@
                         <td>${prod.categoria || '-'}</td>
                         <td style="font-size: 0.8rem;">${listaOpcoesText}</td>
                         <td>
+                            <button class="btn-status-toggle ${isEsgotado ? 'out-of-stock' : 'available'}" onclick="toggleEsgotado('${prodId}', ${isEsgotado})">
+                                ${isEsgotado ? '🔴 Esgotado' : '🟢 Disponível'}
+                            </button>
+                        </td>
+                        <td>
                             <button class="btn-delete-sub" onclick="deletarProduto('${prodId}', '${prod.nome}')">🗑️ Eliminar</button>
                         </td>
                     `;
@@ -604,7 +649,7 @@
 
             } catch (error) {
                 console.error("Erro ao carregar produtos: ", error);
-                produtosTableBody.innerHTML = '<tr><td colspan="6" style="color: var(--danger); text-align:center;">Erro ao carregar lista de produtos.</td></tr>';
+                produtosTableBody.innerHTML = '<tr><td colspan="7" style="color: var(--danger); text-align:center;">Erro ao carregar lista de produtos.</td></tr>';
             }
         }
 
