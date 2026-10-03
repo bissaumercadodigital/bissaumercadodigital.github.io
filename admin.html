@@ -362,7 +362,7 @@
 
                 <div class="grid-2">
                     <input type="text" id="prodCategoria" class="form-input" placeholder="Categoria (Ex: Streaming, Jogos)">
-                    <input type="text" id="prodPaginaDestino" class="form-input" placeholder="Página de Destino (Ex: netflix2.html ou battlefield2.html)">
+                    <input type="text" id="prodPaginaDestino" class="form-input" placeholder="Página de Destino (Ex: netflix.html ou pubg.html)">
                 </div>
 
                 <div class="grid-2">
@@ -417,7 +417,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, setDoc, deleteDoc, getDoc, increment, query, where, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, updateDoc, setDoc, deleteDoc, getDoc, increment, query, where, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
@@ -440,15 +440,18 @@
         const assinaturasTableBody = document.getElementById('assinaturasTableBody');
         const produtosTableBody = document.getElementById('produtosTableBody');
 
+        // Desativar escutas anteriores ao trocar de conta/estado
+        let unsubPedidos = null;
+        let unsubAssinaturas = null;
+        let unsubProdutos = null;
+
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 if (user.email.toLowerCase() === EMAIL_ADMIN_OFICIAL.toLowerCase()) {
                     loginArea.style.display = 'none';
                     dashboardArea.style.display = 'block';
                     document.getElementById('userLoggedEmail').innerText = 'Logado como: ' + user.email;
-                    carregarPedidosPendentes();
-                    carregarAssinaturas();
-                    carregarProdutos();
+                    iniciarEscutasEmTempoReal();
                 } else {
                     alert("Acesso Negado! O e-mail " + user.email + " não tem permissões de administrador.");
                     signOut(auth);
@@ -456,8 +459,17 @@
             } else {
                 loginArea.style.display = 'block';
                 dashboardArea.style.display = 'none';
+                if (unsubPedidos) unsubPedidos();
+                if (unsubAssinaturas) unsubAssinaturas();
+                if (unsubProdutos) unsubProdutos();
             }
         });
+
+        function iniciarEscutasEmTempoReal() {
+            escutarPedidosPendentes();
+            escutarAssinaturas();
+            escutarProdutos();
+        }
 
         window.fazerLogin = async function() {
             const email = document.getElementById('adminEmail').value.trim();
@@ -504,15 +516,12 @@
             if (aba === 'pedidos') {
                 secPedidos.style.display = 'block';
                 tabPedidosBtn.classList.add('active');
-                carregarPedidosPendentes();
             } else if (aba === 'assinaturas') {
                 secAssinaturas.style.display = 'block';
                 tabAssinaturasBtn.classList.add('active');
-                carregarAssinaturas();
             } else if (aba === 'produtos') {
                 secProdutos.style.display = 'block';
                 tabProdutosBtn.classList.add('active');
-                carregarProdutos();
             }
         };
 
@@ -592,8 +601,6 @@
                     </div>
                 `;
 
-                carregarProdutos();
-
             } catch (error) {
                 console.error("Erro ao publicar produto: ", error);
                 alert("Erro ao publicar produto. Verifique a conexão.");
@@ -606,16 +613,14 @@
                 await updateDoc(prodRef, {
                     esgotado: !estadoAtual
                 });
-                carregarProdutos();
             } catch (error) {
                 console.error("Erro ao alterar estado do produto: ", error);
                 alert("Erro ao atualizar o estado de stock do produto.");
             }
         };
 
-        async function carregarProdutos() {
-            try {
-                const querySnapshot = await getDocs(collection(db, "produtos"));
+        function escutarProdutos() {
+            unsubProdutos = onSnapshot(collection(db, "produtos"), (querySnapshot) => {
                 produtosTableBody.innerHTML = '';
 
                 if (querySnapshot.empty) {
@@ -653,11 +658,10 @@
                     `;
                     produtosTableBody.appendChild(tr);
                 });
-
-            } catch (error) {
-                console.error("Erro ao carregar produtos: ", error);
+            }, (error) => {
+                console.error("Erro ao escutar produtos: ", error);
                 produtosTableBody.innerHTML = '<tr><td colspan="7" style="color: var(--danger); text-align:center;">Erro ao carregar lista de produtos.</td></tr>';
-            }
+            });
         }
 
         window.deletarProduto = async function(prodId, prodNome) {
@@ -667,18 +671,15 @@
             try {
                 await deleteDoc(doc(db, "produtos", prodId));
                 alert("Produto eliminado!");
-                carregarProdutos();
             } catch (error) {
                 console.error("Erro ao apagar produto: ", error);
                 alert("Erro ao eliminar o produto.");
             }
         };
 
-        async function carregarPedidosPendentes() {
-            try {
-                const q = query(collection(db, "pedidos"), where("status", "==", "Pendente"));
-                const querySnapshot = await getDocs(q);
-                
+        function escutarPedidosPendentes() {
+            const q = query(collection(db, "pedidos"), where("status", "==", "Pendente"));
+            unsubPedidos = onSnapshot(q, (querySnapshot) => {
                 containerPedidos.innerHTML = ''; 
 
                 if (querySnapshot.empty) {
@@ -745,10 +746,10 @@
                     `;
                     containerPedidos.appendChild(card);
                 });
-            } catch (error) {
-                console.error("Erro ao carregar pedidos: ", error);
+            }, (error) => {
+                console.error("Erro ao escutar pedidos: ", error);
                 containerPedidos.innerHTML = '<div id="emptyMsg" style="color: var(--danger);">Erro ao conectar ao servidor.</div>';
-            }
+            });
         }
 
         window.aprovarPedido = async function(docId, telefone, orderId, clienteNome) {
@@ -826,8 +827,6 @@
                 const whatsappUrl = `https://wa.me/${telefone}?text=${encodeURIComponent(msg)}`;
 
                 window.open(whatsappUrl, '_blank');
-                carregarPedidosPendentes();
-                carregarAssinaturas();
 
             } catch (error) {
                 console.error("Erro ao aprovar pedido: ", error);
@@ -900,8 +899,6 @@
                 document.getElementById('manualValidade').value = '30';
                 document.getElementById('manualDiasCustom').style.display = 'none';
 
-                carregarAssinaturas();
-
             } catch (error) {
                 console.error("Erro ao registar assinatura manual: ", error);
                 alert("Erro ao registar assinatura manual. Tente novamente.");
@@ -915,16 +912,14 @@
             try {
                 await deleteDoc(doc(db, "assinaturas", assId));
                 alert("Assinatura apagada com sucesso!");
-                carregarAssinaturas();
             } catch (error) {
                 console.error("Erro ao apagar assinatura: ", error);
                 alert("Erro ao apagar a assinatura. Verifique se tem permissões suficientes.");
             }
         };
 
-        async function carregarAssinaturas() {
-            try {
-                const querySnapshot = await getDocs(collection(db, "assinaturas"));
+        function escutarAssinaturas() {
+            unsubAssinaturas = onSnapshot(collection(db, "assinaturas"), (querySnapshot) => {
                 assinaturasTableBody.innerHTML = '';
 
                 if (querySnapshot.empty) {
@@ -997,11 +992,10 @@
                     `;
                     assinaturasTableBody.appendChild(tr);
                 });
-
-            } catch (error) {
+            }, (error) => {
                 console.error("Erro ao carregar assinaturas: ", error);
-                assinaturasTableBody.innerHTML = '<tr><td colspan="6" style="color: var(--danger); text-align:center;">Erro ao carregar assinaturas.</td> interiorHTML';
-            }
+                assinaturasTableBody.innerHTML = '<tr><td colspan="6" style="color: var(--danger); text-align:center;">Erro ao carregar assinaturas.</td></tr>';
+            });
         }
     </script>
 </body>
