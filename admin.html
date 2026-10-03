@@ -122,6 +122,34 @@
             cursor: pointer;
         }
 
+        /* Card de Cadastro Manual */
+        .manual-add-card {
+            background-color: var(--bg-card);
+            border: 1px dashed var(--orange);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .manual-add-card h3 {
+            font-size: 1rem;
+            color: var(--orange);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
         .order-card {
             background-color: var(--bg-card); border: 1px solid var(--border);
             border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;
@@ -207,6 +235,35 @@
 
         <!-- Conteúdo das Assinaturas -->
         <div id="secAssinaturas" style="display: none;">
+            
+            <!-- Formulário de Registo Manual para Clientes do WhatsApp -->
+            <div class="manual-add-card">
+                <h3>➕ Registo Manual de Assinatura (Cliente WhatsApp)</h3>
+                
+                <div class="grid-2">
+                    <input type="text" id="manualNome" class="form-input" placeholder="Nome do Cliente">
+                    <input type="tel" id="manualTelefone" class="form-input" placeholder="WhatsApp (Ex: 245955288370)">
+                </div>
+
+                <div class="grid-2">
+                    <input type="text" id="manualServico" class="form-input" placeholder="Serviço (Ex: Netflix 4K - 1 Tela)">
+                    <input type="number" id="manualPreco" class="form-input" placeholder="Preço do Serviço (FCFA)">
+                </div>
+
+                <div class="grid-2">
+                    <select id="manualValidade" class="form-select">
+                        <option value="30">30 Dias (1 Mês)</option>
+                        <option value="90">90 Dias (3 Meses)</option>
+                        <option value="365">365 Dias (1 Ano)</option>
+                        <option value="0">Vitalício / Sem Expiração</option>
+                    </select>
+                </div>
+
+                <textarea id="manualDados" class="delivery-input" rows="2" placeholder="Dados de Acesso (Ex: Email: x@x.com, Senha: 123)"></textarea>
+
+                <button class="btn-approve" onclick="registarAssinaturaManual()">⚡ Ativar Assinatura Manual e Adicionar ao Painel</button>
+            </div>
+
             <div id="assinaturasContainer">
                 <div id="loadingMsgAssinaturas">A carregar assinaturas...</div>
             </div>
@@ -397,13 +454,11 @@
                     dataFim.setDate(dataFim.getDate() + diasValidade);
                 }
 
-                // 1. Atualizar o pedido para Concluído
                 await updateDoc(pedidoRef, {
                     status: "Concluído",
                     dadosEntregues: dadosEntrega
                 });
 
-                // 2. Criar Registro de Assinatura
                 const servicoNome = (pedidoData.itens && pedidoData.itens[0]) ? pedidoData.itens[0].nome : 'Assinatura Digital';
                 const assinaturaRef = doc(collection(db, "assinaturas"));
 
@@ -421,7 +476,6 @@
                     itemDetalhe: pedidoData.itens || []
                 });
 
-                // 3. Creditar 1% dos pontos ao utilizador que convidou
                 if (pedidoData && pedidoData.userId) {
                     const compradorRef = doc(db, "usuarios", pedidoData.userId);
                     const compradorSnap = await getDoc(compradorRef);
@@ -453,6 +507,71 @@
             } catch (error) {
                 console.error("Erro ao aprovar pedido: ", error);
                 alert("Erro ao aprovar pedido. Tente novamente.");
+            }
+        };
+
+        // Função de Registo Manual para Clientes do WhatsApp
+        window.registarAssinaturaManual = async function() {
+            const nome = document.getElementById('manualNome').value.trim();
+            let telefone = document.getElementById('manualTelefone').value.trim().replace(/\D/g, '');
+            const servico = document.getElementById('manualServico').value.trim();
+            const preco = parseFloat(document.getElementById('manualPreco').value) || 0;
+            const diasValidade = parseInt(document.getElementById('manualValidade').value);
+            const dados = document.getElementById('manualDados').value.trim();
+
+            if (!nome || !telefone || !servico || !dados) {
+                alert("Por favor, preencha todos os campos obrigatórios (Nome, Telefone, Serviço e Dados de Acesso).");
+                return;
+            }
+
+            if (!telefone.startsWith('245')) {
+                telefone = '245' + telefone;
+            }
+
+            try {
+                const dataInicio = new Date();
+                let dataFim = null;
+
+                if (diasValidade > 0) {
+                    dataFim = new Date();
+                    dataFim.setDate(dataFim.getDate() + diasValidade);
+                }
+
+                const assinaturaRef = doc(collection(db, "assinaturas"));
+
+                await setDoc(assinaturaRef, {
+                    pedidoId: 'MANUAL-' + Math.floor(100000 + Math.random() * 900000),
+                    userId: null,
+                    clienteNome: nome,
+                    clienteTelefone: telefone,
+                    servicoNome: servico,
+                    dadosEntrega: dados,
+                    dataInicio: dataInicio.toISOString(),
+                    dataFim: dataFim ? dataFim.toISOString() : null,
+                    diasContratados: diasValidade,
+                    status: "Ativa",
+                    itemDetalhe: [{
+                        nome: servico,
+                        opcao: 'Registo Manual WhatsApp',
+                        price: preco,
+                        quantidade: 1
+                    }]
+                });
+
+                alert("Assinatura manual ativada com sucesso!");
+                
+                // Limpar campos
+                document.getElementById('manualNome').value = '';
+                document.getElementById('manualTelefone').value = '';
+                document.getElementById('manualServico').value = '';
+                document.getElementById('manualPreco').value = '';
+                document.getElementById('manualDados').value = '';
+
+                carregarAssinaturas();
+
+            } catch (error) {
+                console.error("Erro ao registar assinatura manual: ", error);
+                alert("Erro ao registar assinatura manual. Tente novamente.");
             }
         };
 
