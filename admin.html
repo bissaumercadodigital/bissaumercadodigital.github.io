@@ -170,7 +170,9 @@
         .delivery-input { width: 100%; padding: 12px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: white; font-size: 14px; margin-bottom: 10px; }
         
         .btn-approve { width: 100%; background: var(--success); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; }
-        .btn-whatsapp-remind { background: #25d366; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-whatsapp-remind { background: #25d366; color: white; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-delete-sub { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); padding: 6px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 4px; }
+        .btn-delete-sub:hover { background: var(--danger); color: white; }
 
         /* Estilos da Tabela de Assinaturas */
         .table-responsive {
@@ -221,6 +223,8 @@
         .days-badge.warning { background: rgba(255, 102, 0, 0.2); border-color: var(--orange); color: var(--orange); }
         .days-badge.danger { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); color: var(--danger); }
         
+        .actions-cell { display: flex; gap: 6px; align-items: center; }
+
         #loadingMsg, #emptyMsg, #loadingMsgAssinaturas { text-align: center; color: var(--text-muted); padding: 30px; font-weight: 600; }
     </style>
 </head>
@@ -300,7 +304,7 @@
                             <th>Início / Fim</th>
                             <th>Status / Restante</th>
                             <th>Dados de Acesso</th>
-                            <th>Ação</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody id="assinaturasTableBody">
@@ -317,7 +321,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, setDoc, getDoc, increment, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, setDoc, deleteDoc, getDoc, increment, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
@@ -398,7 +402,7 @@
             } else {
                 secPedidos.style.display = 'none';
                 secAssinaturas.style.display = 'block';
-                tabPedidosBtn.classList.remove('active');
+                tabPedidosBtn.remove('active');
                 tabAssinaturasBtn.classList.add('active');
                 carregarAssinaturas();
             }
@@ -648,6 +652,20 @@
             }
         };
 
+        window.deletarAssinatura = async function(assId, clienteNome) {
+            const confirmacao = confirm(`Tem certeza de que deseja apagar a assinatura do cliente "${clienteNome}"? Esta ação não pode ser desfeita.`);
+            if (!confirmacao) return;
+
+            try {
+                await deleteDoc(doc(db, "assinaturas", assId));
+                alert("Assinatura apagada com sucesso!");
+                carregarAssinaturas();
+            } catch (error) {
+                console.error("Erro ao apagar assinatura: ", error);
+                alert("Erro ao apagar a assinatura. Verifique se tem permissões suficientes.");
+            }
+        };
+
         async function carregarAssinaturas() {
             try {
                 const querySnapshot = await getDocs(collection(db, "assinaturas"));
@@ -709,11 +727,16 @@
                             ${ass.dadosEntrega}
                         </td>
                         <td>
-                            ${isExpiringSoon ? `
-                                <button class="btn-whatsapp-remind" onclick="window.open('https://wa.me/${ass.clienteTelefone}?text=${encodeURIComponent(mensagemWhatsApp)}', '_blank')">
-                                    🔔 Avisar
+                            <div class="actions-cell">
+                                ${isExpiringSoon ? `
+                                    <button class="btn-whatsapp-remind" onclick="window.open('https://wa.me/${ass.clienteTelefone}?text=${encodeURIComponent(mensagemWhatsApp)}', '_blank')">
+                                        🔔 Avisar
+                                    </button>
+                                ` : '<span style="color: var(--success); font-weight:700; font-size: 0.78rem;">Em Dia</span>'}
+                                <button class="btn-delete-sub" onclick="deletarAssinatura('${assId}', '${ass.clienteNome}')" title="Apagar Assinatura">
+                                    🗑️ Apagar
                                 </button>
-                            ` : '<span style="color: var(--success); font-weight:700;">Em Dia</span>'}
+                            </div>
                         </td>
                     `;
                     assinaturasTableBody.appendChild(tr);
