@@ -405,6 +405,12 @@
             border-color: var(--blue-dev-glow);
         }
 
+        .card-badge.badge-out {
+            color: var(--danger);
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.2);
+        }
+
         .card-info {
             padding: 0.75rem;
             display: flex;
@@ -444,6 +450,13 @@
         .card-action-btn.btn-dev {
             background: linear-gradient(135deg, var(--blue-dev), #0284c7);
             color: #ffffff;
+        }
+
+        .card-action-btn.btn-disabled {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            cursor: not-allowed;
         }
 
         /* 5. Banner Orange Money */
@@ -836,7 +849,7 @@
     <div class="section-header" id="jogos-section">
         <h2>Jogos e Moedas Digitais</h2>
     </div>
-    <div class="product-grid">
+    <div class="product-grid" id="gridJogos">
         <a href="pubg.html" class="card product-card" data-title="pubg mobile uc moedas">
             <div class="card-banner" style="background-image: url('https://img.utdstc.com/icon/f39/58f/f3958fd8814bbe41a967f6aaab3ec533396d9b39b9684cb003cdf75461889bdd:600');">
                 <span class="card-badge">UC</span>
@@ -886,7 +899,7 @@
     <div class="section-header" id="streaming-section">
         <h2>Streaming e TV</h2>
     </div>
-    <div class="product-grid">
+    <div class="product-grid" id="gridStreaming">
         <a href="primevideo.html" class="card product-card" data-title="prime video amazon filmes series">
             <div class="card-banner" style="background-image: url('https://m.media-amazon.com/images/G/01/primevideo/seo/primevideo-seo-logo.png');">
                 <span class="card-badge">4K ULTRA HD</span>
@@ -925,7 +938,7 @@
     <div class="section-header" id="edicao-section">
         <h2>Design e Edição</h2>
     </div>
-    <div class="product-grid">
+    <div class="product-grid" id="gridEdicao">
         <a href="canva.html" class="card product-card" data-title="canva pro premium design fotos edicao ia">
             <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=600&auto=format&fit=crop');">
                 <span class="card-badge">PRO IA</span>
@@ -942,7 +955,7 @@
     <div class="section-header" id="websites-section">
         <h2>Criação de Websites & Lojas</h2>
     </div>
-    <div class="product-grid">
+    <div class="product-grid" id="gridWebsites">
         <a href="sites.html" class="card product-card card-dev" data-title="criar site website loja virtual portfolio landing page desenvolvimento programador">
             <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=600&auto=format&fit=crop');">
                 <span class="card-badge badge-dev">WEB DEV</span>
@@ -954,6 +967,12 @@
             </div>
         </a>
     </div>
+
+    <!-- Container Dinâmico extra para Produtos gerados via Admin -->
+    <div class="section-header" id="outros-section" style="display: none;">
+        <h2>Outros Serviços & Produtos</h2>
+    </div>
+    <div class="product-grid" id="gridOutros" style="display: none;"></div>
 
     <!-- 8. Pagamento Orange Money -->
     <div class="payment-banner">
@@ -1101,8 +1120,8 @@
             const cards = document.querySelectorAll('.product-card');
 
             cards.forEach(card => {
-                const searchKeywords = card.getAttribute('data-title').toLowerCase();
-                const cardTitle = card.querySelector('h3').innerText.toLowerCase();
+                const searchKeywords = (card.getAttribute('data-title') || '').toLowerCase();
+                const cardTitle = card.querySelector('h3') ? card.querySelector('h3').innerText.toLowerCase() : '';
 
                 if (searchKeywords.includes(input) || cardTitle.includes(input)) {
                     card.style.display = "flex";
@@ -1124,7 +1143,7 @@
         });
     </script>
 
-    <!-- Script de Autenticação Firebase & Firestore -->
+    <!-- Script de Autenticação Firebase & Leitura do Firestore -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -1142,7 +1161,9 @@
             getFirestore, 
             doc, 
             setDoc,
-            onSnapshot
+            onSnapshot,
+            collection,
+            getDocs
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -1160,6 +1181,95 @@
         const googleProvider = new GoogleAuthProvider();
 
         let unsubscribePoints = null;
+
+        // Leitura Dinâmica de Produtos no Firestore
+        async function carregarProdutosDoFirestore() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "produtos"));
+                if (querySnapshot.empty) return;
+
+                const gridJogos = document.getElementById('gridJogos');
+                const gridStreaming = document.getElementById('gridStreaming');
+                const gridEdicao = document.getElementById('gridEdicao');
+                const gridWebsites = document.getElementById('gridWebsites');
+                const gridOutros = document.getElementById('gridOutros');
+                const outrosSection = document.getElementById('outros-section');
+
+                querySnapshot.forEach((docSnap) => {
+                    const prod = docSnap.data();
+                    const prodId = docSnap.id;
+                    const isEsgotado = prod.esgotado || false;
+                    const categoria = (prod.categoria || '').toLowerCase();
+                    const nomeLower = (prod.nome || '').toLowerCase();
+
+                    // Mapeamento de rotas das páginas estáticas do site
+                    let linkDestino = prod.paginaDestino || '#';
+                    if (linkDestino === '#' || !linkDestino) {
+                        if (nomeLower.includes('pubg')) linkDestino = 'pubg.html';
+                        else if (nomeLower.includes('free fire')) linkDestino = 'freefire.html';
+                        else if (nomeLower.includes('playstation') || nomeLower.includes('ps4') || nomeLower.includes('ps5')) linkDestino = 'playstation.html';
+                        else if (nomeLower.includes('efootball') || nomeLower.includes('pes')) linkDestino = 'efootball.html';
+                        else if (nomeLower.includes('prime video')) linkDestino = 'primevideo.html';
+                        else if (nomeLower.includes('netflix')) linkDestino = 'netflix.html';
+                        else if (nomeLower.includes('iptv') || nomeLower.includes('unitv')) linkDestino = 'iptv.html';
+                        else if (nomeLower.includes('canva')) linkDestino = 'canva.html';
+                        else if (nomeLower.includes('site') || nomeLower.includes('website') || nomeLower.includes('loja')) linkDestino = 'sites.html';
+                        else linkDestino = `produto.html?id=${prodId}`;
+                    }
+
+                    // Se o produto estiver no Firestore, atualiza estado de Esgotado nos cards existentes ou cria novos
+                    const existingCard = document.querySelector(`.product-card[href="${linkDestino}"]`);
+                    if (existingCard) {
+                        const badge = existingCard.querySelector('.card-badge');
+                        const btnAction = existingCard.querySelector('.card-action-btn');
+                        
+                        if (isEsgotado) {
+                            existingCard.setAttribute('href', 'javascript:void(0)');
+                            if (badge) {
+                                badge.innerText = '🔴 ESGOTADO';
+                                badge.className = 'card-badge badge-out';
+                            }
+                            if (btnAction) {
+                                btnAction.innerText = 'Esgotado';
+                                btnAction.className = 'card-action-btn btn-disabled';
+                            }
+                        }
+                    } else {
+                        // Se for um novo produto cadastrado pelo painel Admin
+                        const cardHtml = document.createElement('a');
+                        cardHtml.href = isEsgotado ? 'javascript:void(0)' : linkDestino;
+                        cardHtml.className = 'card product-card';
+                        cardHtml.setAttribute('data-title', `${prod.nome} ${prod.categoria} ${prod.badge}`);
+
+                        cardHtml.innerHTML = `
+                            <div class="card-banner" style="background-image: url('${prod.imagem}');">
+                                <span class="card-badge ${isEsgotado ? 'badge-out' : ''}">${isEsgotado ? '🔴 ESGOTADO' : (prod.badge || 'NOVO')}</span>
+                            </div>
+                            <div class="card-info">
+                                <h3>${prod.nome}</h3>
+                                <p>${prod.descricao || ''}</p>
+                                <span class="card-action-btn ${isEsgotado ? 'btn-disabled' : 'btn-dev'}">${isEsgotado ? 'Esgotado' : 'Ver Opções'}</span>
+                            </div>
+                        `;
+
+                        if (categoria.includes('jogo')) gridJogos.appendChild(cardHtml);
+                        else if (categoria.includes('stream') || categoria.includes('iptv')) gridStreaming.appendChild(cardHtml);
+                        else if (categoria.includes('edicao') || categoria.includes('design')) gridEdicao.appendChild(cardHtml);
+                        else if (categoria.includes('site') || categoria.includes('web')) gridWebsites.appendChild(cardHtml);
+                        else {
+                            if (outrosSection) outrosSection.style.display = 'flex';
+                            if (gridOutros) {
+                                gridOutros.style.display = 'grid';
+                                gridOutros.appendChild(cardHtml);
+                            }
+                        }
+                    }
+                });
+
+            } catch (err) {
+                console.error("Erro ao carregar produtos do Firestore:", err);
+            }
+        }
 
         onAuthStateChanged(auth, (user) => {
             const guestTopBar = document.getElementById('guestTopBar');
@@ -1196,6 +1306,9 @@
                 if (unsubscribePoints) unsubscribePoints();
             }
         });
+
+        // Inicializar a leitura dos produtos do Firestore ao carregar a página
+        carregarProdutosDoFirestore();
 
         window.handleGoogleLogin = async function() {
             try {
