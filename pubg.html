@@ -492,16 +492,33 @@
         </a>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
         let selectedUC = 60;
         let selectedPrice = 800;
 
-        function selectPackage(element, uc, price) {
+        window.selectPackage = function(element, uc, price) {
             document.querySelectorAll('.pkg-card').forEach(card => card.classList.remove('selected'));
             element.classList.add('selected');
             selectedUC = uc;
             selectedPrice = price;
-        }
+        };
 
         function updateNavBadges() {
             try {
@@ -552,7 +569,7 @@
             }, 2500);
         }
 
-        function addToCart() {
+        window.addToCart = function() {
             const playerId = document.getElementById('playerId').value.trim();
             const playerName = document.getElementById('playerName').value.trim();
 
@@ -578,9 +595,9 @@
 
             updateNavBadges();
             showToast("✅ " + selectedUC + " UC adicionado ao carrinho!");
-        }
+        };
 
-        function buyDirectWhatsApp() {
+        window.buyDirectWhatsApp = async function() {
             const playerId = document.getElementById('playerId').value.trim();
             const playerName = document.getElementById('playerName').value.trim();
 
@@ -588,6 +605,46 @@
                 alert("Por favor, preencha o seu ID de Jogador do PUBG Mobile!");
                 document.getElementById('playerId').focus();
                 return;
+            }
+
+            const orderIdCode = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+            const currentUser = auth.currentUser;
+
+            try {
+                await addDoc(collection(db, "pedidos"), {
+                    orderId: orderIdCode,
+                    userId: currentUser ? currentUser.uid : null,
+                    clienteNome: playerName || "Jogador PUBG Mobile",
+                    clienteTelefone: "WhatsApp Direto",
+                    comprovativoFornecido: "WhatsApp Direto",
+                    tipoComprovativo: "WhatsApp",
+                    itens: [{
+                        nome: 'PUBG Mobile - ' + selectedUC + ' UC',
+                        opcao: 'ID: ' + playerId + (playerName ? ' | Nome: ' + playerName : ''),
+                        price: selectedPrice,
+                        quantidade: 1
+                    }],
+                    subtotal: selectedPrice,
+                    desconto: 0,
+                    total: selectedPrice,
+                    status: 'Pendente',
+                    dadosEntregues: '',
+                    criadoEm: serverTimestamp()
+                });
+
+                const pedidosLocais = JSON.parse(localStorage.getItem('bissau_orders')) || [];
+                pedidosLocais.push({
+                    orderId: orderIdCode,
+                    id: orderIdCode,
+                    data: new Date().toLocaleDateString('pt-PT'),
+                    itens: [{ nome: 'PUBG Mobile - ' + selectedUC + ' UC', opcao: 'ID: ' + playerId, price: selectedPrice, quantidade: 1 }],
+                    total: selectedPrice,
+                    status: 'Pendente'
+                });
+                localStorage.setItem('bissau_orders', JSON.stringify(pedidosLocais));
+
+            } catch (err) {
+                console.error("Erro ao salvar no Firestore:", err);
             }
 
             let text = `🎮 *PEDIDO DIRETO - PUBG MOBILE UC*\n`;
@@ -602,7 +659,7 @@
 
             const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
             window.open(waUrl, '_blank');
-        }
+        };
 
         document.addEventListener('DOMContentLoaded', updateNavBadges);
 

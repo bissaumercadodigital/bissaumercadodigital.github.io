@@ -1191,7 +1191,6 @@
             const outrosSection = document.getElementById('outros-section');
 
             onSnapshot(collection(db, "produtos"), (querySnapshot) => {
-                // Se houver produtos criados via admin, limpa o container de outros produtos dinâmicos
                 if (gridOutros) gridOutros.innerHTML = '';
 
                 querySnapshot.forEach((docSnap) => {
@@ -1201,7 +1200,6 @@
                     const categoria = (prod.categoria || '').toLowerCase();
                     const nomeLower = (prod.nome || '').toLowerCase();
 
-                    // Mapeamento de rotas das páginas estáticas do site
                     let linkDestino = prod.paginaDestino || '#';
                     if (linkDestino === '#' || !linkDestino) {
                         if (nomeLower.includes('pubg')) linkDestino = 'pubg.html';
@@ -1216,7 +1214,6 @@
                         else linkDestino = `produto.html?id=${prodId}`;
                     }
 
-                    // Se o produto estático existir no HTML, atualiza o seu estado (Ex: Esgotado) em tempo real
                     const existingCard = document.querySelector(`.product-card[href="${linkDestino}"]`);
                     if (existingCard) {
                         const badge = existingCard.querySelector('.card-badge');
@@ -1246,7 +1243,6 @@
                             }
                         }
                     } else {
-                        // Se for um novo produto criado manualmente no Admin
                         const cardHtml = document.createElement('a');
                         cardHtml.href = isEsgotado ? 'javascript:void(0)' : linkDestino;
                         cardHtml.className = 'card product-card';
@@ -1317,7 +1313,6 @@
             }
         });
 
-        // Iniciar escuta dos produtos em tempo real ao carregar o site
         escutarProdutosFirestore();
 
         window.handleGoogleLogin = async function() {

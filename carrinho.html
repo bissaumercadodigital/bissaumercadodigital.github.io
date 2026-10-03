@@ -638,8 +638,26 @@
         </a>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
         let userPointsAvailable = 0;
+        let currentUserGlobal = null;
         const MAX_PONTOS_POR_COMPRA = 5000;
 
         function getCart() {
@@ -653,7 +671,6 @@
 
         function atualizarContadoresNav() {
             try {
-                // 1. Contador do Carrinho
                 const cart = getCart();
                 const totalCarrinho = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
                 const cartBadge = document.getElementById('cartBadge');
@@ -667,7 +684,6 @@
                     }
                 }
 
-                // 2. Contador de Pedidos
                 const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
                 const totalPedidos = pedidos.length;
                 const pedidosBadge = document.getElementById('pedidosBadge');
@@ -685,7 +701,7 @@
             }
         }
 
-        function renderCart() {
+        window.renderCart = function() {
             const cart = getCart();
             const emptyCart = document.getElementById('emptyCart');
             const cartContent = document.getElementById('cartContent');
@@ -728,7 +744,6 @@
                 cartList.appendChild(itemElement);
             });
 
-            // Gestão do Desconto por Pontos
             const usePointsCheckbox = document.getElementById('usePointsCheckbox');
             const pointsCheckboxContainer = document.getElementById('pointsCheckboxContainer');
             const pointsMsgText = document.getElementById('pointsMsgText');
@@ -771,7 +786,7 @@
             }
 
             document.getElementById('totalVal').innerText = total.toLocaleString() + ' FCFA';
-        }
+        };
 
         window.changeQty = function(index, delta) {
             let cart = getCart();
@@ -817,7 +832,7 @@
             window.location.href = 'checkout.html';
         };
 
-        window.checkoutWhatsApp = function() {
+        window.checkoutWhatsApp = async function() {
             const cart = getCart();
             const name = document.getElementById('clientName').value.trim();
             const phone = document.getElementById('clientPhone').value.trim();
@@ -834,6 +849,30 @@
                 return;
             }
 
+            const orderIdCode = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+
+            // 1. ENVIAR PEDIDO DIRETO AO FIRESTORE PARA O PAINEL ADMIN VER
+            try {
+                await addDoc(collection(db, "pedidos"), {
+                    orderId: orderIdCode,
+                    userId: currentUserGlobal ? currentUserGlobal.uid : null,
+                    clienteNome: name,
+                    clienteTelefone: phone,
+                    comprovativoFornecido: "WhatsApp Direto",
+                    tipoComprovativo: "WhatsApp",
+                    itens: cart,
+                    subtotal: totals.subtotal,
+                    desconto: totals.desconto,
+                    total: totals.total,
+                    status: 'Pendente',
+                    dadosEntregues: '',
+                    criadoEm: serverTimestamp()
+                });
+            } catch (err) {
+                console.error("Erro ao sincronizar Firestore:", err);
+            }
+
+            // 2. MONTAR MENSAGEM WHATSAPP
             let text = `🛒 *NOVO PEDIDO - MERCADO DIGITAL BISSAU*\n`;
             text += `--------------------------------\n`;
             text += `👤 *Cliente:* ${name}\n`;
@@ -861,7 +900,8 @@
 
             const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
             pedidos.push({
-                id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+                orderId: orderIdCode,
+                id: orderIdCode,
                 data: new Date().toLocaleDateString('pt-PT'),
                 itens: cart,
                 subtotal: totals.subtotal,
@@ -876,32 +916,8 @@
             window.open(waUrl, '_blank');
         };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCart();
-            atualizarContadoresNav();
-        });
-    </script>
-
-    <!-- Firebase para Ler Saldo de Pontos -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
-            authDomain: "mercado-digital-bissau.firebaseapp.com",
-            projectId: "mercado-digital-bissau",
-            storageBucket: "mercado-digital-bissau.firebasestorage.app",
-            messagingSenderId: "171260734990",
-            appId: "1:171260734990:web:130c33169923af3437165f"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
         onAuthStateChanged(auth, async (user) => {
+            currentUserGlobal = user;
             const pointsBox = document.getElementById('pointsBox');
             if (user) {
                 try {
@@ -923,6 +939,11 @@
             } else {
                 pointsBox.style.display = 'none';
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCart();
+            atualizarContadoresNav();
         });
     </script>
 

@@ -163,7 +163,6 @@
                 document.getElementById('daysLeftText').innerText = diasRestantesText;
                 document.getElementById('statusBadgeContainer').innerHTML = statusBadgeHtml;
 
-                // Preparar o item para inserção direta no carrinho
                 itemParaCarrinho = {
                     nome: `Renovação: ${ass.servicoNome}`,
                     opcao: `Renovação de Conta (${ass.clienteNome})`,
@@ -184,12 +183,10 @@
         window.efetuarRenovacao = function() {
             if (!itemParaCarrinho) return;
 
-            // Inserir item no carrinho local
             let cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
             cart.push(itemParaCarrinho);
             localStorage.setItem('bissau_cart', JSON.stringify(cart));
 
-            // Redirecionar diretamente para o carrinho/checkout
             window.location.href = 'carrinho.html';
         };
     </script>

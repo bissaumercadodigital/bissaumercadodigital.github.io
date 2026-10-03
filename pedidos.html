@@ -296,7 +296,6 @@
             color: #ffffff;
         }
 
-        /* Clear History Btn */
         .btn-clear-history {
             width: 100%;
             background: transparent;
@@ -439,7 +438,22 @@
         </a>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         function atualizarContadoresNav() {
             try {
                 const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
@@ -471,23 +485,6 @@
                 console.error(e);
             }
         }
-    </script>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
-            authDomain: "mercado-digital-bissau.firebaseapp.com",
-            projectId: "mercado-digital-bissau",
-            storageBucket: "mercado-digital-bissau.firebasestorage.app",
-            messagingSenderId: "171260734990",
-            appId: "1:171260734990:web:130c33169923af3437165f"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
 
         async function renderOrders() {
             const localOrders = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
@@ -614,21 +611,5 @@
             renderOrders();
         });
     </script>
-    <script>
-        document.addEventListener('focusin', (e) => {
-            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
-                const bottomNav = document.querySelector('.bottom-nav');
-                if (bottomNav) bottomNav.style.display = 'none';
-            }
-        });
-
-        document.addEventListener('focusout', (e) => {
-            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
-                const bottomNav = document.querySelector('.bottom-nav');
-                if (bottomNav) bottomNav.style.display = 'flex';
-            }
-        });
-    </script>
-
 </body>
 </html>

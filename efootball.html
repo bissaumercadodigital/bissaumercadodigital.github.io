@@ -490,20 +490,36 @@
         </a>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
         let selectedLabel = '130 Moedas';
         let selectedPrice = 1200;
 
-        function selectPackage(element, label, price) {
+        window.selectPackage = function(element, label, price) {
             document.querySelectorAll('.pkg-card').forEach(card => card.classList.remove('selected'));
             element.classList.add('selected');
             selectedLabel = label;
             selectedPrice = price;
-        }
+        };
 
         function updateNavBadges() {
             try {
-                // 1. Carrinho
                 const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
                 const totalCarrinho = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
                 
@@ -523,7 +539,6 @@
                     topCartBadge.style.display = totalCarrinho > 0 ? 'flex' : 'none';
                 }
 
-                // 2. Pedidos
                 const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
                 const totalPedidos = pedidos.length;
                 const pedidosBadge = document.getElementById('pedidosBadge');
@@ -550,7 +565,7 @@
             }, 2500);
         }
 
-        function addToCart() {
+        window.addToCart = function() {
             const platform = document.getElementById('platformSelect').value;
             const konamiId = document.getElementById('konamiId').value.trim();
             const playerName = document.getElementById('playerName').value.trim();
@@ -577,9 +592,9 @@
 
             updateNavBadges();
             showToast("✅ " + selectedLabel + " adicionado ao carrinho!");
-        }
+        };
 
-        function buyDirectWhatsApp() {
+        window.buyDirectWhatsApp = async function() {
             const platform = document.getElementById('platformSelect').value;
             const konamiId = document.getElementById('konamiId').value.trim();
             const playerName = document.getElementById('playerName').value.trim();
@@ -588,6 +603,46 @@
                 alert("Por favor, preencha o seu Konami ID ou E-mail da conta!");
                 document.getElementById('konamiId').focus();
                 return;
+            }
+
+            const orderIdCode = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+            const currentUser = auth.currentUser;
+
+            try {
+                await addDoc(collection(db, "pedidos"), {
+                    orderId: orderIdCode,
+                    userId: currentUser ? currentUser.uid : null,
+                    clienteNome: playerName || "Jogador eFootball",
+                    clienteTelefone: "WhatsApp Direto",
+                    comprovativoFornecido: "WhatsApp Direto",
+                    tipoComprovativo: "WhatsApp",
+                    itens: [{
+                        nome: 'eFootball 2027 - ' + selectedLabel,
+                        opcao: 'Plataforma: ' + platform + ' | ID/Email: ' + konamiId + (playerName ? ' | Equipa: ' + playerName : ''),
+                        price: selectedPrice,
+                        quantidade: 1
+                    }],
+                    subtotal: selectedPrice,
+                    desconto: 0,
+                    total: selectedPrice,
+                    status: 'Pendente',
+                    dadosEntregues: '',
+                    criadoEm: serverTimestamp()
+                });
+
+                const pedidosLocais = JSON.parse(localStorage.getItem('bissau_orders')) || [];
+                pedidosLocais.push({
+                    orderId: orderIdCode,
+                    id: orderIdCode,
+                    data: new Date().toLocaleDateString('pt-PT'),
+                    itens: [{ nome: 'eFootball 2027 - ' + selectedLabel, opcao: 'Konami ID: ' + konamiId, price: selectedPrice, quantidade: 1 }],
+                    total: selectedPrice,
+                    status: 'Pendente'
+                });
+                localStorage.setItem('bissau_orders', JSON.stringify(pedidosLocais));
+
+            } catch (err) {
+                console.error("Erro ao salvar no Firestore:", err);
             }
 
             let text = `⚽ *PEDIDO DIRETO - eFOOTBALL 2027*\n`;
@@ -603,7 +658,7 @@
 
             const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
             window.open(waUrl, '_blank');
-        }
+        };
 
         document.addEventListener('DOMContentLoaded', updateNavBadges);
 

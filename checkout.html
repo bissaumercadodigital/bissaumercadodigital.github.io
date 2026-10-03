@@ -319,7 +319,6 @@
                 discountBadge.innerText = `🎁 Cupão de Pontos Aplicado: -${desconto.toLocaleString()} FCFA`;
             }
             
-            // Configurar código USSD com o valor líquido a pagar
             const linkUSSD = `tel:%23144%231*1*955288370*${total}*2%23`;
             document.getElementById('btnOrangeMoney').href = linkUSSD;
         }
@@ -354,15 +353,15 @@
             }
 
             processarEPublicarPedido(inputVal, isTelefone ? 'Telefone' : 'ID_Transacao');
-        }
+        };
 
         window.mostrarErro = function(mensagem) {
             const errorMsg = document.getElementById('errorMsg');
             errorMsg.innerText = mensagem;
             errorMsg.style.display = 'block';
-        }
+        };
 
-        // 3. Gravar no Firestore e Abater Pontos Usados do Utilizador
+        // 3. Gravar no Firestore
         async function processarEPublicarPedido(comprovativo, tipo) {
             document.getElementById('telaPrincipal').style.display = 'none';
             document.getElementById('telaProcessamento').style.display = 'block';
@@ -389,10 +388,8 @@
             };
 
             try {
-                // Guardar pedido no Firestore
                 await addDoc(collection(db, "pedidos"), novoPedido);
 
-                // Se o utilizador utilizou pontos, abater do saldo dele no Firestore
                 if (currentUser && desconto > 0) {
                     try {
                         const userDocRef = doc(db, "usuarios", currentUser.uid);
@@ -407,7 +404,6 @@
                     }
                 }
 
-                // Guardar localmente
                 const pedidosLocais = JSON.parse(localStorage.getItem('bissau_orders')) || [];
                 pedidosLocais.push({
                     ...novoPedido,
@@ -415,11 +411,9 @@
                 });
                 localStorage.setItem('bissau_orders', JSON.stringify(pedidosLocais));
 
-                // Limpar Carrinho e Totais Temporários
                 localStorage.removeItem('bissau_cart');
                 localStorage.removeItem('bissau_checkout_totals');
 
-                // Mostrar tela de sucesso
                 document.getElementById('telaProcessamento').style.display = 'none';
                 document.getElementById('telaSucesso').style.display = 'block';
 
@@ -431,21 +425,5 @@
             }
         }
     </script>
-<script>
-    document.addEventListener('focusin', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-            const bottomNav = document.querySelector('.bottom-nav');
-            if (bottomNav) bottomNav.style.display = 'none';
-        }
-    });
-
-    document.addEventListener('focusout', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-            const bottomNav = document.querySelector('.bottom-nav');
-            if (bottomNav) bottomNav.style.display = 'flex';
-        }
-    });
-</script>
-
 </body>
 </html>

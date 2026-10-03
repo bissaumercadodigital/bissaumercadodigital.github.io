@@ -565,64 +565,6 @@
         </a>
     </div>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const refParam = urlParams.get('ref');
-        if (refParam) {
-            localStorage.setItem('bissau_ref', refParam);
-        }
-
-        function atualizarContadoresNav() {
-            try {
-                // 1. Contador do Carrinho
-                const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
-                const totalCarrinho = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
-                const cartBadge = document.getElementById('cartBadge');
-                
-                if (cartBadge) {
-                    if (totalCarrinho > 0) {
-                        cartBadge.innerText = totalCarrinho > 99 ? '99+' : totalCarrinho;
-                        cartBadge.style.display = 'flex';
-                    } else {
-                        cartBadge.style.display = 'none';
-                    }
-                }
-
-                // 2. Contador de Pedidos
-                const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
-                const totalPedidos = pedidos.length;
-                const pedidosBadge = document.getElementById('pedidosBadge');
-
-                if (pedidosBadge) {
-                    if (totalPedidos > 0) {
-                        pedidosBadge.innerText = totalPedidos > 99 ? '99+' : totalPedidos;
-                        pedidosBadge.style.display = 'flex';
-                    } else {
-                        pedidosBadge.style.display = 'none';
-                    }
-                }
-            } catch (e) {
-                console.error("Erro ao atualizar contadores da navegação:", e);
-            }
-        }
-
-        function redirectToLogin() {
-            window.location.href = "index.html";
-        }
-
-        function copiarLinkConvite() {
-            const input = document.getElementById('myReferralLink');
-            if (!input.value) return;
-            input.select();
-            input.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(input.value);
-            alert("✅ Link de convite copiado!");
-        }
-
-        document.addEventListener('DOMContentLoaded', atualizarContadoresNav);
-    </script>
-
-    <!-- Firebase Auth & Firestore Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -655,6 +597,51 @@
         const googleProvider = new GoogleAuthProvider();
 
         let currentUser = null;
+
+        function atualizarContadoresNav() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+                const totalCarrinho = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
+                const cartBadge = document.getElementById('cartBadge');
+                
+                if (cartBadge) {
+                    if (totalCarrinho > 0) {
+                        cartBadge.innerText = totalCarrinho > 99 ? '99+' : totalCarrinho;
+                        cartBadge.style.display = 'flex';
+                    } else {
+                        cartBadge.style.display = 'none';
+                    }
+                }
+
+                const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
+                const totalPedidos = pedidos.length;
+                const pedidosBadge = document.getElementById('pedidosBadge');
+
+                if (pedidosBadge) {
+                    if (totalPedidos > 0) {
+                        pedidosBadge.innerText = totalPedidos > 99 ? '99+' : totalPedidos;
+                        pedidosBadge.style.display = 'flex';
+                    } else {
+                        pedidosBadge.style.display = 'none';
+                    }
+                }
+            } catch (e) {
+                console.error("Erro ao atualizar contadores:", e);
+            }
+        }
+
+        window.redirectToLogin = function() {
+            window.location.href = "index.html";
+        };
+
+        window.copiarLinkConvite = function() {
+            const input = document.getElementById('myReferralLink');
+            if (!input.value) return;
+            input.select();
+            input.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(input.value);
+            alert("✅ Link de convite copiado!");
+        };
 
         onAuthStateChanged(auth, async (user) => {
             document.getElementById('loadingBox').style.display = 'none';
@@ -737,7 +724,7 @@
                 alert("Sessão iniciada com sucesso!");
             } catch (error) {
                 if (error.code === 'auth/unauthorized-domain') {
-                    alert("Atenção: Adicione o domínio da sua loja à consola do Firebase (Authentication -> Authorized Domains).");
+                    alert("Atenção: Adicione o domínio da sua loja à consola do Firebase.");
                 } else {
                     alert("Erro ao entrar: " + error.message);
                 }
@@ -748,7 +735,7 @@
             if (currentUser) {
                 try {
                     await sendEmailVerification(currentUser);
-                    alert("Reenviámos a ligação de verificação para o seu e-mail (" + currentUser.email + "). Verifique a sua caixa de entrada e o spam.");
+                    alert("Reenviámos a ligação de verificação para o seu e-mail (" + currentUser.email + ").");
                 } catch (error) {
                     alert("Erro ao enviar e-mail: " + error.message);
                 }
@@ -763,24 +750,8 @@
                 alert("Erro ao sair: " + error.message);
             }
         };
+
+        document.addEventListener('DOMContentLoaded', atualizarContadoresNav);
     </script>
-
-    <!-- Script de Gestão do Teclado Virtual -->
-    <script>
-        document.addEventListener('focusin', (e) => {
-            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
-                const bottomNav = document.querySelector('.bottom-nav');
-                if (bottomNav) bottomNav.style.display = 'none';
-            }
-        });
-
-        document.addEventListener('focusout', (e) => {
-            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
-                const bottomNav = document.querySelector('.bottom-nav');
-                if (bottomNav) bottomNav.style.display = 'flex';
-            }
-        });
-    </script>
-
 </body>
 </html>
