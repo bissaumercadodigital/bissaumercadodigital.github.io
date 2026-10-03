@@ -170,6 +170,9 @@
         .delivery-input { width: 100%; padding: 12px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: white; font-size: 14px; margin-bottom: 10px; }
         
         .btn-approve { width: 100%; background: var(--success); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; }
+        .btn-import { width: 100%; background: rgba(124, 58, 237, 0.2); color: #a78bfa; border: 1px solid var(--primary); padding: 10px; border-radius: 8px; font-weight: 800; cursor: pointer; margin-bottom: 15px; text-align: center; }
+        .btn-import:hover { background: var(--primary); color: white; }
+        
         .btn-add-opt { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem; margin-bottom: 12px; }
         .btn-whatsapp-remind { background: #25d366; color: white; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 5px; }
         .btn-delete-sub { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); padding: 6px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 4px; }
@@ -267,7 +270,7 @@
 
     <div class="admin-container" id="dashboardArea">
         <div class="header">
-            <h1>⚙️ Bissau Mercado Digital - ADMIN</h1>
+            <h1>⚙️️ Bissau Mercado Digital - ADMIN</h1>
             <p>Gestão de Pedidos, Assinaturas e Produtos</p>
         </div>
 
@@ -349,6 +352,8 @@
         <!-- Conteúdo de Gestão de Produtos (CMS) -->
         <div id="secProdutos" style="display: none;">
             
+            <button class="btn-import" onclick="importarProdutosPadrao()">📦 Clique aqui para Importar Todos os Produtos Antigos do Site (Netflix, Prime, UniTV, etc.)</button>
+
             <div class="manual-add-card">
                 <h3>➕ Criar Novo Produto / Jogo para o Site</h3>
                 
@@ -533,6 +538,134 @@
             container.appendChild(row);
         };
 
+        window.importarProdutosPadrao = async function() {
+            const confirmacao = confirm("Deseja carregar automaticamente no painel todos os produtos antigos do site (Netflix, Prime Video, UniTV, HBO Max, Canva, Free Fire, PUBG, eFootball, etc.)?");
+            if (!confirmacao) return;
+
+            const listaPadrao = [
+                {
+                    nome: "Netflix 4K Ultra HD",
+                    tipo: "assinatura",
+                    categoria: "Streaming",
+                    badge: "POPULAR",
+                    imagem: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500&auto=format&fit=crop&q=60",
+                    descricao: "Perfil Privado com PIN - Qualidade 4K Ultra HD.",
+                    opcoes: [
+                        { rotulo: "1 Mês (30 Dias)", preco: 3500 },
+                        { rotulo: "3 Meses (90 Dias)", preco: 9500 },
+                        { rotulo: "6 Meses (180 Dias)", preco: 18000 }
+                    ]
+                },
+                {
+                    nome: "Amazon Prime Video",
+                    tipo: "assinatura",
+                    categoria: "Streaming",
+                    badge: "OFERTA",
+                    imagem: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=500&auto=format&fit=crop&q=60",
+                    descricao: "Streaming de Filmes, Séries e Frete Grátis Prime.",
+                    opcoes: [
+                        { rotulo: "1 Mês (30 Dias)", preco: 2500 },
+                        { rotulo: "3 Meses (90 Dias)", preco: 7000 },
+                        { rotulo: "1 Ano (365 Dias)", preco: 22000 }
+                    ]
+                },
+                {
+                    nome: "HBO Max / Max",
+                    tipo: "assinatura",
+                    categoria: "Streaming",
+                    badge: "HD / 4K",
+                    imagem: "https://images.unsplash.com/photo-1616469829941-c7200edec809?w=500&auto=format&fit=crop&q=60",
+                    descricao: "Acesso total aos conteúdos da HBO Max e Warner Bros.",
+                    opcoes: [
+                        { rotulo: "1 Mês (30 Dias)", preco: 3000 },
+                        { rotulo: "3 Meses (90 Dias)", preco: 8000 }
+                    ]
+                },
+                {
+                    nome: "UniTV / IPTV Premium",
+                    tipo: "assinatura",
+                    categoria: "IPTV",
+                    badge: "CANAIS + 4K",
+                    imagem: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=500&auto=format&fit=crop&q=60",
+                    descricao: "Mais de 10.000 canais abertos, fechados, desporto e filmes.",
+                    opcoes: [
+                        { rotulo: "1 Mês (30 Dias)", preco: 4000 },
+                        { rotulo: "3 Meses (90 Dias)", preco: 11000 },
+                        { rotulo: "6 Meses (180 Dias)", preco: 20000 },
+                        { rotulo: "1 Ano (365 Dias)", preco: 35000 }
+                    ]
+                },
+                {
+                    nome: "Canva Pro Premium",
+                    tipo: "assinatura",
+                    categoria: "Ferramentas",
+                    badge: "PRO",
+                    imagem: "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500&auto=format&fit=crop&q=60",
+                    descricao: "Acesso Pro com milhões de fotos, elementos e modelos premium.",
+                    opcoes: [
+                        { rotulo: "1 Mês", preco: 2000 },
+                        { rotulo: "1 Ano", preco: 12000 }
+                    ]
+                },
+                {
+                    nome: "Free Fire (Diamantes)",
+                    tipo: "jogo",
+                    categoria: "Jogos",
+                    badge: "ENTREGA RÁPIDA",
+                    imagem: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=500&auto=format&fit=crop&q=60",
+                    descricao: "Recarga direta via ID do Jogador.",
+                    opcoes: [
+                        { rotulo: "100 Diamantes", preco: 1000 },
+                        { rotulo: "310 Diamantes", preco: 3000 },
+                        { rotulo: "520 Diamantes", preco: 5000 },
+                        { rotulo: "1060 Diamantes", preco: 10000 },
+                        { rotulo: "Passe de Elite / Nível", preco: 2500 }
+                    ]
+                },
+                {
+                    nome: "PUBG Mobile (UC)",
+                    tipo: "jogo",
+                    categoria: "Jogos",
+                    badge: "HOT",
+                    imagem: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500&auto=format&fit=crop&q=60",
+                    descricao: "Recarga de UC para PUBG Mobile via ID.",
+                    opcoes: [
+                        { rotulo: "60 UC", preco: 1200 },
+                        { rotulo: "325 UC", preco: 5500 },
+                        { rotulo: "660 UC", preco: 10500 }
+                    ]
+                },
+                {
+                    nome: "eFootball 2027 (Moedas)",
+                    tipo: "jogo",
+                    categoria: "Jogos",
+                    badge: "POPULAR",
+                    imagem: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=500&auto=format&fit=crop&q=60",
+                    descricao: "Recarga de eFootball Coins.",
+                    opcoes: [
+                        { rotulo: "130 Moedas", preco: 1500 },
+                        { rotulo: "550 Moedas", preco: 6000 },
+                        { rotulo: "1040 Moedas", preco: 11000 }
+                    ]
+                }
+            ];
+
+            try {
+                for (const prod of listaPadrao) {
+                    await addDoc(collection(db, "produtos"), {
+                        ...prod,
+                        esgotado: false,
+                        createdAt: new Date().toISOString()
+                    });
+                }
+                alert("Todos os produtos antigos do site foram importados para o painel com sucesso!");
+                carregarProdutos();
+            } catch (error) {
+                console.error("Erro ao importar produtos: ", error);
+                alert("Erro ao importar produtos.");
+            }
+        };
+
         window.salvarProduto = async function() {
             const nome = document.getElementById('prodNome').value.trim();
             const tipo = document.getElementById('prodTipo').value;
@@ -612,7 +745,7 @@
                 produtosTableBody.innerHTML = '';
 
                 if (querySnapshot.empty) {
-                    produtosTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">🛍️️ Nenhum produto publicado ainda.</td></tr>';
+                    produtosTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">🛍️ Nenhum produto publicado no painel. Clique no botão roxo acima para importar a lista inicial de produtos!</td></tr>';
                     return;
                 }
 
