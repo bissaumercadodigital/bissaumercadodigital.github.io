@@ -245,7 +245,7 @@
             <h3>Já fez o pagamento?</h3>
             <p>Para o sistema localizar o seu depósito, insira abaixo o <strong>ID da Transação</strong> recebido por SMS ou o <strong>Número de Telemóvel</strong> que enviou o dinheiro.</p>
             
-            <input type="text" id="comprovativoInput" class="form-input" placeholder="Ex: 95XXXXXXX ou ID de 20 letras/números" autocomplete="off">
+            <input type="text" id="comprovativoInput" class="form-input" placeholder="Ex: 95XXXXXXX ou ID da transação" autocomplete="off">
             
             <div id="errorMsg" class="error-message"></div>
 
@@ -290,7 +290,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // 1. Carregar carrinho e resumo dos valores com cupão/desconto
         const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
         const checkoutTotals = JSON.parse(localStorage.getItem('bissau_checkout_totals')) || null;
 
@@ -323,32 +322,24 @@
             document.getElementById('btnOrangeMoney').href = linkUSSD;
         }
 
-        // 2. Lógica de Validação
         window.validarPagamento = function() {
             const inputVal = document.getElementById('comprovativoInput').value.trim();
             const errorMsg = document.getElementById('errorMsg');
             
             errorMsg.style.display = 'none';
 
-            const regexTelefone = /^(95|96)\d{7}$/;
-            const isTelefone = regexTelefone.test(inputVal);
-
-            const regexID = /^[a-zA-Z0-9.]{20}$/;
-            const isTransacaoID = regexID.test(inputVal);
-
             if (inputVal === '') {
                 window.mostrarErro("Por favor, preencha o campo com o Número ou ID da transação.");
                 return;
             }
 
+            const regexTelefone = /^(245)?(95|96)\d{7}$/;
+            const isTelefone = regexTelefone.test(inputVal.replace(/\s+/g, ''));
+
+            const isTransacaoID = inputVal.length >= 5;
+
             if (!isTelefone && !isTransacaoID) {
-                if ((inputVal.startsWith('95') || inputVal.startsWith('96')) && inputVal.length !== 9) {
-                    window.mostrarErro("O número de telemóvel está incompleto ou inválido. Deve ter exatamente 9 dígitos.");
-                } else if (inputVal.match(/^[0-9]+$/) && !inputVal.startsWith('95') && !inputVal.startsWith('96')) {
-                    window.mostrarErro("O número fornecido deve ser da rede Orange (começar com 95 ou 96).");
-                } else {
-                    window.mostrarErro("O ID da transação está inválido. Deve ter exatamente 20 caracteres (letras, números e pontos) ou insira um número válido com 9 dígitos.");
-                }
+                window.mostrarErro("O valor inserido é inválido. Insira um número de telemóvel Orange (Ex: 95XXXXXXX) ou o ID da transação.");
                 return;
             }
 
@@ -361,7 +352,6 @@
             errorMsg.style.display = 'block';
         };
 
-        // 3. Gravar no Firestore
         async function processarEPublicarPedido(comprovativo, tipo) {
             document.getElementById('telaPrincipal').style.display = 'none';
             document.getElementById('telaProcessamento').style.display = 'block';
@@ -404,9 +394,10 @@
                     }
                 }
 
-                const pedidosLocais = JSON.parse(localStorage.getItem('bissau_orders')) || [];
+                const pedidosLocais = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
                 pedidosLocais.push({
                     ...novoPedido,
+                    id: orderIdCode,
                     data: new Date().toLocaleDateString('pt-PT') + ' ' + new Date().toLocaleTimeString('pt-PT', {hour: '2-digit', minute:'2-digit'})
                 });
                 localStorage.setItem('bissau_orders', JSON.stringify(pedidosLocais));

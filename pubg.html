@@ -25,6 +25,7 @@
             --text-main: #ffffff;
             --text-muted: #94a3b8;
             --success: #10b981;
+            --danger: #ef4444;
             --border: #1e293b;
             --border-highlight: rgba(124, 58, 237, 0.35);
         }
@@ -151,6 +152,19 @@
             line-height: 1.4;
         }
 
+        .stock-warning {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
         /* Form Inputs */
         .input-card {
             background-color: var(--bg-card);
@@ -238,11 +252,6 @@
             gap: 4px;
         }
 
-        .pkg-uc::before {
-            content: '🪙';
-            font-size: 0.9rem;
-        }
-
         .pkg-price {
             font-size: 0.85rem;
             font-weight: 800;
@@ -292,6 +301,13 @@
             justify-content: center;
             gap: 8px;
             text-transform: uppercase;
+        }
+
+        .btn-add-cart:disabled, .btn-buy-wa:disabled {
+            background: #334155 !important;
+            color: #94a3b8 !important;
+            cursor: not-allowed;
+            box-shadow: none !important;
         }
 
         .btn-add-cart:active, .btn-buy-wa:active {
@@ -410,6 +426,11 @@
             </div>
         </div>
 
+        <!-- Aviso de Stock -->
+        <div id="stockWarning" class="stock-warning">
+            🔴 Produto Temporariamente Esgotado no Painel de Administração.
+        </div>
+
         <!-- Dados do Jogador -->
         <div class="input-card">
             <h3 class="input-card-title">1. Dados do Jogador</h3>
@@ -425,39 +446,39 @@
 
         <!-- Seleção de Pacote -->
         <div class="packages-title">2. Escolha a Quantidade de UC</div>
-        <div class="package-grid">
-            <div class="pkg-card selected" onclick="selectPackage(this, 60, 800)">
-                <div class="pkg-uc">60 UC</div>
+        <div class="package-grid" id="packageGridContainer">
+            <div class="pkg-card selected" onclick="selectPackage(this, '60 UC', 800)">
+                <div class="pkg-uc">🪙 60 UC</div>
                 <div class="pkg-price">800 FCFA</div>
             </div>
-            <div class="pkg-card" onclick="selectPackage(this, 325, 3500)">
-                <div class="pkg-uc">325 UC</div>
+            <div class="pkg-card" onclick="selectPackage(this, '325 UC', 3500)">
+                <div class="pkg-uc">🪙 325 UC</div>
                 <div class="pkg-price">3.500 FCFA</div>
             </div>
-            <div class="pkg-card" onclick="selectPackage(this, 660, 6500)">
-                <div class="pkg-uc">660 UC</div>
+            <div class="pkg-card" onclick="selectPackage(this, '660 UC', 6500)">
+                <div class="pkg-uc">🪙 660 UC</div>
                 <div class="pkg-price">6.500 FCFA</div>
             </div>
-            <div class="pkg-card" onclick="selectPackage(this, 1800, 15000)">
-                <div class="pkg-uc">1.800 UC</div>
+            <div class="pkg-card" onclick="selectPackage(this, '1.800 UC', 15000)">
+                <div class="pkg-uc">🪙 1.800 UC</div>
                 <div class="pkg-price">15.000 FCFA</div>
             </div>
-            <div class="pkg-card" onclick="selectPackage(this, 3850, 29500)">
-                <div class="pkg-uc">3.850 UC</div>
+            <div class="pkg-card" onclick="selectPackage(this, '3.850 UC', 29500)">
+                <div class="pkg-uc">🪙 3.850 UC</div>
                 <div class="pkg-price">29.500 FCFA</div>
             </div>
-            <div class="pkg-card" onclick="selectPackage(this, 8100, 63000)">
-                <div class="pkg-uc">8.100 UC</div>
+            <div class="pkg-card" onclick="selectPackage(this, '8.100 UC', 63000)">
+                <div class="pkg-uc">🪙 8.100 UC</div>
                 <div class="pkg-price">63.000 FCFA</div>
             </div>
         </div>
 
         <!-- Botões de Ação -->
         <div class="action-container">
-            <button class="btn-add-cart" onclick="addToCart()">
+            <button id="btnAddCart" class="btn-add-cart" onclick="addToCart()">
                 🛒 Adicionar ao Carrinho
             </button>
-            <button class="btn-buy-wa" onclick="buyDirectWhatsApp()">
+            <button id="btnBuyWA" class="btn-buy-wa" onclick="buyDirectWhatsApp()">
                 💬 Comprar Directo no WhatsApp
             </button>
         </div>
@@ -466,7 +487,7 @@
     <!-- Toast Notification -->
     <div id="toast" class="toast">Item adicionado ao carrinho!</div>
 
-    <!-- Navegação Inferior (4 Opções) -->
+    <!-- Navegação Inferior -->
     <div class="bottom-nav">
         <a href="index.html" class="nav-item">
             <div class="nav-icon-wrapper"><span class="nav-icon">🏠</span></div>
@@ -495,7 +516,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
@@ -510,19 +531,80 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let selectedUC = 60;
+        let selectedLabel = '60 UC';
         let selectedPrice = 800;
+        let isProductEsgotado = false;
 
-        window.selectPackage = function(element, uc, price) {
+        function sincronizarComAdmin() {
+            const q = query(collection(db, "produtos"), where("paginaDestino", "==", "pubg.html"));
+            onSnapshot(q, (snapshot) => {
+                if (!snapshot.empty) {
+                    const prodData = snapshot.docs[0].data();
+                    isProductEsgotado = prodData.esgotado || false;
+
+                    const stockWarning = document.getElementById('stockWarning');
+                    const btnAddCart = document.getElementById('btnAddCart');
+                    const btnBuyWA = document.getElementById('btnBuyWA');
+
+                    if (isProductEsgotado) {
+                        if (stockWarning) stockWarning.style.display = 'block';
+                        if (btnAddCart) {
+                            btnAddCart.disabled = true;
+                            btnAddCart.innerText = '🔴 PRODUTO ESGOTADO';
+                        }
+                        if (btnBuyWA) {
+                            btnBuyWA.disabled = true;
+                            btnBuyWA.innerText = '🔴 INDISPONÍVEL';
+                        }
+                    } else {
+                        if (stockWarning) stockWarning.style.display = 'none';
+                        if (btnAddCart) {
+                            btnAddCart.disabled = false;
+                            btnAddCart.innerText = '🛒 ADICIONAR AO CARRINHO';
+                        }
+                        if (btnBuyWA) {
+                            btnBuyWA.disabled = false;
+                            btnBuyWA.innerText = '💬 COMPRAR DIRECTO NO WHATSAPP';
+                        }
+                    }
+
+                    if (prodData.opcoes && Array.isArray(prodData.opcoes) && prodData.opcoes.length > 0) {
+                        const grid = document.getElementById('packageGridContainer');
+                        if (grid) {
+                            grid.innerHTML = '';
+                            prodData.opcoes.forEach((opt, index) => {
+                                const isSelected = index === 0;
+                                if (isSelected) {
+                                    selectedLabel = opt.rotulo;
+                                    selectedPrice = opt.preco;
+                                }
+
+                                const card = document.createElement('div');
+                                card.className = `pkg-card ${isSelected ? 'selected' : ''}`;
+                                card.onclick = function() {
+                                    selectPackage(card, opt.rotulo, opt.preco);
+                                };
+                                card.innerHTML = `
+                                    <div class="pkg-uc">🪙 ${opt.rotulo}</div>
+                                    <div class="pkg-price">${opt.preco.toLocaleString()} FCFA</div>
+                                `;
+                                grid.appendChild(card);
+                            });
+                        }
+                    }
+                }
+            }, (err) => console.error("Erro ao sincronizar PUBG em tempo real:", err));
+        }
+
+        window.selectPackage = function(element, label, price) {
             document.querySelectorAll('.pkg-card').forEach(card => card.classList.remove('selected'));
             element.classList.add('selected');
-            selectedUC = uc;
+            selectedLabel = label;
             selectedPrice = price;
         };
 
         function updateNavBadges() {
             try {
-                // 1. Carrinho
                 const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
                 const totalCarrinho = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
                 
@@ -542,7 +624,6 @@
                     topCartBadge.style.display = totalCarrinho > 0 ? 'flex' : 'none';
                 }
 
-                // 2. Pedidos
                 const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
                 const totalPedidos = pedidos.length;
                 const pedidosBadge = document.getElementById('pedidosBadge');
@@ -570,6 +651,11 @@
         }
 
         window.addToCart = function() {
+            if (isProductEsgotado) {
+                alert("Desculpe, este produto está esgotado no momento.");
+                return;
+            }
+
             const playerId = document.getElementById('playerId').value.trim();
             const playerName = document.getElementById('playerName').value.trim();
 
@@ -582,8 +668,8 @@
             const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
 
             const newItem = {
-                id: 'pubg_' + selectedUC + '_' + Date.now(),
-                nome: 'PUBG Mobile - ' + selectedUC + ' UC',
+                id: 'pubg_' + Date.now(),
+                nome: 'PUBG Mobile - ' + selectedLabel,
                 opcao: 'ID: ' + playerId + (playerName ? ' | Nome: ' + playerName : ''),
                 price: selectedPrice,
                 quantidade: 1,
@@ -594,10 +680,15 @@
             localStorage.setItem('bissau_cart', JSON.stringify(cart));
 
             updateNavBadges();
-            showToast("✅ " + selectedUC + " UC adicionado ao carrinho!");
+            showToast("✅ " + selectedLabel + " adicionado ao carrinho!");
         };
 
         window.buyDirectWhatsApp = async function() {
+            if (isProductEsgotado) {
+                alert("Desculpe, este produto está esgotado no momento.");
+                return;
+            }
+
             const playerId = document.getElementById('playerId').value.trim();
             const playerName = document.getElementById('playerName').value.trim();
 
@@ -619,7 +710,7 @@
                     comprovativoFornecido: "WhatsApp Direto",
                     tipoComprovativo: "WhatsApp",
                     itens: [{
-                        nome: 'PUBG Mobile - ' + selectedUC + ' UC',
+                        nome: 'PUBG Mobile - ' + selectedLabel,
                         opcao: 'ID: ' + playerId + (playerName ? ' | Nome: ' + playerName : ''),
                         price: selectedPrice,
                         quantidade: 1
@@ -637,7 +728,7 @@
                     orderId: orderIdCode,
                     id: orderIdCode,
                     data: new Date().toLocaleDateString('pt-PT'),
-                    itens: [{ nome: 'PUBG Mobile - ' + selectedUC + ' UC', opcao: 'ID: ' + playerId, price: selectedPrice, quantidade: 1 }],
+                    itens: [{ nome: 'PUBG Mobile - ' + selectedLabel, opcao: 'ID: ' + playerId, price: selectedPrice, quantidade: 1 }],
                     total: selectedPrice,
                     status: 'Pendente'
                 });
@@ -649,7 +740,7 @@
 
             let text = `🎮 *PEDIDO DIRETO - PUBG MOBILE UC*\n`;
             text += `--------------------------------\n`;
-            text += `📦 *Pacote:* ${selectedUC} UC\n`;
+            text += `📦 *Pacote:* ${selectedLabel}\n`;
             text += `💰 *Valor:* ${selectedPrice.toLocaleString()} FCFA\n`;
             text += `🆔 *ID de Jogador:* ${playerId}\n`;
             if (playerName) text += `👤 *Nome no Jogo:* ${playerName}\n`;
@@ -661,7 +752,10 @@
             window.open(waUrl, '_blank');
         };
 
-        document.addEventListener('DOMContentLoaded', updateNavBadges);
+        document.addEventListener('DOMContentLoaded', () => {
+            updateNavBadges();
+            sincronizarComAdmin();
+        });
 
         document.addEventListener('focusin', (e) => {
             if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {

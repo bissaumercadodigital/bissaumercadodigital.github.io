@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Produto - Mercado Digital Bissau</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-dark: #090d16; --orange: #ff6600; --text-main: #ffffff; }
+        body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; padding: 2rem; }
+        .container { max-width: 600px; margin: 0 auto; background: #121926; padding: 2rem; border-radius: 16px; text-align: center; }
+        img { max-width: 150px; border-radius: 12px; margin-bottom: 1rem; }
+        .btn { background: var(--orange); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 1rem; width: 100%; }
+        #loading { color: var(--orange); }
+    </style>
+</head>
+<body>
+    <a href="index.html" style="color: white; text-decoration: none;">‹ Voltar</a>
+    <div class="container" id="product-container">
+        <h2 id="loading">A carregar produto...</h2>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Obter ID do produto pelo URL (ex: produto.html?id=123)
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        async function carregarProduto() {
+            if (!productId) {
+                document.getElementById('product-container').innerHTML = "<h2>Produto não encontrado.</h2>";
+                return;
+            }
+            const docRef = doc(db, "produtos", productId);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const p = docSnap.data();
+                document.getElementById('product-container').innerHTML = `
+                    <img src="${p.imagem || 'default.png'}" alt="${p.nome}">
+                    <h2>${p.nome}</h2>
+                    <p style="color: #94a3b8; margin: 10px 0;">${p.descricao || 'Sem descrição'}</p>
+                    <h3 style="color: var(--orange);">${p.preco} FCFA</h3>
+                    <button class="btn" onclick="adicionarCarrinho('${docSnap.id}', '${p.nome}', ${p.preco})">Adicionar ao Carrinho</button>
+                `;
+            } else {
+                document.getElementById('product-container').innerHTML = "<h2>Produto não existe.</h2>";
+            }
+        }
+
+        window.adicionarCarrinho = function(id, nome, preco) {
+            let cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+            cart.push({ id, name: nome, price: preco, quantidade: 1 });
+            localStorage.setItem('bissau_cart', JSON.stringify(cart));
+            alert("Adicionado ao carrinho!");
+            window.location.href = "carrinho.html";
+        };
+
+        carregarProduto();
+    </script>
+</body>
+</html>

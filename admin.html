@@ -27,7 +27,6 @@
         
         .admin-container { max-width: 1000px; margin: 0 auto; }
         
-        /* Card de Login */
         .login-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border);
@@ -73,7 +72,6 @@
             display: none;
         }
 
-        /* Dashboard & Tabs */
         #dashboardArea { display: none; }
 
         .top-admin-bar {
@@ -122,7 +120,6 @@
             cursor: pointer;
         }
 
-        /* Card de Registo Manual & Formulários */
         .manual-add-card {
             background-color: var(--bg-card);
             border: 1px dashed var(--orange);
@@ -199,7 +196,6 @@
             border-color: var(--danger);
         }
 
-        /* Estilos da Tabela */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -362,7 +358,7 @@
 
                 <div class="grid-2">
                     <input type="text" id="prodCategoria" class="form-input" placeholder="Categoria (Ex: Streaming, Jogos)">
-                    <input type="text" id="prodPaginaDestino" class="form-input" placeholder="Página de Destino (Ex: netflix.html ou pubg.html)">
+                    <input type="text" id="prodPaginaDestino" class="form-input" placeholder="Página de Destino (Ex: netflix.html ou canva.html)">
                 </div>
 
                 <div class="grid-2">
@@ -388,7 +384,6 @@
                 <button class="btn-approve" onclick="salvarProduto()">🚀 Publicar Produto no Site</button>
             </div>
 
-            <!-- Lista de Produtos Cadastrados -->
             <h3 style="margin-bottom: 15px; color: var(--orange);">📋 Produtos Publicados no Site</h3>
             <div class="table-responsive">
                 <table class="custom-table">
@@ -440,7 +435,6 @@
         const assinaturasTableBody = document.getElementById('assinaturasTableBody');
         const produtosTableBody = document.getElementById('produtosTableBody');
 
-        // Desativar escutas anteriores ao trocar de conta/estado
         let unsubPedidos = null;
         let unsubAssinaturas = null;
         let unsubProdutos = null;

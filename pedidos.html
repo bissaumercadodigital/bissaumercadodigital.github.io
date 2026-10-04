@@ -194,6 +194,12 @@
             border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
+        .status-badge.cancelado {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
         .order-items {
             display: flex;
             flex-direction: column;
@@ -403,12 +409,12 @@
         <div id="ordersContainer">
             <div id="ordersList" class="orders-list"></div>
             <button id="btnClearHistory" class="btn-clear-history" onclick="clearOrdersHistory()" style="display: none;">
-                Limpar Histórico de Pedidos
+                Limpar Histórico de Pedidos Local
             </button>
         </div>
     </div>
 
-    <!-- Navegação Inferior (4 Opções) -->
+    <!-- Navegação Inferior -->
     <div class="bottom-nav">
         <a href="index.html" class="nav-item">
             <div class="nav-icon-wrapper">
@@ -440,7 +446,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
@@ -452,7 +459,10 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
+
+        let unsubFirestore = null;
 
         function atualizarContadoresNav() {
             try {
@@ -486,13 +496,12 @@
             }
         }
 
-        async function renderOrders() {
-            const localOrders = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
+        function renderOrders(ordersData) {
             const emptyOrders = document.getElementById('emptyOrders');
             const ordersList = document.getElementById('ordersList');
             const btnClear = document.getElementById('btnClearHistory');
 
-            if (localOrders.length === 0) {
+            if (!ordersData || ordersData.length === 0) {
                 emptyOrders.style.display = 'block';
                 ordersList.innerHTML = '';
                 btnClear.style.display = 'none';
@@ -503,29 +512,12 @@
             btnClear.style.display = 'block';
             ordersList.innerHTML = '';
 
-            const orderIds = localOrders.map(o => o.orderId || o.id).filter(Boolean);
-
-            let firestoreMap = {};
-            if (orderIds.length > 0) {
-                try {
-                    const q = query(collection(db, "pedidos"), where("orderId", "in", orderIds));
-                    const querySnapshot = await getDocs(q);
-                    querySnapshot.forEach(docSnap => {
-                        const data = docSnap.data();
-                        firestoreMap[data.orderId] = data;
-                    });
-                } catch (e) {
-                    console.warn("Não foi possível sincronizar em tempo real com o Firestore:", e);
-                }
-            }
-
-            const reversedOrders = [...localOrders].reverse();
+            const reversedOrders = [...ordersData].reverse();
 
             reversedOrders.forEach((order) => {
                 const displayOrderId = order.orderId || order.id || 'ORD-000000';
-                const firestoreData = firestoreMap[displayOrderId] || {};
-                const currentStatus = firestoreData.status || order.status || 'Pendente';
-                const dadosEntregues = firestoreData.dadosEntregues || order.dadosEntregues || '';
+                const currentStatus = order.status || 'Pendente';
+                const dadosEntregues = order.dadosEntregues || '';
 
                 const orderCard = document.createElement('div');
                 orderCard.className = 'order-card';
@@ -542,7 +534,7 @@
                                 <div>
                                     <div class="item-name">${item.nome}</div>
                                     <div class="item-sub">${item.opcao || ''}</div>
-                                    ${clienteNome ? `<div class="item-sub">Cliente: ${clienteNome}${clienteTelefone ? '| WA: ' + clienteTelefone : ''}</div>` : ''}
+                                    ${clienteNome ? `<div class="item-sub">Cliente: ${clienteNome}${clienteTelefone ? ' | WA: ' + clienteTelefone : ''}</div>` : ''}
                                 </div>
                                 <div class="item-price-qty">${item.quantidade || 1}x | ${itemTotal.toLocaleString()} FCFA</div>
                             </div>
@@ -592,6 +584,60 @@
             });
         }
 
+        function carregarPedidosLocais() {
+            const localOrders = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
+            renderOrders(localOrders);
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (unsubFirestore) unsubFirestore();
+
+            const localOrders = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
+            const localOrderIds = localOrders.map(o => o.orderId || o.id).filter(Boolean);
+
+            if (user) {
+                const q = query(collection(db, "pedidos"), where("userId", "==", user.uid));
+                unsubFirestore = onSnapshot(q, (snapshot) => {
+                    const firestoreOrders = [];
+                    snapshot.forEach(docSnap => {
+                        firestoreOrders.push({ id: docSnap.id, ...docSnap.data() });
+                    });
+
+                    if (firestoreOrders.length > 0) {
+                        renderOrders(firestoreOrders);
+                    } else {
+                        carregarPedidosLocais();
+                    }
+                }, (err) => {
+                    console.warn("Erro no snapshot Firestore do utilizador:", err);
+                    carregarPedidosLocais();
+                });
+            } else if (localOrderIds.length > 0) {
+                const q = query(collection(db, "pedidos"), where("orderId", "in", localOrderIds.slice(0, 10)));
+                unsubFirestore = onSnapshot(q, (snapshot) => {
+                    const firestoreMap = {};
+                    snapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        firestoreMap[data.orderId] = data;
+                    });
+
+                    const merged = localOrders.map(loc => {
+                        const idCode = loc.orderId || loc.id;
+                        if (firestoreMap[idCode]) {
+                            return { ...loc, ...firestoreMap[idCode] };
+                        }
+                        return loc;
+                    });
+                    renderOrders(merged);
+                }, (err) => {
+                    console.warn("Erro no snapshot do Firestore local:", err);
+                    carregarPedidosLocais();
+                });
+            } else {
+                carregarPedidosLocais();
+            }
+        });
+
         window.contactSupportOrder = function(orderId) {
             const text = `Ol%C3%A1!%20Gostaria%20de%20saber%20o%20estado%20do%20meu%20pedido%20*${orderId}*.`;
             window.open(`https://wa.me/245955288370?text=${text}`, '_blank');
@@ -601,14 +647,14 @@
             if (confirm("Deseja realmente apagar o seu histórico local de pedidos?")) {
                 localStorage.removeItem('bissau_orders');
                 localStorage.removeItem('bissau_pedidos');
-                renderOrders();
+                carregarPedidosLocais();
                 atualizarContadoresNav();
             }
         };
 
         document.addEventListener('DOMContentLoaded', () => {
             atualizarContadoresNav();
-            renderOrders();
+            carregarPedidosLocais();
         });
     </script>
 </body>

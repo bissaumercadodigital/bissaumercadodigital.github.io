@@ -163,10 +163,16 @@
                 document.getElementById('daysLeftText').innerText = diasRestantesText;
                 document.getElementById('statusBadgeContainer').innerHTML = statusBadgeHtml;
 
+                let precoRenovacao = 0;
+                if (ass.itemDetalhe && Array.isArray(ass.itemDetalhe) && ass.itemDetalhe.length > 0) {
+                    precoRenovacao = parseFloat(ass.itemDetalhe[0].price) || 0;
+                }
+
                 itemParaCarrinho = {
+                    id: 'renovacao_' + Date.now(),
                     nome: `Renovação: ${ass.servicoNome}`,
                     opcao: `Renovação de Conta (${ass.clienteNome})`,
-                    price: ass.itemDetalhe && ass.itemDetalhe[0] ? (ass.itemDetalhe[0].price || 0) : 0,
+                    price: precoRenovacao,
                     quantidade: 1,
                     img: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=200'
                 };

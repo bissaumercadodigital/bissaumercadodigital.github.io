@@ -363,7 +363,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
-        /* Navigation Inferior (4 Opções) */
+        /* Navigation Inferior */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -535,7 +535,7 @@
         </div>
     </div>
 
-    <!-- Navegação Inferior (4 Opções com Contadores) -->
+    <!-- Navegação Inferior -->
     <div class="bottom-nav">
         <a href="index.html" class="nav-item">
             <div class="nav-icon-wrapper">
@@ -579,7 +579,8 @@
             getFirestore, 
             doc, 
             getDoc, 
-            setDoc 
+            setDoc,
+            onSnapshot 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -597,6 +598,7 @@
         const googleProvider = new GoogleAuthProvider();
 
         let currentUser = null;
+        let unsubscribeUserDoc = null;
 
         function atualizarContadoresNav() {
             try {
@@ -645,6 +647,8 @@
 
         onAuthStateChanged(auth, async (user) => {
             document.getElementById('loadingBox').style.display = 'none';
+            if (unsubscribeUserDoc) unsubscribeUserDoc();
+
             if (user) {
                 currentUser = user;
                 document.getElementById('userProfileBox').style.display = 'block';
@@ -680,33 +684,30 @@
                 try {
                     const savedRef = localStorage.getItem('bissau_ref');
                     const userRef = doc(db, "usuarios", user.uid);
-                    const docSnap = await getDoc(userRef);
+                    
+                    unsubscribeUserDoc = onSnapshot(userRef, (docSnap) => {
+                        if (docSnap.exists()) {
+                            const data = docSnap.data();
+                            const pontos = data.pontos || 0;
+                            document.getElementById('userPoints').innerText = pontos.toLocaleString() + ' FCFA';
+                        } else {
+                            const userData = {
+                                nome: user.displayName || 'Cliente',
+                                email: user.email,
+                                pontos: 0,
+                                criadoEm: new Date().toISOString()
+                            };
 
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        const pontos = data.pontos || 0;
-                        document.getElementById('userPoints').innerText = pontos.toLocaleString() + ' FCFA';
+                            if (savedRef && savedRef !== user.uid) {
+                                userData.convidadoPor = savedRef;
+                                localStorage.removeItem('bissau_ref');
+                            }
 
-                        if (!data.convidadoPor && savedRef && savedRef !== user.uid) {
-                            await setDoc(userRef, { convidadoPor: savedRef }, { merge: true });
-                            localStorage.removeItem('bissau_ref');
+                            setDoc(userRef, userData, { merge: true });
+                            document.getElementById('userPoints').innerText = '0 FCFA';
                         }
-                    } else {
-                        const userData = {
-                            nome: user.displayName || 'Cliente',
-                            email: user.email,
-                            pontos: 0,
-                            criadoEm: new Date().toISOString()
-                        };
+                    });
 
-                        if (savedRef && savedRef !== user.uid) {
-                            userData.convidadoPor = savedRef;
-                            localStorage.removeItem('bissau_ref');
-                        }
-
-                        await setDoc(userRef, userData, { merge: true });
-                        document.getElementById('userPoints').innerText = '0 FCFA';
-                    }
                 } catch (err) {
                     console.error("Erro ao carregar saldo de pontos:", err);
                 }

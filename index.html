@@ -48,10 +48,12 @@
         .card { background-color: var(--bg-card); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative; }
         .card-banner { height: 105px; width: 100%; background-size: cover; background-position: center; position: relative; }
         .card-badge { position: absolute; top: 8px; right: 8px; background: rgba(0, 0, 0, 0.75); color: var(--orange); font-size: 0.62rem; font-weight: 800; padding: 3px 7px; border-radius: 8px; border: 1px solid rgba(255, 102, 0, 0.4); z-index: 2; }
+        .card-badge.esgotado-badge { background: rgba(239, 68, 68, 0.9); color: #ffffff; border-color: #ef4444; }
         .card-info { padding: 0.75rem; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
         .card-info h3 { font-size: 0.9rem; font-weight: 800; color: #ffffff; margin-bottom: 0.2rem; }
         .card-info p { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.75rem; }
         .card-action-btn { background: linear-gradient(135deg, var(--primary), #5b21b6); color: #ffffff; text-align: center; padding: 8px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: block; width: 100%; }
+        .card.is-esgotado .card-action-btn { background: #334155; color: #94a3b8; }
         .payment-banner { margin: 0.5rem 1rem 1.5rem 1rem; background: linear-gradient(135deg, #1f140e 0%, #121826 100%); border-radius: 16px; padding: 1.1rem; border: 1px solid rgba(255, 102, 0, 0.4); display: flex; flex-direction: column; gap: 8px; }
         .payment-header { display: flex; align-items: center; gap: 10px; }
         .payment-icon-box { width: 38px; height: 38px; background-color: var(--orange); color: #ffffff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
@@ -104,19 +106,19 @@
 
     <div class="section-header" id="jogos-section"><h2>Jogos e Moedas Digitais</h2></div>
     <div class="product-grid" id="gridJogos">
-        <a href="pubg.html" class="card product-card" data-title="pubg mobile uc moedas">
+        <a href="pubg.html" class="card product-card" data-page="pubg.html" data-title="pubg mobile uc moedas">
             <div class="card-banner" style="background-image: url('https://img.utdstc.com/icon/f39/58f/f3958fd8814bbe41a967f6aaab3ec533396d9b39b9684cb003cdf75461889bdd:600');"><span class="card-badge">UC</span></div>
             <div class="card-info"><h3>PUBG MOBILE</h3><p>Moedas UC diretas por ID.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
-        <a href="freefire.html" class="card product-card" data-title="free fire diamantes ff">
+        <a href="freefire.html" class="card product-card" data-page="freefire.html" data-title="free fire diamantes ff">
             <div class="card-banner" style="background-image: url('https://play-lh.googleusercontent.com/cK-U0_B9GrnSy26SNISDuvU_hL4VggyqJ1J5V2oiuyVEfiGo7fzegdBjk0ejXPg3PKK5sPwumdLBbWv8KkBKLQ=w240-h480-rw');"><span class="card-badge">DIAMANTES💎</span></div>
             <div class="card-info"><h3>FREE FIRE</h3><p>Recarga instantânea por ID.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
-        <a href="playstation.html" class="card product-card" data-title="playstation ps plus store">
+        <a href="playstation.html" class="card product-card" data-page="playstation.html" data-title="playstation ps plus store">
             <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1606813907291-d86efa9b94db?q=80&w=600');"><span class="card-badge">PS4 / PS5</span></div>
             <div class="card-info"><h3>PLAYSTATION</h3><p>Assinatura PS Plus e Gift Cards.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
-        <a href="efootball.html" class="card product-card" data-title="efootball 2027 moedas">
+        <a href="efootball.html" class="card product-card" data-page="efootball.html" data-title="efootball 2027 moedas">
             <div class="card-banner" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNYn4nxb33ZToK-vN5DRyzHXcpRLHemIxihtBo5gEvZgyCLcA-FwUhAKk&s=10');"><span class="card-badge">2027 MOBILE</span></div>
             <div class="card-info"><h3>eFOOTBALL 2027</h3><p>Moedas para Android e iPhone.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
@@ -124,15 +126,15 @@
 
     <div class="section-header" id="streaming-section"><h2>Streaming e TV</h2></div>
     <div class="product-grid" id="gridStreaming">
-        <a href="primevideo.html" class="card product-card" data-title="prime video amazon">
+        <a href="primevideo.html" class="card product-card" data-page="primevideo.html" data-title="prime video amazon">
             <div class="card-banner" style="background-image: url('https://m.media-amazon.com/images/G/01/primevideo/seo/primevideo-seo-logo.png');"><span class="card-badge">4K ULTRA HD</span></div>
             <div class="card-info"><h3>PRIME VIDEO</h3><p>Filmes e séries sem anúncios.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
-        <a href="netflix.html" class="card product-card" data-title="netflix 4k ultra hd">
+        <a href="netflix.html" class="card product-card" data-page="netflix.html" data-title="netflix 4k ultra hd">
             <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=600');"><span class="card-badge">4K ULTRA HD</span></div>
             <div class="card-info"><h3>NETFLIX</h3><p>Acesso telas Premium em HD e 4K.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
-        <a href="iptv.html" class="card product-card" data-title="iptv canais ao vivo">
+        <a href="iptv.html" class="card product-card" data-page="iptv.html" data-title="iptv canais ao vivo">
             <div class="card-banner" style="background-image: url('https://static.ndmais.com.br/2025/05/iptv-smart-tv.jpg');"><span class="card-badge">+20.000 CANAIS</span></div>
             <div class="card-info"><h3>IPTV PREMIUM</h3><p>Canais abertos e fechados ao vivo.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
@@ -140,7 +142,7 @@
 
     <div class="section-header" id="edicao-section"><h2>Design e Edição</h2></div>
     <div class="product-grid" id="gridEdicao">
-        <a href="canva.html" class="card product-card" data-title="canva pro premium">
+        <a href="canva.html" class="card product-card" data-page="canva.html" data-title="canva pro premium">
             <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=600');"><span class="card-badge">PRO IA</span></div>
             <div class="card-info"><h3>CANVA PRO</h3><p>Ferramentas de design e IA.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
@@ -148,7 +150,7 @@
 
     <div class="section-header" id="websites-section"><h2>Criação de Websites & Lojas</h2></div>
     <div class="product-grid" id="gridWebsites">
-        <a href="sites.html" class="card product-card" data-title="criar site website loja virtual">
+        <a href="sites.html" class="card product-card" data-page="sites.html" data-title="criar site website loja virtual">
             <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=600');"><span class="card-badge">WEB DEV</span></div>
             <div class="card-info"><h3>CRIAÇÃO DE SITES</h3><p>Websites profissionais e lojas.</p><span class="card-action-btn">Ver Opções</span></div>
         </a>
@@ -202,11 +204,11 @@
         window.addEventListener('DOMContentLoaded', atualizarContadoresNav);
     </script>
 
-    <!-- Script do Firebase para monitorar Login e Pontos -->
+    <!-- Script do Firebase para Monitorar Login, Pontos e Estado de Stock -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
@@ -261,6 +263,33 @@
                 if (topPointsContainer) topPointsContainer.style.display = 'none';
                 if (unsubscribePoints) unsubscribePoints();
             }
+        });
+
+        // Sincronizar estado de esgotado dos produtos na Home Page
+        onSnapshot(collection(db, "produtos"), (snapshot) => {
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                if (data.paginaDestino) {
+                    const card = document.querySelector(`.product-card[data-page="${data.paginaDestino}"]`);
+                    if (card) {
+                        const badge = card.querySelector('.card-badge');
+                        const btn = card.querySelector('.card-action-btn');
+
+                        if (data.esgotado) {
+                            card.classList.add('is-esgotado');
+                            if (badge) {
+                                badge.innerText = 'ESGOTADO 🔴';
+                                badge.classList.add('esgotado-badge');
+                            }
+                            if (btn) btn.innerText = 'Esgotado';
+                        } else {
+                            card.classList.remove('is-esgotado');
+                            if (badge) badge.classList.remove('esgotado-badge');
+                            if (btn) btn.innerText = 'Ver Opções';
+                        }
+                    }
+                }
+            });
         });
 
         window.handleLogout = async function() {

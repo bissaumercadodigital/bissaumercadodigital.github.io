@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        /* Esconder selos desnecessários */
         #netlify-badge, .netlify-badge, a[href*="netlify.com"] {
             display: none !important;
         }
@@ -229,7 +228,6 @@
             justify-content: center;
         }
 
-        /* Card Saldo de Pontos */
         .points-box {
             background-color: var(--bg-card);
             border: 1px solid var(--border-highlight);
@@ -288,7 +286,6 @@
             cursor: pointer;
         }
 
-        /* Order Summary Card */
         .summary-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border);
@@ -331,7 +328,6 @@
             color: var(--orange);
         }
 
-        /* Checkout Form */
         .checkout-box {
             background-color: var(--bg-card);
             border: 1px solid var(--border-highlight);
@@ -386,7 +382,6 @@
             font-size: 0.85rem;
         }
 
-        /* Botões de Ação */
         .action-container {
             display: flex;
             flex-direction: column;
@@ -447,7 +442,6 @@
             margin-top: 0.8rem;
         }
 
-        /* Navigation Inferior (4 Opções) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -534,10 +528,8 @@
 
         <!-- Conteúdo do Carrinho -->
         <div id="cartContent">
-            <!-- Lista de Produtos -->
             <div id="cartList" class="cart-list"></div>
 
-            <!-- Saldo de Pontos / Desconto -->
             <div id="pointsBox" class="points-box" style="display: none;">
                 <div class="points-header">
                     <span class="points-title">🎁 Usar Saldo de Pontos</span>
@@ -552,7 +544,6 @@
                 </label>
             </div>
 
-            <!-- Resumo dos Valores -->
             <div class="summary-card">
                 <h3 class="summary-title">Resumo da Compra</h3>
                 <div class="summary-row">
@@ -573,7 +564,6 @@
                 </div>
             </div>
 
-            <!-- Informações de Pagamento & Entrega -->
             <div class="checkout-box">
                 <h3 class="summary-title">Dados para Entrega</h3>
 
@@ -592,7 +582,6 @@
                     O pagamento é feito enviando o valor total para o número <strong>955288370</strong>.
                 </div>
 
-                <!-- Botões de Ação -->
                 <div class="action-container">
                     <button class="btn-site" onclick="checkoutSite()">
                         💳 Pagar pelo Site (Automático)
@@ -608,7 +597,7 @@
         </div>
     </div>
 
-    <!-- Navegação Inferior (4 Opções com Contadores) -->
+    <!-- Navegação Inferior -->
     <div class="bottom-nav">
         <a href="index.html" class="nav-item">
             <div class="nav-icon-wrapper">
@@ -851,7 +840,6 @@
 
             const orderIdCode = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
 
-            // 1. ENVIAR PEDIDO DIRETO AO FIRESTORE PARA O PAINEL ADMIN VER
             try {
                 await addDoc(collection(db, "pedidos"), {
                     orderId: orderIdCode,
@@ -872,7 +860,6 @@
                 console.error("Erro ao sincronizar Firestore:", err);
             }
 
-            // 2. MONTAR MENSAGEM WHATSAPP
             let text = `🛒 *NOVO PEDIDO - MERCADO DIGITAL BISSAU*\n`;
             text += `--------------------------------\n`;
             text += `👤 *Cliente:* ${name}\n`;
@@ -947,7 +934,6 @@
         });
     </script>
 
-    <!-- Ocultar barra inferior ao abrir o teclado virtual -->
     <script>
         document.addEventListener('focusin', (e) => {
             if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {

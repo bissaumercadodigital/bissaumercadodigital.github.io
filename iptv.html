@@ -27,6 +27,7 @@
             --text-main: #ffffff;
             --text-muted: #94a3b8;
             --success: #10b981;
+            --danger: #ef4444;
             --border: #1e293b;
             --border-highlight: rgba(6, 182, 212, 0.35);
         }
@@ -151,6 +152,19 @@
             font-size: 0.8rem;
             color: var(--text-muted);
             line-height: 1.4;
+        }
+
+        .stock-warning {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            display: none;
         }
 
         /* Form Inputs */
@@ -298,6 +312,13 @@
             text-transform: uppercase;
         }
 
+        .btn-add-cart:disabled, .btn-buy-wa:disabled {
+            background: #334155 !important;
+            color: #94a3b8 !important;
+            cursor: not-allowed;
+            box-shadow: none !important;
+        }
+
         .btn-add-cart:active, .btn-buy-wa:active {
             transform: scale(0.98);
         }
@@ -414,6 +435,11 @@
             </div>
         </div>
 
+        <!-- Aviso de Stock -->
+        <div id="stockWarning" class="stock-warning">
+            🔴 Produto Temporariamente Esgotado no Painel de Administração.
+        </div>
+
         <!-- Dados do Dispositivo -->
         <div class="input-card">
             <h3 class="input-card-title">1. Dispositivo & Contacto</h3>
@@ -438,7 +464,7 @@
 
         <!-- Seleção do Plano -->
         <div class="packages-title">2. Escolha o Plano Desejado</div>
-        <div class="package-grid">
+        <div class="package-grid" id="packageGridContainer">
             <div class="pkg-card selected" onclick="selectPackage(this, 'IPTV Premium (1 Mês)', 5000)">
                 <div class="pkg-info">
                     <div class="pkg-title">📺 Plano 1 Mês</div>
@@ -474,10 +500,10 @@
 
         <!-- Botões de Ação -->
         <div class="action-container">
-            <button class="btn-add-cart" onclick="addToCart()">
+            <button id="btnAddCart" class="btn-add-cart" onclick="addToCart()">
                 🛒 Adicionar ao Carrinho
             </button>
-            <button class="btn-buy-wa" onclick="buyDirectWhatsApp()">
+            <button id="btnBuyWA" class="btn-buy-wa" onclick="buyDirectWhatsApp()">
                 💬 Comprar Directo no WhatsApp
             </button>
         </div>
@@ -486,7 +512,7 @@
     <!-- Toast Notification -->
     <div id="toast" class="toast">Item adicionado ao carrinho!</div>
 
-    <!-- Navegação Inferior (4 Opções) -->
+    <!-- Navegação Inferior -->
     <div class="bottom-nav">
         <a href="index.html" class="nav-item">
             <div class="nav-icon-wrapper"><span class="nav-icon">🏠</span></div>
@@ -515,7 +541,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
@@ -532,6 +558,71 @@
 
         let selectedLabel = 'IPTV Premium (1 Mês)';
         let selectedPrice = 5000;
+        let isProductEsgotado = false;
+
+        function sincronizarComAdmin() {
+            const q = query(collection(db, "produtos"), where("paginaDestino", "==", "iptv.html"));
+            onSnapshot(q, (snapshot) => {
+                if (!snapshot.empty) {
+                    const prodData = snapshot.docs[0].data();
+                    isProductEsgotado = prodData.esgotado || false;
+
+                    const stockWarning = document.getElementById('stockWarning');
+                    const btnAddCart = document.getElementById('btnAddCart');
+                    const btnBuyWA = document.getElementById('btnBuyWA');
+
+                    if (isProductEsgotado) {
+                        if (stockWarning) stockWarning.style.display = 'block';
+                        if (btnAddCart) {
+                            btnAddCart.disabled = true;
+                            btnAddCart.innerText = '🔴 PRODUTO ESGOTADO';
+                        }
+                        if (btnBuyWA) {
+                            btnBuyWA.disabled = true;
+                            btnBuyWA.innerText = '🔴 INDISPONÍVEL';
+                        }
+                    } else {
+                        if (stockWarning) stockWarning.style.display = 'none';
+                        if (btnAddCart) {
+                            btnAddCart.disabled = false;
+                            btnAddCart.innerText = '🛒 ADICIONAR AO CARRINHO';
+                        }
+                        if (btnBuyWA) {
+                            btnBuyWA.disabled = false;
+                            btnBuyWA.innerText = '💬 COMPRAR DIRECTO NO WHATSAPP';
+                        }
+                    }
+
+                    if (prodData.opcoes && Array.isArray(prodData.opcoes) && prodData.opcoes.length > 0) {
+                        const grid = document.getElementById('packageGridContainer');
+                        if (grid) {
+                            grid.innerHTML = '';
+                            prodData.opcoes.forEach((opt, index) => {
+                                const isSelected = index === 0;
+                                if (isSelected) {
+                                    selectedLabel = opt.rotulo;
+                                    selectedPrice = opt.preco;
+                                }
+
+                                const card = document.createElement('div');
+                                card.className = `pkg-card ${isSelected ? 'selected' : ''}`;
+                                card.onclick = function() {
+                                    selectPackage(card, opt.rotulo, opt.preco);
+                                };
+                                card.innerHTML = `
+                                    <div class="pkg-info">
+                                        <div class="pkg-title">📺 ${opt.rotulo}</div>
+                                        <div class="pkg-sub">+20.000 Canais + Filmes/Séries em HD e 4K</div>
+                                    </div>
+                                    <div class="pkg-price">${opt.preco.toLocaleString()} FCFA</div>
+                                `;
+                                grid.appendChild(card);
+                            });
+                        }
+                    }
+                }
+            }, (err) => console.error("Erro ao sincronizar IPTV em tempo real:", err));
+        }
 
         window.selectPackage = function(element, label, price) {
             document.querySelectorAll('.pkg-card').forEach(card => card.classList.remove('selected'));
@@ -588,6 +679,11 @@
         }
 
         window.addToCart = function() {
+            if (isProductEsgotado) {
+                alert("Desculpe, este produto está esgotado no momento.");
+                return;
+            }
+
             const device = document.getElementById('deviceSelect').value;
             const name = document.getElementById('clientName').value.trim();
             const wa = document.getElementById('clientWhatsApp').value.trim();
@@ -617,6 +713,11 @@
         };
 
         window.buyDirectWhatsApp = async function() {
+            if (isProductEsgotado) {
+                alert("Desculpe, este produto está esgotado no momento.");
+                return;
+            }
+
             const device = document.getElementById('deviceSelect').value;
             const name = document.getElementById('clientName').value.trim();
             const wa = document.getElementById('clientWhatsApp').value.trim();
@@ -630,7 +731,6 @@
             const orderIdCode = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
             const currentUser = auth.currentUser;
 
-            // GRAVAR NO FIRESTORE ANTES DE ABRIR O WHATSAPP
             try {
                 await addDoc(collection(db, "pedidos"), {
                     orderId: orderIdCode,
@@ -683,7 +783,10 @@
             window.open(waUrl, '_blank');
         };
 
-        document.addEventListener('DOMContentLoaded', updateNavBadges);
+        document.addEventListener('DOMContentLoaded', () => {
+            updateNavBadges();
+            sincronizarComAdmin();
+        });
 
         document.addEventListener('focusin', (e) => {
             if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {

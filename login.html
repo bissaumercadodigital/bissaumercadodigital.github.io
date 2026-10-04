@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Mercado Digital Bissau</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* ... Mantenha o seu CSS atual do login aqui ... */
+        :root { --bg-dark: #090d16; --orange: #ff6600; --text-main: #ffffff; --bg-card: #121926;}
+        body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; padding: 2rem; }
+        .form-container { max-width: 400px; margin: 0 auto; background: var(--bg-card); padding: 2rem; border-radius: 16px; border: 1px solid #1e293b;}
+        input { width: 100%; padding: 12px; margin-bottom: 1rem; border-radius: 8px; border: 1px solid #1e293b; background: var(--bg-dark); color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 14px; background: var(--orange); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .error { color: #ef4444; font-size: 0.9rem; margin-bottom: 1rem; display: none; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2 style="text-align: center; margin-bottom: 2rem;">Entrar</h2>
+        <div id="errorMsg" class="error"></div>
+        <input type="email" id="email" placeholder="O seu Email">
+        <input type="password" id="password" placeholder="Palavra-passe">
+        <button id="loginBtn">Entrar na Conta</button>
+        <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">
+            Não tem conta? <a href="register.html" style="color: var(--orange);">Registar</a>
+        </p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = { apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo", authDomain: "mercado-digital-bissau.firebaseapp.com", projectId: "mercado-digital-bissau" };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('errorMsg');
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                // Em vez de alert(), usamos localStorage para disparar a notificação no index
+                localStorage.setItem('system_msg', '✅ Bem-vindo de volta!');
+                window.location.href = 'index.html';
+            } catch (error) {
+                errorDiv.innerText = "Email ou palavra-passe incorretos.";
+                errorDiv.style.display = "block";
+            }
+        });
+    </script>
+</body>
+</html>
