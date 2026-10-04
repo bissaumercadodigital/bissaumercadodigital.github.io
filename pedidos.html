@@ -447,7 +447,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
@@ -512,9 +512,14 @@
             btnClear.style.display = 'block';
             ordersList.innerHTML = '';
 
-            const reversedOrders = [...ordersData].reverse();
+            // Ordena os pedidos garantindo que o mais recente (criado por último) fique sempre no topo
+            const sortedOrders = [...ordersData].sort((a, b) => {
+                const timeA = a.criadoEm && a.criadoEm.toMillis ? a.criadoEm.toMillis() : (new Date(a.criadoEm || a.data || 0).getTime());
+                const timeB = b.criadoEm && b.criadoEm.toMillis ? b.criadoEm.toMillis() : (new Date(b.criadoEm || b.data || 0).getTime());
+                return timeB - timeA;
+            });
 
-            reversedOrders.forEach((order) => {
+            sortedOrders.forEach((order) => {
                 const displayOrderId = order.orderId || order.id || 'ORD-000000';
                 const currentStatus = order.status || 'Pendente';
                 const dadosEntregues = order.dadosEntregues || '';
@@ -596,7 +601,8 @@
             const localOrderIds = localOrders.map(o => o.orderId || o.id).filter(Boolean);
 
             if (user) {
-                const q = query(collection(db, "pedidos"), where("userId", "==", user.uid));
+                // Adicionado orderBy para ordenar diretamente do Firestore pelo campo de criação mais recente
+                const q = query(collection(db, "pedidos"), where("userId", "==", user.uid), orderBy("criadoEm", "desc"));
                 unsubFirestore = onSnapshot(q, (snapshot) => {
                     const firestoreOrders = [];
                     snapshot.forEach(docSnap => {

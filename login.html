@@ -6,7 +6,6 @@
     <title>Login - Mercado Digital Bissau</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* ... Mantenha o seu CSS atual do login aqui ... */
         :root { --bg-dark: #090d16; --orange: #ff6600; --text-main: #ffffff; --bg-card: #121926;}
         body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; padding: 2rem; }
         .form-container { max-width: 400px; margin: 0 auto; background: var(--bg-card); padding: 2rem; border-radius: 16px; border: 1px solid #1e293b;}
@@ -42,8 +41,7 @@
             
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                // Em vez de alert(), usamos localStorage para disparar a notificação no index
-                localStorage.setItem('system_msg', '✅ Bem-vindo de volta!');
+                localStorage.setItem('system_msg', '✅ Bem-vindo de volta!');[span_4](start_span)[span_4](end_span)
                 window.location.href = 'index.html';
             } catch (error) {
                 errorDiv.innerText = "Email ou palavra-passe incorretos.";

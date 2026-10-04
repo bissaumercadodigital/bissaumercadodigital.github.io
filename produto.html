@@ -17,7 +17,7 @@
 <body>
     <a href="index.html" style="color: white; text-decoration: none;">‹ Voltar</a>
     <div class="container" id="product-container">
-        <h2 id="loading">A carregar produto...</h2>
+        <h2 id="loading">A carregar produto...</h2>[span_0](start_span)[span_0](end_span)
     </div>
 
     <script type="module">
@@ -32,13 +32,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Obter ID do produto pelo URL (ex: produto.html?id=123)
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('id');
 
         async function carregarProduto() {
             if (!productId) {
-                document.getElementById('product-container').innerHTML = "<h2>Produto não encontrado.</h2>";
+                document.getElementById('product-container').innerHTML = "<h2>Produto não encontrado.</h2>";[span_1](start_span)[span_1](end_span)
                 return;
             }
             const docRef = doc(db, "produtos", productId);
@@ -52,9 +51,9 @@
                     <p style="color: #94a3b8; margin: 10px 0;">${p.descricao || 'Sem descrição'}</p>
                     <h3 style="color: var(--orange);">${p.preco} FCFA</h3>
                     <button class="btn" onclick="adicionarCarrinho('${docSnap.id}', '${p.nome}', ${p.preco})">Adicionar ao Carrinho</button>
-                `;
+                `;[span_2](start_span)[span_2](end_span)
             } else {
-                document.getElementById('product-container').innerHTML = "<h2>Produto não existe.</h2>";
+                document.getElementById('product-container').innerHTML = "<h2>Produto não existe.</h2>";[span_3](start_span)[span_3](end_span)
             }
         }
 

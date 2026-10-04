@@ -4,22 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Meu Carrinho - Mercado Digital Bissau</title>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        #netlify-badge, .netlify-badge, a[href*="netlify.com"] {
-            display: none !important;
-        }
+        #netlify-badge, .netlify-badge, a[href*="netlify.com"] { display: none !important; }
 
         :root {
             --bg-dark: #090d16;
             --bg-card: #121926;
-            --bg-card-hover: #1c273e;
             --primary: #7c3aed;
-            --primary-glow: rgba(124, 58, 237, 0.4);
             --orange: #ff6600;
             --orange-glow: rgba(255, 102, 0, 0.4);
             --text-main: #ffffff;
@@ -30,31 +25,12 @@
             --border-highlight: rgba(124, 58, 237, 0.35);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.5; padding-bottom: 100px; }
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            line-height: 1.5;
-            padding-bottom: 100px;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        a { text-decoration: none; color: inherit; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        /* Top Bar */
         .top-bar {
             background: rgba(9, 13, 22, 0.92);
             backdrop-filter: blur(12px);
@@ -68,449 +44,144 @@
             justify-content: space-between;
         }
 
-        .back-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
+        .back-btn { color: var(--text-muted); font-size: 0.85rem; font-weight: 700; }
+        .page-title { font-size: 1.05rem; font-weight: 800; color: #ffffff; }
+        .container { padding: 1rem; max-width: 600px; margin: 0 auto; animation: fadeIn 0.25s ease-out; }
 
-        .page-title {
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: #ffffff;
-        }
-
-        .container {
-            padding: 1rem;
-            max-width: 600px;
-            margin: 0 auto;
-            animation: fadeIn 0.25s ease-out;
-        }
-
-        /* Cart State */
         .empty-cart {
-            text-align: center;
-            padding: 3rem 1rem;
-            background-color: var(--bg-card);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            margin-top: 1rem;
+            text-align: center; padding: 3rem 1rem; background-color: var(--bg-card);
+            border-radius: 16px; border: 1px solid var(--border); margin-top: 1rem;
         }
 
-        .empty-cart-icon {
-            font-size: 3rem;
-            margin-bottom: 0.8rem;
-            display: block;
-        }
-
-        .empty-cart h3 {
-            font-size: 1.1rem;
-            font-weight: 800;
-            margin-bottom: 0.4rem;
-        }
-
-        .empty-cart p {
-            color: var(--text-muted);
-            font-size: 0.82rem;
-            margin-bottom: 1.25rem;
-        }
+        .empty-cart-icon { font-size: 3rem; margin-bottom: 0.8rem; display: block; }
+        .empty-cart h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.4rem; }
+        .empty-cart p { color: var(--text-muted); font-size: 0.82rem; margin-bottom: 1.25rem; }
 
         .btn-go-shop {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--orange), #d95300);
-            color: #ffffff;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 0.85rem;
-            box-shadow: 0 4px 15px var(--orange-glow);
+            display: inline-block; background: linear-gradient(135deg, var(--orange), #d95300);
+            color: #ffffff; padding: 10px 20px; border-radius: 12px; font-weight: 800;
+            font-size: 0.85rem; box-shadow: 0 4px 15px var(--orange-glow);
         }
 
-        /* Cart Items */
-        .cart-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 1.25rem;
-        }
+        .cart-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.25rem; }
 
         .cart-item {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            position: relative;
+            background-color: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 0.85rem; display: flex; align-items: center;
+            gap: 12px; position: relative;
         }
 
-        .item-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            object-fit: cover;
-            background-color: var(--bg-dark);
-            flex-shrink: 0;
-        }
-
-        .item-info {
-            flex-grow: 1;
-        }
-
-        .item-title {
-            font-size: 0.88rem;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 0.2rem;
-        }
-
-        .item-detail {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            margin-bottom: 0.4rem;
-        }
-
-        .item-price {
-            font-size: 0.88rem;
-            font-weight: 800;
-            color: var(--orange);
-        }
+        .item-img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; background-color: var(--bg-dark); flex-shrink: 0; }
+        .item-info { flex-grow: 1; }
+        .item-title { font-size: 0.88rem; font-weight: 800; color: #ffffff; margin-bottom: 0.2rem; }
+        .item-detail { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+        .item-price { font-size: 0.88rem; font-weight: 800; color: var(--orange); }
 
         .item-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background-color: var(--bg-dark);
-            border: 1px solid var(--border);
-            padding: 4px 8px;
-            border-radius: 10px;
+            display: flex; align-items: center; gap: 8px; background-color: var(--bg-dark);
+            border: 1px solid var(--border); padding: 4px 8px; border-radius: 10px;
         }
 
-        .btn-qty {
-            background: transparent;
-            border: none;
-            color: #ffffff;
-            font-size: 1rem;
-            font-weight: 800;
-            width: 22px;
-            height: 22px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .qty-val {
-            font-size: 0.82rem;
-            font-weight: 800;
-            min-width: 16px;
-            text-align: center;
-        }
+        .btn-qty { background: transparent; border: none; color: #ffffff; font-size: 1rem; font-weight: 800; width: 22px; height: 22px; cursor: pointer; }
+        .qty-val { font-size: 0.82rem; font-weight: 800; min-width: 16px; text-align: center; }
 
         .btn-remove {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-            border: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            font-size: 0.8rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute; top: 8px; right: 8px; background: rgba(239, 68, 68, 0.15);
+            color: var(--danger); border: none; width: 24px; height: 24px; border-radius: 50%;
+            font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
 
         .points-box {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-highlight);
-            border-radius: 16px;
-            padding: 1rem;
-            margin-bottom: 1.25rem;
+            background-color: var(--bg-card); border: 1px solid var(--border-highlight);
+            border-radius: 16px; padding: 1rem; margin-bottom: 1.25rem;
         }
 
-        .points-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.4rem;
-        }
-
-        .points-title {
-            font-size: 0.88rem;
-            font-weight: 800;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .points-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+        .points-title { font-size: 0.88rem; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 6px; }
 
         .points-badge {
-            font-size: 0.85rem;
-            font-weight: 800;
-            color: var(--success);
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 2px 8px;
-            border-radius: 10px;
+            font-size: 0.85rem; font-weight: 800; color: var(--success);
+            background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 2px 8px; border-radius: 10px;
         }
 
-        .points-msg {
-            font-size: 0.74rem;
-            color: var(--text-muted);
-            margin-bottom: 0.6rem;
-            line-height: 1.35;
-        }
-
-        .points-checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #ffffff;
-            cursor: pointer;
-        }
-
-        .points-checkbox-label input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: var(--orange);
-            cursor: pointer;
-        }
+        .points-msg { font-size: 0.74rem; color: var(--text-muted); margin-bottom: 0.6rem; }
+        .points-checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 700; color: #ffffff; cursor: pointer; }
 
         .summary-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.1rem;
-            margin-bottom: 1.25rem;
+            background-color: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 1.1rem; margin-bottom: 1.25rem;
         }
 
-        .summary-title {
-            font-size: 0.95rem;
-            font-weight: 800;
-            margin-bottom: 0.85rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border);
-        }
+        .summary-title { font-size: 0.95rem; font-weight: 800; margin-bottom: 0.85rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+        .summary-row { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .summary-row.discount-row { color: var(--success); font-weight: 700; }
+        .summary-row.total-row { font-size: 1.05rem; font-weight: 800; color: #ffffff; margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px dashed var(--border); }
+        .summary-row.total-row span:last-child { color: var(--orange); }
 
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .summary-row.discount-row {
-            color: var(--success);
-            font-weight: 700;
-        }
-
-        .summary-row.total-row {
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: #ffffff;
-            margin-top: 0.8rem;
-            padding-top: 0.8rem;
-            border-top: 1px dashed var(--border);
-        }
-
-        .summary-row.total-row span:last-child {
-            color: var(--orange);
-        }
-
-        .checkout-box {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-highlight);
-            border-radius: 16px;
-            padding: 1.1rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .form-group {
-            margin-bottom: 0.85rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.82rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            margin-bottom: 0.3rem;
-        }
+        .checkout-box { background-color: var(--bg-card); border: 1px solid var(--border-highlight); border-radius: 16px; padding: 1.1rem; margin-bottom: 1.25rem; }
+        .form-group { margin-bottom: 0.85rem; }
+        .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.3rem; }
 
         .form-input {
-            width: 100%;
-            padding: 11px 13px;
-            background-color: var(--bg-dark);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: 600;
-            outline: none;
-            transition: border-color 0.2s;
+            width: 100%; padding: 11px 13px; background-color: var(--bg-dark);
+            border: 1px solid var(--border); border-radius: 10px; color: #ffffff;
+            font-size: 16px; font-weight: 600; outline: none; transition: border-color 0.2s;
         }
 
-        .form-input:focus {
-            border-color: var(--orange);
-        }
+        .form-input:focus { border-color: var(--orange); }
 
         .payment-info-box {
-            background: rgba(255, 102, 0, 0.1);
-            border: 1px dashed var(--orange);
-            border-radius: 12px;
-            padding: 0.85rem;
-            margin-bottom: 1rem;
-            font-size: 0.8rem;
-            color: var(--text-muted);
+            background: rgba(255, 102, 0, 0.1); border: 1px dashed var(--orange);
+            border-radius: 12px; padding: 0.85rem; margin-bottom: 1rem; font-size: 0.8rem; color: var(--text-muted);
         }
 
-        .payment-info-box strong {
-            color: var(--orange);
-            display: block;
-            margin-bottom: 0.2rem;
-            font-size: 0.85rem;
-        }
-
-        .action-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 10px;
-        }
+        .payment-info-box strong { color: var(--orange); display: block; margin-bottom: 0.2rem; font-size: 0.85rem; }
+        .action-container { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
 
         .btn-site {
-            width: 100%;
-            background: linear-gradient(135deg, var(--orange), #d95300);
-            color: #ffffff;
-            border: none;
-            padding: 13px;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 0.9rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px var(--orange-glow);
+            width: 100%; background: linear-gradient(135deg, var(--orange), #d95300);
+            color: #ffffff; border: none; padding: 13px; border-radius: 12px;
+            font-weight: 800; font-size: 0.9rem; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px var(--orange-glow);
             text-transform: uppercase;
         }
 
         .btn-whatsapp {
-            width: 100%;
-            background: linear-gradient(135deg, #25d366, #128c7e);
-            color: #ffffff;
-            border: none;
-            padding: 13px;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 0.9rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            width: 100%; background: linear-gradient(135deg, #25d366, #128c7e);
+            color: #ffffff; border: none; padding: 13px; border-radius: 12px;
+            font-weight: 800; font-size: 0.9rem; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
             text-transform: uppercase;
         }
 
-        .btn-site:active, .btn-whatsapp:active {
-            transform: scale(0.98);
-        }
-
         .btn-clear-cart {
-            width: 100%;
-            background: transparent;
-            color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 8px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 0.8rem;
+            width: 100%; background: transparent; color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px; border-radius: 10px;
+            font-size: 0.75rem; font-weight: 700; cursor: pointer; margin-top: 0.8rem;
         }
 
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(18, 25, 38, 0.95);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            display: flex;
-            justify-content: space-around;
-            padding: 0.65rem 0;
-            border-top: 1px solid var(--border);
-            z-index: 1000;
-            transform: translateZ(0);
-            will-change: transform;
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(18, 25, 38, 0.95); backdrop-filter: blur(12px);
+            display: flex; justify-content: space-around; padding: 0.65rem 0;
+            border-top: 1px solid var(--border); z-index: 1000;
         }
 
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            gap: 0.2rem;
-            transition: color 0.2s;
-            flex: 1;
-            text-align: center;
-        }
-
-        .nav-item.active, .nav-item:hover {
-            color: var(--orange);
-        }
-
-        .nav-icon-wrapper {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav-icon {
-            font-size: 1.25rem;
-            line-height: 1;
-        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; color: var(--text-muted); font-weight: 600; gap: 0.2rem; flex: 1; text-align: center; }
+        .nav-item.active, .nav-item:hover { color: var(--orange); }
+        .nav-icon-wrapper { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+        .nav-icon { font-size: 1.25rem; line-height: 1; }
 
         .nav-badge-count {
-            position: absolute;
-            top: -5px;
-            right: -8px;
-            background: linear-gradient(135deg, var(--orange), #ff3300);
-            color: #ffffff;
-            font-size: 0.62rem;
-            font-weight: 800;
-            min-width: 16px;
-            height: 16px;
-            padding: 0 4px;
-            border-radius: 10px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 8px var(--orange-glow);
-            border: 1.5px solid var(--bg-card);
+            position: absolute; top: -5px; right: -8px; background: linear-gradient(135deg, var(--orange), #ff3300);
+            color: #ffffff; font-size: 0.62rem; font-weight: 800; min-width: 16px; height: 16px;
+            padding: 0 4px; border-radius: 10px; display: none; align-items: center; justify-content: center;
         }
     </style>
 </head>
 <body>
 
-    <!-- Top Bar -->
     <div class="top-bar">
         <a href="index.html" class="back-btn">‹ Voltar à Loja</a>
         <h1 class="page-title">Meu Carrinho</h1>
@@ -518,7 +189,6 @@
     </div>
 
     <div class="container">
-        <!-- Estado Vazio -->
         <div id="emptyCart" class="empty-cart" style="display: none;">
             <span class="empty-cart-icon">🛒</span>
             <h3>O seu carrinho está vazio</h3>
@@ -526,7 +196,6 @@
             <a href="index.html" class="btn-go-shop">VER SERVIÇOS</a>
         </div>
 
-        <!-- Conteúdo do Carrinho -->
         <div id="cartContent">
             <div id="cartList" class="cart-list"></div>
 
@@ -546,32 +215,18 @@
 
             <div class="summary-card">
                 <h3 class="summary-title">Resumo da Compra</h3>
-                <div class="summary-row">
-                    <span>Subtotal</span>
-                    <span id="subtotalVal">0 FCFA</span>
-                </div>
-                <div class="summary-row discount-row" id="discountRow" style="display: none;">
-                    <span>Desconto de Pontos</span>
-                    <span id="discountVal">-0 FCFA</span>
-                </div>
-                <div class="summary-row">
-                    <span>Taxa de Processamento</span>
-                    <span style="color: var(--success);">Grátis</span>
-                </div>
-                <div class="summary-row total-row">
-                    <span>Total A Pagar</span>
-                    <span id="totalVal">0 FCFA</span>
-                </div>
+                <div class="summary-row"><span>Subtotal</span><span id="subtotalVal">0 FCFA</span></div>
+                <div class="summary-row discount-row" id="discountRow" style="display: none;"><span>Desconto de Pontos</span><span id="discountVal">-0 FCFA</span></div>
+                <div class="summary-row"><span>Taxa de Processamento</span><span style="color: var(--success);">Grátis</span></div>
+                <div class="summary-row total-row"><span>Total A Pagar</span><span id="totalVal">0 FCFA</span></div>
             </div>
 
             <div class="checkout-box">
                 <h3 class="summary-title">Dados para Entrega</h3>
-
                 <div class="form-group">
                     <label for="clientName">Seu Nome Completo *</label>
                     <input type="text" id="clientName" class="form-input" placeholder="Ex: Du Black" required>
                 </div>
-
                 <div class="form-group">
                     <label for="clientPhone">Seu Nº de WhatsApp / Contacto *</label>
                     <input type="tel" id="clientPhone" class="form-input" placeholder="Ex: 955288370" required>
@@ -583,48 +238,19 @@
                 </div>
 
                 <div class="action-container">
-                    <button class="btn-site" onclick="checkoutSite()">
-                        💳 Pagar pelo Site (Automático)
-                    </button>
-                    
-                    <button class="btn-whatsapp" onclick="checkoutWhatsApp()">
-                        💬 Finalizar no WhatsApp
-                    </button>
+                    <button class="btn-site" onclick="checkoutSite()">💳 Pagar pelo Site (Automático)</button>
+                    <button class="btn-whatsapp" onclick="checkoutWhatsApp()">💬 Finalizar no WhatsApp</button>
                 </div>
-
                 <button class="btn-clear-cart" onclick="clearCart()">Esvaziar Carrinho</button>
             </div>
         </div>
     </div>
 
-    <!-- Navegação Inferior -->
     <div class="bottom-nav">
-        <a href="index.html" class="nav-item">
-            <div class="nav-icon-wrapper">
-                <span class="nav-icon">🏠</span>
-            </div>
-            <span>Loja</span>
-        </a>
-        <a href="pedidos.html" class="nav-item">
-            <div class="nav-icon-wrapper">
-                <span class="nav-icon">📦</span>
-                <span class="nav-badge-count" id="pedidosBadge">0</span>
-            </div>
-            <span>Pedidos</span>
-        </a>
-        <a href="carrinho.html" class="nav-item active">
-            <div class="nav-icon-wrapper">
-                <span class="nav-icon">🛒</span>
-                <span class="nav-badge-count" id="cartBadge">0</span>
-            </div>
-            <span>Carrinho</span>
-        </a>
-        <a href="conta.html" class="nav-item">
-            <div class="nav-icon-wrapper">
-                <span class="nav-icon">👤</span>
-            </div>
-            <span>Conta</span>
-        </a>
+        <a href="index.html" class="nav-item"><div class="nav-icon-wrapper"><span class="nav-icon">🏠</span></div><span>Loja</span></a>
+        <a href="pedidos.html" class="nav-item"><div class="nav-icon-wrapper"><span class="nav-icon">📦</span><span class="nav-badge-count" id="pedidosBadge">0</span></div><span>Pedidos</span></a>
+        <a href="carrinho.html" class="nav-item active"><div class="nav-icon-wrapper"><span class="nav-icon">🛒</span><span class="nav-badge-count" id="cartBadge">0</span></div><span>Carrinho</span></a>
+        <a href="conta.html" class="nav-item"><div class="nav-icon-wrapper"><span class="nav-icon">👤</span></div><span>Conta</span></a>
     </div>
 
     <script type="module">
@@ -649,14 +275,8 @@
         let currentUserGlobal = null;
         const MAX_PONTOS_POR_COMPRA = 5000;
 
-        function getCart() {
-            return JSON.parse(localStorage.getItem('bissau_cart')) || [];
-        }
-
-        function saveCart(cart) {
-            localStorage.setItem('bissau_cart', JSON.stringify(cart));
-            renderCart();
-        }
+        function getCart() { return JSON.parse(localStorage.getItem('bissau_cart')) || []; }
+        function saveCart(cart) { localStorage.setItem('bissau_cart', JSON.stringify(cart)); renderCart(); }
 
         function atualizarContadoresNav() {
             try {
@@ -665,28 +285,19 @@
                 const cartBadge = document.getElementById('cartBadge');
                 
                 if (cartBadge) {
-                    if (totalCarrinho > 0) {
-                        cartBadge.innerText = totalCarrinho > 99 ? '99+' : totalCarrinho;
-                        cartBadge.style.display = 'flex';
-                    } else {
-                        cartBadge.style.display = 'none';
-                    }
+                    cartBadge.innerText = totalCarrinho > 99 ? '99+' : totalCarrinho;
+                    cartBadge.style.display = totalCarrinho > 0 ? 'flex' : 'none';
                 }
 
                 const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
-                const totalPedidos = pedidos.length;
                 const pedidosBadge = document.getElementById('pedidosBadge');
 
                 if (pedidosBadge) {
-                    if (totalPedidos > 0) {
-                        pedidosBadge.innerText = totalPedidos > 99 ? '99+' : totalPedidos;
-                        pedidosBadge.style.display = 'flex';
-                    } else {
-                        pedidosBadge.style.display = 'none';
-                    }
+                    pedidosBadge.innerText = pedidos.length > 99 ? '99+' : pedidos.length;
+                    pedidosBadge.style.display = pedidos.length > 0 ? 'flex' : 'none';
                 }
             } catch (e) {
-                console.error("Erro ao atualizar contadores:", e);
+                console.error(e);
             }
         }
 
@@ -699,15 +310,10 @@
             atualizarContadoresNav();
 
             if (cart.length === 0) {
-                emptyCart.style.display = 'block';
-                cartContent.style.display = 'none';
-                return;
+                emptyCart.style.display = 'block'; cartContent.style.display = 'none'; return;
             }
 
-            emptyCart.style.display = 'none';
-            cartContent.style.display = 'block';
-            cartList.innerHTML = '';
-
+            emptyCart.style.display = 'none'; cartContent.style.display = 'block'; cartList.innerHTML = '';
             let subtotal = 0;
 
             cart.forEach((item, index) => {
@@ -741,14 +347,11 @@
             if (userPointsAvailable > 0) {
                 pointsCheckboxContainer.style.display = 'flex';
                 const pontosPermitidos = Math.min(userPointsAvailable, MAX_PONTOS_POR_COMPRA, subtotal);
-                
                 document.getElementById('pointsLabelText').innerText = `Abater até ${pontosPermitidos.toLocaleString()} pontos (${pontosPermitidos.toLocaleString()} FCFA)`;
                 pointsMsgText.innerText = `Tem ${userPointsAvailable.toLocaleString()} pontos disponíveis. (Máximo de 5.000 pontos por compra).`;
                 pointsMsgText.style.color = "var(--success)";
 
-                if (usePointsCheckbox && usePointsCheckbox.checked) {
-                    desconto = pontosPermitidos;
-                }
+                if (usePointsCheckbox && usePointsCheckbox.checked) { desconto = pontosPermitidos; }
             } else {
                 pointsCheckboxContainer.style.display = 'none';
                 if (usePointsCheckbox) usePointsCheckbox.checked = false;
@@ -757,22 +360,14 @@
             }
 
             const total = Math.max(0, subtotal - desconto);
-
-            localStorage.setItem('bissau_checkout_totals', JSON.stringify({
-                subtotal: subtotal,
-                desconto: desconto,
-                total: total
-            }));
+            localStorage.setItem('bissau_checkout_totals', JSON.stringify({ subtotal, desconto, total }));
 
             document.getElementById('subtotalVal').innerText = subtotal.toLocaleString() + ' FCFA';
-            
             const discountRow = document.getElementById('discountRow');
             if (desconto > 0) {
                 discountRow.style.display = 'flex';
                 document.getElementById('discountVal').innerText = '-' + desconto.toLocaleString() + ' FCFA';
-            } else {
-                discountRow.style.display = 'none';
-            }
+            } else { discountRow.style.display = 'none'; }
 
             document.getElementById('totalVal').innerText = total.toLocaleString() + ' FCFA';
         };
@@ -781,24 +376,18 @@
             let cart = getCart();
             if (cart[index]) {
                 cart[index].quantidade = (cart[index].quantidade || 1) + delta;
-                if (cart[index].quantidade <= 0) {
-                    cart.splice(index, 1);
-                }
+                if (cart[index].quantidade <= 0) { cart.splice(index, 1); }
                 saveCart(cart);
             }
         };
 
         window.removeItem = function(index) {
-            let cart = getCart();
-            cart.splice(index, 1);
-            saveCart(cart);
+            let cart = getCart(); cart.splice(index, 1); saveCart(cart);
         };
 
         window.clearCart = function() {
             if (confirm("Tem certeza que deseja esvaziar o seu carrinho?")) {
-                localStorage.removeItem('bissau_cart');
-                localStorage.removeItem('bissau_checkout_totals');
-                renderCart();
+                localStorage.removeItem('bissau_cart'); localStorage.removeItem('bissau_checkout_totals'); renderCart();
             }
         };
 
@@ -807,17 +396,10 @@
             const name = document.getElementById('clientName').value.trim();
             const phone = document.getElementById('clientPhone').value.trim();
 
-            if (cart.length === 0) {
-                alert("O seu carrinho está vazio!");
-                return;
-            }
+            if (cart.length === 0) { alert("O seu carrinho está vazio!"); return; }
+            if (!name || !phone) { alert("Por favor, preencha o seu Nome e Número de WhatsApp para continuar."); return; }
 
-            if (!name || !phone) {
-                alert("Por favor, preencha o seu Nome e Número de WhatsApp para continuar.");
-                return;
-            }
-
-            localStorage.setItem('bissau_client_info', JSON.stringify({ name: name, phone: phone }));
+            localStorage.setItem('bissau_client_info', JSON.stringify({ name, phone }));
             window.location.href = 'checkout.html';
         };
 
@@ -825,18 +407,10 @@
             const cart = getCart();
             const name = document.getElementById('clientName').value.trim();
             const phone = document.getElementById('clientPhone').value.trim();
-            
             const totals = JSON.parse(localStorage.getItem('bissau_checkout_totals')) || { subtotal: 0, desconto: 0, total: 0 };
 
-            if (cart.length === 0) {
-                alert("O seu carrinho está vazio!");
-                return;
-            }
-
-            if (!name || !phone) {
-                alert("Por favor, preencha o seu Nome e Número de WhatsApp para entrega.");
-                return;
-            }
+            if (cart.length === 0) { alert("O seu carrinho está vazio!"); return; }
+            if (!name || !phone) { alert("Por favor, preencha o seu Nome e Número de WhatsApp para entrega."); return; }
 
             const orderIdCode = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
 
@@ -844,63 +418,28 @@
                 await addDoc(collection(db, "pedidos"), {
                     orderId: orderIdCode,
                     userId: currentUserGlobal ? currentUserGlobal.uid : null,
-                    clienteNome: name,
-                    clienteTelefone: phone,
-                    comprovativoFornecido: "WhatsApp Direto",
-                    tipoComprovativo: "WhatsApp",
-                    itens: cart,
-                    subtotal: totals.subtotal,
-                    desconto: totals.desconto,
-                    total: totals.total,
-                    status: 'Pendente',
-                    dadosEntregues: '',
-                    criadoEm: serverTimestamp()
+                    clienteNome: name, clienteTelefone: phone,
+                    comprovativoFornecido: "WhatsApp Direto", tipoComprovativo: "WhatsApp",
+                    itens: cart, subtotal: totals.subtotal, desconto: totals.desconto, total: totals.total,
+                    status: 'Pendente', dadosEntregues: '', criadoEm: serverTimestamp()
                 });
-            } catch (err) {
-                console.error("Erro ao sincronizar Firestore:", err);
-            }
+            } catch (err) { console.error("Erro ao sincronizar Firestore:", err); }
 
-            let text = `🛒 *NOVO PEDIDO - MERCADO DIGITAL BISSAU*\n`;
-            text += `--------------------------------\n`;
-            text += `👤 *Cliente:* ${name}\n`;
-            text += `📱 *Contacto:* ${phone}\n\n`;
-            text += `📦 *ITENS DO PEDIDO:*\n`;
-
+            let text = `🛒 *NOVO PEDIDO - MERCADO DIGITAL BISSAU*\n--------------------------------\n👤 *Cliente:* ${name}\n📱 *Contacto:* ${phone}\n\n📦 *ITENS DO PEDIDO:*\n`;
             cart.forEach((item, idx) => {
                 const itemTotal = (item.price || 0) * (item.quantidade || 1);
-                text += `${idx + 1}. *${item.nome}*\n`;
-                text += `   • Detalhe: ${item.opcao || 'Padrão'}\n`;
-                text += `   • Qtd: ${item.quantidade || 1}x | Valor: ${itemTotal.toLocaleString()} FCFA\n\n`;
+                text += `${idx + 1}. *${item.nome}*\n   • Detalhe: ${item.opcao || 'Padrão'}\n   • Qtd: ${item.quantidade || 1}x | Valor: ${itemTotal.toLocaleString()} FCFA\n\n`;
             });
+            text += `--------------------------------\n💰 *Subtotal:* ${totals.subtotal.toLocaleString()} FCFA\n`;
+            if (totals.desconto > 0) text += `🎁 *Desconto:* -${totals.desconto.toLocaleString()} FCFA\n`;
+            text += `🔥 *TOTAL A PAGAR:* ${totals.total.toLocaleString()} FCFA\n💳 *Método:* Orange Money (955288370)\n\nAguardando confirmação do pagamento.`;
 
-            text += `--------------------------------\n`;
-            text += `💰 *Subtotal:* ${totals.subtotal.toLocaleString()} FCFA\n`;
-            if (totals.desconto > 0) {
-                text += `🎁 *Desconto (Pontos Utilizados):* -${totals.desconto.toLocaleString()} FCFA\n`;
-            }
-            text += `🔥 *TOTAL A PAGAR:* ${totals.total.toLocaleString()} FCFA\n`;
-            text += `💳 *Método de Pagamento:* Orange Money (955288370)\n\n`;
-            text += `Aguardando confirmação para realizar a transferência/envio do comprovativo.`;
-
-            const encodedText = encodeURIComponent(text);
-            const waUrl = `https://wa.me/245955288370?text=${encodedText}`;
-
-            const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
-            pedidos.push({
-                orderId: orderIdCode,
-                id: orderIdCode,
-                data: new Date().toLocaleDateString('pt-PT'),
-                itens: cart,
-                subtotal: totals.subtotal,
-                desconto: totals.desconto,
-                total: totals.total,
-                status: 'Pendente'
-            });
+            const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || [];
+            pedidos.push({ orderId: orderIdCode, id: orderIdCode, data: new Date().toLocaleDateString('pt-PT'), itens: cart, total: totals.total, status: 'Pendente' });
             localStorage.setItem('bissau_orders', JSON.stringify(pedidos));
 
-            localStorage.removeItem('bissau_cart');
-            localStorage.removeItem('bissau_checkout_totals');
-            window.open(waUrl, '_blank');
+            localStorage.removeItem('bissau_cart'); localStorage.removeItem('bissau_checkout_totals');
+            window.open(`https://wa.me/245955288370?text=${encodeURIComponent(text)}`, '_blank');
         };
 
         onAuthStateChanged(auth, async (user) => {
@@ -909,46 +448,18 @@
             if (user) {
                 try {
                     const docSnap = await getDoc(doc(db, "usuarios", user.uid));
-                    if (docSnap.exists()) {
-                        userPointsAvailable = docSnap.data().pontos || 0;
-                    }
-                } catch (e) {
-                    console.error("Erro ao procurar pontos:", e);
-                }
+                    if (docSnap.exists()) userPointsAvailable = docSnap.data().pontos || 0;
+                } catch (e) { console.error("Erro ao procurar pontos:", e); }
 
                 if (userPointsAvailable > 0) {
                     pointsBox.style.display = 'block';
                     document.getElementById('cartPointsBalance').innerText = userPointsAvailable.toLocaleString() + ' Pts';
                     renderCart();
-                } else {
-                    pointsBox.style.display = 'none';
-                }
-            } else {
-                pointsBox.style.display = 'none';
-            }
+                } else { pointsBox.style.display = 'none'; }
+            } else { pointsBox.style.display = 'none'; }
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCart();
-            atualizarContadoresNav();
-        });
+        document.addEventListener('DOMContentLoaded', () => { renderCart(); atualizarContadoresNav(); });
     </script>
-
-    <script>
-        document.addEventListener('focusin', (e) => {
-            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
-                const bottomNav = document.querySelector('.bottom-nav');
-                if (bottomNav) bottomNav.style.display = 'none';
-            }
-        });
-
-        document.addEventListener('focusout', (e) => {
-            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
-                const bottomNav = document.querySelector('.bottom-nav');
-                if (bottomNav) bottomNav.style.display = 'flex';
-            }
-        });
-    </script>
-
 </body>
 </html>

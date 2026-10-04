@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Recarga PUBG Mobile UC - Mercado Digital Bissau</title>
+    <title>PUBG Mobile UC - Mercado Digital Bissau</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,13 +21,14 @@
             --primary: #7c3aed;
             --primary-glow: rgba(124, 58, 237, 0.4);
             --orange: #ff6600;
-            --orange-glow: rgba(255, 102, 0, 0.4);
+            --pubg-gold: #f59e0b;
+            --pubg-glow: rgba(245, 158, 11, 0.4);
             --text-main: #ffffff;
             --text-muted: #94a3b8;
             --success: #10b981;
             --danger: #ef4444;
             --border: #1e293b;
-            --border-highlight: rgba(124, 58, 237, 0.35);
+            --border-highlight: rgba(245, 158, 11, 0.35);
         }
 
         * {
@@ -105,7 +106,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 6px var(--orange-glow);
+            box-shadow: 0 0 6px var(--pubg-glow);
         }
 
         .container {
@@ -195,7 +196,7 @@
             margin-bottom: 0.35rem;
         }
 
-        .form-input, .form-select, .form-textarea {
+        .form-input {
             width: 100%;
             padding: 11px 13px;
             background-color: var(--bg-dark);
@@ -206,6 +207,10 @@
             font-weight: 600;
             outline: none;
             transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--pubg-gold);
         }
 
         /* Package Grid Selection */
@@ -237,12 +242,12 @@
         }
 
         .pkg-card.selected {
-            border-color: var(--orange);
-            background-color: rgba(255, 102, 0, 0.08);
-            box-shadow: 0 0 15px var(--orange-glow);
+            border-color: var(--pubg-gold);
+            background-color: rgba(245, 158, 11, 0.08);
+            box-shadow: 0 0 15px var(--pubg-glow);
         }
 
-        .pkg-uc {
+        .pkg-title {
             font-size: 1.05rem;
             font-weight: 800;
             color: #ffffff;
@@ -255,7 +260,7 @@
         .pkg-price {
             font-size: 0.85rem;
             font-weight: 800;
-            color: var(--orange);
+            color: var(--pubg-gold);
             margin-top: 0.3rem;
         }
 
@@ -269,7 +274,7 @@
 
         .btn-add-cart {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary), #5b21b6);
+            background: linear-gradient(135deg, var(--pubg-gold), #d97706);
             color: #ffffff;
             border: none;
             padding: 13px;
@@ -277,7 +282,7 @@
             font-weight: 800;
             font-size: 0.88rem;
             cursor: pointer;
-            box-shadow: 0 4px 15px var(--primary-glow);
+            box-shadow: 0 4px 15px var(--pubg-glow);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -397,7 +402,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 8px var(--orange-glow);
+            box-shadow: 0 0 8px var(--pubg-glow);
             border: 1.5px solid var(--bg-card);
         }
     </style>
@@ -421,8 +426,8 @@
         <div class="product-hero">
             <div class="product-banner"></div>
             <div class="product-hero-info">
-                <h2>Recarga PUBG Mobile UC 🎮</h2>
-                <p>Receba as suas moedas UC diretamente na sua conta através do seu ID de jogador. Rápido, seguro e sem complicações na Guiné-Bissau.</p>
+                <h2>PUBG Mobile UC 🪖</h2>
+                <p>Receba as moedas UC diretamente na sua conta PUBG pelo Player ID. Rápido e fácil na Guiné-Bissau.</p>
             </div>
         </div>
 
@@ -435,41 +440,37 @@
         <div class="input-card">
             <h3 class="input-card-title">1. Dados do Jogador</h3>
             <div class="form-group">
-                <label for="playerId">ID de Jogador (Character ID) *</label>
+                <label for="playerId">ID de Jogador PUBG (Player ID) *</label>
                 <input type="number" id="playerId" class="form-input" placeholder="Ex: 5123456789" required>
             </div>
             <div class="form-group">
                 <label for="playerName">Nome no Jogo (Opcional)</label>
-                <input type="text" id="playerName" class="form-input" placeholder="Ex: du_black123">
+                <input type="text" id="playerName" class="form-input" placeholder="Ex: DuBlack_PUBG">
             </div>
         </div>
 
         <!-- Seleção de Pacote -->
-        <div class="packages-title">2. Escolha a Quantidade de UC</div>
+        <div class="packages-title">2. Escolha o Pacote de UC</div>
         <div class="package-grid" id="packageGridContainer">
             <div class="pkg-card selected" onclick="selectPackage(this, '60 UC', 800)">
-                <div class="pkg-uc">🪙 60 UC</div>
+                <div class="pkg-title">🪙 60 UC</div>
                 <div class="pkg-price">800 FCFA</div>
             </div>
             <div class="pkg-card" onclick="selectPackage(this, '325 UC', 3500)">
-                <div class="pkg-uc">🪙 325 UC</div>
+                <div class="pkg-title">🪙 325 UC</div>
                 <div class="pkg-price">3.500 FCFA</div>
             </div>
             <div class="pkg-card" onclick="selectPackage(this, '660 UC', 6500)">
-                <div class="pkg-uc">🪙 660 UC</div>
+                <div class="pkg-title">🪙 660 UC</div>
                 <div class="pkg-price">6.500 FCFA</div>
             </div>
             <div class="pkg-card" onclick="selectPackage(this, '1.800 UC', 15000)">
-                <div class="pkg-uc">🪙 1.800 UC</div>
+                <div class="pkg-title">🪙 1.800 UC</div>
                 <div class="pkg-price">15.000 FCFA</div>
             </div>
-            <div class="pkg-card" onclick="selectPackage(this, '3.850 UC', 29500)">
-                <div class="pkg-uc">🪙 3.850 UC</div>
-                <div class="pkg-price">29.500 FCFA</div>
-            </div>
-            <div class="pkg-card" onclick="selectPackage(this, '8.100 UC', 63000)">
-                <div class="pkg-uc">🪙 8.100 UC</div>
-                <div class="pkg-price">63.000 FCFA</div>
+            <div class="pkg-card" onclick="selectPackage(this, '3.850 UC', 30000)">
+                <div class="pkg-title">🪙 3.850 UC</div>
+                <div class="pkg-price">30.000 FCFA</div>
             </div>
         </div>
 
@@ -585,7 +586,7 @@
                                     selectPackage(card, opt.rotulo, opt.preco);
                                 };
                                 card.innerHTML = `
-                                    <div class="pkg-uc">🪙 ${opt.rotulo}</div>
+                                    <div class="pkg-title">🪙 ${opt.rotulo}</div>
                                     <div class="pkg-price">${opt.preco.toLocaleString()} FCFA</div>
                                 `;
                                 grid.appendChild(card);
@@ -660,7 +661,7 @@
             const playerName = document.getElementById('playerName').value.trim();
 
             if (!playerId) {
-                alert("Por favor, preencha o seu ID de Jogador do PUBG Mobile!");
+                alert("Por favor, insira o seu ID de Jogador do PUBG Mobile!");
                 document.getElementById('playerId').focus();
                 return;
             }
@@ -693,7 +694,7 @@
             const playerName = document.getElementById('playerName').value.trim();
 
             if (!playerId) {
-                alert("Por favor, preencha o seu ID de Jogador do PUBG Mobile!");
+                alert("Por favor, insira o seu ID de Jogador do PUBG Mobile!");
                 document.getElementById('playerId').focus();
                 return;
             }
@@ -705,7 +706,7 @@
                 await addDoc(collection(db, "pedidos"), {
                     orderId: orderIdCode,
                     userId: currentUser ? currentUser.uid : null,
-                    clienteNome: playerName || "Jogador PUBG Mobile",
+                    clienteNome: playerName || "Jogador PUBG",
                     clienteTelefone: "WhatsApp Direto",
                     comprovativoFornecido: "WhatsApp Direto",
                     tipoComprovativo: "WhatsApp",
@@ -738,7 +739,7 @@
                 console.error("Erro ao salvar no Firestore:", err);
             }
 
-            let text = `🎮 *PEDIDO DIRETO - PUBG MOBILE UC*\n`;
+            let text = `🪙 *PEDIDO DIRETO - PUBG MOBILE UC*\n`;
             text += `--------------------------------\n`;
             text += `📦 *Pacote:* ${selectedLabel}\n`;
             text += `💰 *Valor:* ${selectedPrice.toLocaleString()} FCFA\n`;
@@ -746,7 +747,7 @@
             if (playerName) text += `👤 *Nome no Jogo:* ${playerName}\n`;
             text += `--------------------------------\n`;
             text += `💳 *Método:* Orange Money (955288370)\n`;
-            text += `Aguardando dados para efetuar o pagamento.`;
+            text += `Aguardando confirmação para pagamento.`;
 
             const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
             window.open(waUrl, '_blank');

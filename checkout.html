@@ -333,13 +333,26 @@
                 return;
             }
 
-            const regexTelefone = /^(245)?(95|96)\d{7}$/;
-            const isTelefone = regexTelefone.test(inputVal.replace(/\s+/g, ''));
+            const valorLimpo = inputVal.replace(/\s+/g, '');
 
-            const isTransacaoID = inputVal.length >= 5;
+            // 1. Regra para Número de Telemóvel: Se contiver apenas dígitos e tiver 9 a 12 caracteres, DEVE começar obrigatoriamente por 95 ou 96 (com ou sem 245)
+            const regexApenasDigitos = /^\d+$/;
+            if (regexApenasDigitos.test(valorLimpo) && valorLimpo.length <= 12) {
+                const regexTelefoneValido = /^(245)?(95|96)\d{7}$/;
+                if (!regexTelefoneValido.test(valorLimpo) && valorLimpo.length <= 12 && !/^\d{13,}$/.test(valorLimpo)) {
+                    window.mostrarErro("Número de telemóvel inválido! O número inserido deve começar por 95 ou 96 e conter 9 dígitos.");
+                    return;
+                }
+            }
+
+            // 2. Regra para ID de Transação: Deve ter de 10 a 20 caracteres (podendo conter números, letras e pontuação)
+            const regexTransacaoID = /^[\w\s\.\,\-\/\:\;\#\*\$\@\!\?\&\%\+\=\<\>]{10,20}$/;
+            const isTransacaoID = regexTransacaoID.test(inputVal);
+
+            const isTelefone = /^(245)?(95|96)\d{7}$/.test(valorLimpo);
 
             if (!isTelefone && !isTransacaoID) {
-                window.mostrarErro("O valor inserido é inválido. Insira um número de telemóvel Orange (Ex: 95XXXXXXX) ou o ID da transação.");
+                window.mostrarErro("Comprovativo inválido! Insira um número de telemóvel válido (ex: 955288370) ou um ID de transação válido com até 20 caracteres.");
                 return;
             }
 

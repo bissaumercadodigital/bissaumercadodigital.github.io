@@ -81,6 +81,23 @@
             margin-bottom: 15px;
         }
 
+        .btn-back-store {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .btn-back-store:hover { color: var(--orange); border-color: var(--orange); }
+
         .admin-tabs {
             display: flex;
             gap: 10px;
@@ -147,27 +164,16 @@
             .grid-2 { grid-template-columns: 1fr; }
         }
 
-        .order-card {
-            background-color: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            position: relative;
-        }
-
-        .order-header { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 10px; margin-bottom: 10px; }
-        .order-id { font-weight: 800; color: var(--primary); }
-        .order-total { font-weight: 800; color: var(--success); font-size: 1.1rem; }
-        
-        .client-info p { margin-bottom: 5px; font-size: 0.9rem; }
         .highlight-data { background: rgba(255, 102, 0, 0.1); border: 1px solid var(--orange); padding: 5px 10px; border-radius: 6px; font-weight: 700; color: var(--orange); display: inline-block; margin-top: 5px; }
         
-        .items-list { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 0.85rem; }
+        .delivery-input { width: 100%; padding: 10px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: white; font-size: 13px; margin-bottom: 8px; }
         
-        .delivery-section { margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
-        .delivery-input { width: 100%; padding: 12px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; color: white; font-size: 14px; margin-bottom: 10px; }
-        
-        .btn-approve { width: 100%; background: var(--success); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; }
+        .btn-approve { width: 100%; background: var(--success); color: white; border: none; padding: 8px; border-radius: 8px; font-weight: 800; cursor: pointer; margin-bottom: 6px; }
+        .btn-reject { width: 100%; background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); padding: 8px; border-radius: 8px; font-weight: 800; cursor: pointer; }
+        .btn-reject:hover { background: var(--danger); color: white; }
+
         .btn-add-opt { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem; margin-bottom: 12px; }
+        .btn-sync-prods { background: linear-gradient(135deg, var(--orange), #d95300); color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 0.85rem; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 8px; }
         .btn-whatsapp-remind { background: #25d366; color: white; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 5px; }
         .btn-delete-sub { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); padding: 6px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 4px; }
         .btn-delete-sub:hover { background: var(--danger); color: white; }
@@ -224,7 +230,7 @@
             padding: 12px 15px;
             border-bottom: 1px solid var(--border);
             color: var(--text-main);
-            vertical-align: middle;
+            vertical-align: top;
         }
 
         .custom-table tr:last-child td { border-bottom: none; }
@@ -244,7 +250,7 @@
         .days-badge.warning { background: rgba(255, 102, 0, 0.2); border-color: var(--orange); color: var(--orange); }
         .days-badge.danger { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); color: var(--danger); }
         
-        .actions-cell { display: flex; gap: 6px; align-items: center; }
+        .actions-cell { display: flex; flex-direction: column; gap: 6px; }
 
         .opcao-row { display: flex; gap: 10px; margin-bottom: 8px; }
 
@@ -254,6 +260,9 @@
 <body>
 
     <div class="login-card" id="loginArea">
+        <div style="margin-bottom: 15px;">
+            <a href="index.html" class="btn-back-store">‹ Voltar à Loja</a>
+        </div>
         <h2>🔒 Login de Administrador</h2>
         <input type="email" id="adminEmail" class="form-input" placeholder="E-mail do Administrador">
         <input type="password" id="adminPassword" class="form-input" placeholder="Sua Senha">
@@ -263,13 +272,16 @@
 
     <div class="admin-container" id="dashboardArea">
         <div class="header">
-            <h1>⚙️ Bissau Mercado Digital - ADMIN</h1>
+            <h1>⚙ Bissau Mercado Digital - ADMIN</h1>
             <p>Gestão de Pedidos, Assinaturas e Produtos</p>
         </div>
 
         <div class="top-admin-bar">
-            <span id="userLoggedEmail" style="font-size: 0.85rem; color: var(--text-muted);"></span>
-            <button onclick="fazerLogout()" class="btn-logout">Sair / Logout</button>
+            <a href="index.html" class="btn-back-store">‹ Voltar à Loja</a>
+            <div>
+                <span id="userLoggedEmail" style="font-size: 0.85rem; color: var(--text-muted); margin-right: 10px;"></span>
+                <button onclick="fazerLogout()" class="btn-logout">Sair / Logout</button>
+            </div>
         </div>
 
         <!-- Abas de Navegação -->
@@ -279,10 +291,26 @@
             <button class="tab-btn" id="tabProdutosBtn" onclick="trocarAba('produtos')">🛍️ Cadastrar Produtos</button>
         </div>
 
-        <!-- Conteúdo dos Pedidos -->
+        <!-- Conteúdo dos Pedidos em Tabela Ordenada -->
         <div id="secPedidos">
-            <div id="pedidosContainer">
-                <div id="loadingMsg">A carregar pedidos...</div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>ID / Data e Hora</th>
+                            <th>Cliente / WhatsApp</th>
+                            <th>Itens Solicitados</th>
+                            <th>Total / Comprovativo</th>
+                            <th>Entrega & Validade</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pedidosTableBody">
+                        <tr>
+                            <td colspan="6" id="loadingMsg">A carregar pedidos pendentes...</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -308,7 +336,7 @@
                         <option value="90">90 Dias (3 Meses)</option>
                         <option value="180">180 Dias (6 Meses)</option>
                         <option value="365">365 Dias (1 Ano)</option>
-                        <option value="custom">⚙️ Dias Personalizados (Introduzir Manualmente)</option>
+                        <option value="custom">⚙ Dias Personalizados (Introduzir Manualmente)</option>
                         <option value="0">Vitalício / Sem Expiração</option>
                     </select>
 
@@ -345,6 +373,12 @@
         <!-- Conteúdo de Gestão de Produtos (CMS) -->
         <div id="secProdutos" style="display: none;">
             
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <button class="btn-sync-prods" onclick="sincronizarProdutosIndex()">
+                    ⚡ Sincronizar Produtos do LocalStorage
+                </button>
+            </div>
+
             <div class="manual-add-card">
                 <h3>➕ Criar Novo Produto / Jogo para o Site</h3>
                 
@@ -363,7 +397,7 @@
 
                 <div class="grid-2">
                     <input type="text" id="prodBadge" class="form-input" placeholder="Badge/Etiqueta (Ex: POPULAR, HOT)">
-                    <input type="url" id="prodImagem" class="form-input" placeholder="URL da Imagem / Imagem do Ficheiro Original">
+                    <input type="url" id="prodImagem" class="form-input" placeholder="URL da Imagem">
                 </div>
 
                 <textarea id="prodDescricao" class="delivery-input" rows="2" placeholder="Descrição curta do produto/jogo..."></textarea>
@@ -431,7 +465,7 @@
 
         const loginArea = document.getElementById('loginArea');
         const dashboardArea = document.getElementById('dashboardArea');
-        const containerPedidos = document.getElementById('pedidosContainer');
+        const pedidosTableBody = document.getElementById('pedidosTableBody');
         const assinaturasTableBody = document.getElementById('assinaturasTableBody');
         const produtosTableBody = document.getElementById('produtosTableBody');
 
@@ -540,6 +574,87 @@
             container.appendChild(row);
         };
 
+        window.sincronizarProdutosIndex = async function() {
+    let produtosLocais = JSON.parse(localStorage.getItem('bissau_produtos')) || JSON.parse(localStorage.getItem('bissau_products')) || [];
+
+    if (!produtosLocais || produtosLocais.length === 0) {
+        produtosLocais = [
+            {
+                nome: "Free Fire - Recarga de Diamantes",
+                tipo: "jogo",
+                categoria: "Jogos",
+                paginaDestino: "freefire.html",
+                badge: "HOT",
+                imagem: "https://play-lh.googleusercontent.com/WW892w8XpY7aZ1IvhT-S99QvYf12e8-G4Xv9=w240-h380",
+                descricao: "Recarga direta de Diamantes Free Fire via ID do Jogador.",
+                opcoes: [
+                    { rotulo: "100 Diamantes", preco: 1000 },
+                    { rotulo: "310 Diamantes", preco: 3000 },
+                    { rotulo: "520 Diamantes", preco: 5000 },
+                    { rotulo: "1060 Diamantes", preco: 10000 }
+                ],
+                esgotado: false
+            },
+            {
+                nome: "eFootball - Moedas myClub",
+                tipo: "jogo",
+                categoria: "Jogos",
+                paginaDestino: "efootball.html",
+                badge: "POPULAR",
+                imagem: "https://play-lh.googleusercontent.com/1-hR3A4A7L2iY0_G5d_G61S6h1H1z0a.jpg",
+                descricao: "Moedas eFootball PES para contratar jogadores lendários.",
+                opcoes: [
+                    { rotulo: "130 Moedas", preco: 1200 },
+                    { rotulo: "550 Moedas", preco: 4800 },
+                    { rotulo: "1040 Moedas", preco: 9000 }
+                ],
+                esgotado: false
+            },
+            {
+                nome: "Netflix 4K Ultra HD",
+                tipo: "assinatura",
+                categoria: "Streaming",
+                paginaDestino: "netflix.html",
+                badge: "TOP",
+                imagem: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
+                descricao: "Conta Netflix Premium 4K com perfil individual e código PIN.",
+                opcoes: [
+                    { rotulo: "1 Mês - 1 Tela", preco: 2500 },
+                    { rotulo: "3 Meses - 1 Tela", preco: 9500 }
+                ],
+                esgotado: false
+            }
+        ];
+    }
+
+    const confirmacao = confirm(`Deseja publicar/sincronizar os ${produtosLocais.length} produtos padrão com a base de dados do Firestore?`);
+    if (!confirmacao) return;
+
+    try {
+        let cont = 0;
+        for (const prod of produtosLocais) {
+            await addDoc(collection(db, "produtos"), {
+                nome: prod.nome || prod.title || 'Produto',
+                tipo: prod.tipo || 'assinatura',
+                categoria: prod.categoria || 'Geral',
+                paginaDestino: prod.paginaDestino || prod.link || '#',
+                badge: prod.badge || 'POPULAR',
+                imagem: prod.imagem || prod.image || '',
+                descricao: prod.descricao || prod.description || '',
+                opcoes: prod.opcoes || [{ rotulo: 'Padrão', preco: prod.preco || prod.price || 0 }],
+                esgotado: prod.esgotado || false,
+                createdAt: new Date().toISOString()
+            });
+            cont++;
+        }
+        alert(`${cont} produtos foram sincronizados com sucesso no banco do Firestore!`);
+    } catch (error) {
+        console.error("Erro ao sincronizar produtos:", error);
+        alert("Ocorreu um erro ao conectar ao Firestore para sincronizar.");
+    }
+};
+
+
         window.salvarProduto = async function() {
             const nome = document.getElementById('prodNome').value.trim();
             const tipo = document.getElementById('prodTipo').value;
@@ -618,7 +733,7 @@
                 produtosTableBody.innerHTML = '';
 
                 if (querySnapshot.empty) {
-                    produtosTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">🛍️ Nenhum produto publicado no painel. Adicione os seus produtos no formulário acima!</td></tr>';
+                    produtosTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">🛍️️ Nenhum produto publicado no painel. Adicione os seus produtos no formulário acima!</td></tr>';
                     return;
                 }
 
@@ -674,17 +789,38 @@
         function escutarPedidosPendentes() {
             const q = query(collection(db, "pedidos"), where("status", "==", "Pendente"));
             unsubPedidos = onSnapshot(q, (querySnapshot) => {
-                containerPedidos.innerHTML = ''; 
+                pedidosTableBody.innerHTML = ''; 
 
                 if (querySnapshot.empty) {
-                    containerPedidos.innerHTML = '<div id="emptyMsg">✅ Não há pedidos pendentes no momento.</div>';
+                    pedidosTableBody.innerHTML = '<tr><td colspan="6" id="emptyMsg">✅ Não há pedidos pendentes no momento.</td></tr>';
                     return;
                 }
 
+                const listaPedidos = [];
                 querySnapshot.forEach((documento) => {
-                    const pedido = documento.data();
-                    const docId = documento.id;
+                    listaPedidos.push({
+                        docId: documento.id,
+                        ...documento.data()
+                    });
+                });
+
+                listaPedidos.sort((a, b) => {
+                    const timeA = a.criadoEm && a.criadoEm.toMillis ? a.criadoEm.toMillis() : (new Date(a.criadoEm || a.data || 0).getTime());
+                    const timeB = b.criadoEm && b.criadoEm.toMillis ? b.criadoEm.toMillis() : (new Date(b.criadoEm || b.data || 0).getTime());
+                    return timeB - timeA;
+                });
+
+                listaPedidos.forEach((pedido) => {
+                    const docId = pedido.docId;
                     
+                    let dataHoraStr = 'Data recente';
+                    if (pedido.criadoEm && pedido.criadoEm.toDate) {
+                        const d = pedido.criadoEm.toDate();
+                        dataHoraStr = d.toLocaleDateString('pt-PT') + ' às ' + d.toLocaleTimeString('pt-PT', {hour: '2-digit', minute:'2-digit'});
+                    } else if (pedido.data) {
+                        dataHoraStr = pedido.data;
+                    }
+
                     let itensHtml = '';
                     let isJogo = false;
 
@@ -694,7 +830,7 @@
                             if (nomeLower.includes('diamantes') || nomeLower.includes('free fire') || nomeLower.includes('pubg') || nomeLower.includes('uc') || nomeLower.includes('efootball') || nomeLower.includes('moedas')) {
                                 isJogo = true;
                             }
-                            itensHtml += `<div>- ${item.nome} (${item.opcao || ''}) | Qtd: ${item.quantidade || 1}</div>`;
+                            itensHtml += `<div>• <strong>${item.nome}</strong> (${item.opcao || ''}) x${item.quantidade || 1}</div>`;
                         });
                     }
 
@@ -703,29 +839,25 @@
                         telefoneCliente = '245' + telefoneCliente;
                     }
 
-                    const card = document.createElement('div');
-                    card.className = 'order-card';
-                    card.innerHTML = `
-                        <div class="order-header">
-                            <span class="order-id">${pedido.orderId || 'ORD-000000'}</span>
-                            <span class="order-total">${(pedido.total || 0).toLocaleString()} FCFA</span>
-                        </div>
-                        <div class="client-info">
-                            <p><strong>Cliente:</strong> ${pedido.clienteNome || 'Cliente'}</p>
-                            <p><strong>WhatsApp:</strong> ${telefoneCliente}</p>
-                            <p><strong>Verificar Depósito:</strong></p>
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>
+                            <strong style="color: var(--primary);">${pedido.orderId || 'ORD-000000'}</strong><br>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">${dataHoraStr}</span>
+                        </td>
+                        <td>
+                            <strong>${pedido.clienteNome || 'Cliente'}</strong><br>
+                            <span style="font-size: 0.78rem; color: var(--text-muted);">${telefoneCliente}</span>
+                        </td>
+                        <td style="font-size: 0.82rem;">${itensHtml}</td>
+                        <td>
+                            <strong style="color: var(--success);">${(pedido.total || 0).toLocaleString()} FCFA</strong><br>
                             <span class="highlight-data">${pedido.comprovativoFornecido}</span>
-                        </div>
-                        
-                        <div class="items-list">
-                            <strong>Itens Solicitados:</strong><br>
-                            ${itensHtml}
-                        </div>
-
-                        <div class="delivery-section">
-                            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Tipo de Produto / Validade:</label>
-                            <select id="validade-${docId}" class="form-select">
-                                ${isJogo ? `<option value="-1" selected>🎮 Compra Única / Moedas de Jogo (Sem Expiração)</option>` : ''}
+                        </td>
+                        <td style="min-width: 220px;">
+                            <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display:block; margin-bottom: 2px;">Validade:</label>
+                            <select id="validade-${docId}" class="form-select" style="padding: 6px; font-size: 12px; margin-bottom: 6px;">
+                                ${isJogo ? `<option value="-1" selected>🎮 Compra Única / Moedas (Sem Expiração)</option>` : ''}
                                 <option value="30">30 Dias (1 Mês)</option>
                                 <option value="90">90 Dias (3 Meses)</option>
                                 <option value="180">180 Dias (6 Meses)</option>
@@ -733,18 +865,42 @@
                                 <option value="0">Vitalício / Sem Expiração</option>
                             </select>
 
-                            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Dados de Entrega (ID do Jogo, Comprovativo ou Acesso):</label>
-                            <textarea id="dados-${docId}" class="delivery-input" rows="3" placeholder="Ex: Email: x@x.com, Senha: 123"></textarea>
-                            <button class="btn-approve" onclick="aprovarPedido('${docId}', '${telefoneCliente}', '${pedido.orderId}', '${pedido.clienteNome}')">✅ Confirmar Pagamento e Entregar</button>
-                        </div>
+                            <textarea id="dados-${docId}" class="delivery-input" rows="2" placeholder="Dados de Entrega (Email, Senha, ID)"></textarea>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="btn-approve" onclick="aprovarPedido('${docId}', '${telefoneCliente}', '${pedido.orderId}', '${pedido.clienteNome}')">
+                                    ✅ Confirmar
+                                </button>
+                                <button class="btn-reject" onclick="rejeitarPedido('${docId}', '${pedido.orderId}')">
+                                    ❌ Rejeitar / Cancelar
+                                </button>
+                            </div>
+                        </td>
                     `;
-                    containerPedidos.appendChild(card);
+                    pedidosTableBody.appendChild(tr);
                 });
             }, (error) => {
                 console.error("Erro ao escutar pedidos: ", error);
-                containerPedidos.innerHTML = '<div id="emptyMsg" style="color: var(--danger);">Erro ao conectar ao servidor.</div>';
+                pedidosTableBody.innerHTML = '<tr><td colspan="6" id="emptyMsg" style="color: var(--danger);">Erro ao conectar ao servidor.</td></tr>';
             });
         }
+
+        window.rejeitarPedido = async function(docId, orderId) {
+            const confirmacao = confirm(`Deseja realmente rejeitar e cancelar o pedido ${orderId}? O estado será atualizado para Cancelado na base de dados e no site do cliente.`);
+            if (!confirmacao) return;
+
+            try {
+                const pedidoRef = doc(db, "pedidos", docId);
+                await updateDoc(pedidoRef, {
+                    status: "Cancelado"
+                });
+                alert(`Pedido ${orderId} foi cancelado com sucesso!`);
+            } catch (error) {
+                console.error("Erro ao cancelar pedido: ", error);
+                alert("Erro ao cancelar o pedido. Tente novamente.");
+            }
+        };
 
         window.aprovarPedido = async function(docId, telefone, orderId, clienteNome) {
             const dadosEntrega = document.getElementById(`dados-${docId}`).value.trim();
