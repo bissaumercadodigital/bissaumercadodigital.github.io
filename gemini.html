@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gemini Google AI Pro & 5TB - Mercado Digital Bissau</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        #netlify-badge, .netlify-badge, a[href*="netlify.com"] {
+            display: none !important;
+        }
+
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #121926;
+            --bg-card-hover: #1c273e;
+            --primary: #4285f4;
+            --gemini-purple: #9b51e0;
+            --gemini-blue: #1a73e8;
+            --gemini-cyan: #00d2ff;
+            --gemini-gradient: linear-gradient(135deg, #4285f4, #9b51e0, #00d2ff);
+            --gemini-glow: rgba(66, 133, 244, 0.35);
+            --orange: #ff6600;
+            --orange-glow: rgba(255, 102, 0, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #1e293b;
+            --border-highlight: rgba(155, 81, 224, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 100px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(9, 13, 22, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .page-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            background: var(--gemini-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .icon-cart-link {
+            position: relative;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-badge-count {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background-color: var(--orange);
+            color: #ffffff;
+            font-size: 0.6rem;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 6px var(--orange-glow);
+        }
+
+        .container {
+            padding: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        /* Hero Product Card */
+        .product-hero {
+            background-color: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-highlight);
+            overflow: hidden;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .product-banner {
+            height: 170px;
+            background: linear-gradient(180deg, rgba(9, 13, 22, 0.1) 0%, var(--bg-card) 100%),
+                        radial-gradient(circle at top right, rgba(155, 81, 224, 0.4), transparent 70%),
+                        radial-gradient(circle at bottom left, rgba(66, 133, 244, 0.4), transparent 70%),
+                        #0c101d;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .hero-logo-badge {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px 24px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 20px rgba(155, 81, 224, 0.3);
+        }
+
+        .hero-logo-badge span {
+            font-size: 1.4rem;
+            font-weight: 900;
+            background: var(--gemini-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .product-hero-info {
+            padding: 1.2rem;
+        }
+
+        .product-hero-info h2 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .product-hero-info p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Features Box */
+        .features-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 1.1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .features-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.85rem;
+            color: var(--gemini-cyan);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .features-list { grid-template-columns: 1fr; }
+        }
+
+        .feat-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+        }
+
+        .feat-item strong {
+            display: block;
+            color: #ffffff;
+            margin-bottom: 2px;
+            font-size: 0.82rem;
+        }
+
+        .stock-warning {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        /* Mode Selector Tabs */
+        .mode-selector-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-highlight);
+            padding: 1.1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .mode-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mode-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            background: var(--bg-dark);
+            padding: 5px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 0.85rem;
+        }
+
+        .mode-btn {
+            padding: 10px 8px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .mode-btn.active {
+            background: var(--gemini-gradient);
+            color: #ffffff;
+            box-shadow: 0 2px 10px var(--gemini-glow);
+        }
+
+        .mode-desc-box {
+            background: rgba(66, 133, 244, 0.08);
+            border: 1px solid rgba(66, 133, 244, 0.25);
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            color: #cbd5e1;
+            line-height: 1.4;
+        }
+
+        .mode-desc-box strong {
+            color: var(--gemini-cyan);
+        }
+
+        /* Form Inputs */
+        .input-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 1.1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .input-card-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 0.85rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 11px 13px;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--gemini-purple);
+        }
+
+        .input-hint {
+            font-size: 0.72rem;
+            color: var(--orange);
+            margin-top: 4px;
+            display: block;
+            font-weight: 600;
+        }
+
+        /* Package Grid Selection */
+        .packages-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 10px;
+            margin-bottom: 1.25rem;
+        }
+
+        .pkg-card {
+            background-color: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pkg-card.selected {
+            border-color: var(--gemini-purple);
+            background-color: rgba(155, 81, 224, 0.08);
+            box-shadow: 0 0 15px var(--gemini-glow);
+        }
+
+        .pkg-info {
+            text-align: left;
+        }
+
+        .pkg-title {
+            font-size: 0.98rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .pkg-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        .pkg-price {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--gemini-cyan);
+            white-space: nowrap;
+        }
+
+        .badge-discount {
+            background: rgba(255, 102, 0, 0.2);
+            color: var(--orange);
+            border: 1px solid var(--orange);
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-weight: 800;
+            margin-left: 6px;
+        }
+
+        /* Action Buttons */
+        .action-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 1.25rem;
+        }
+
+        .btn-add-cart {
+            width: 100%;
+            background: var(--gemini-gradient);
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.88rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--gemini-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+
+        .btn-buy-wa {
+            width: 100%;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.88rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+
+        .btn-add-cart:disabled, .btn-buy-wa:disabled {
+            background: #334155 !important;
+            color: #94a3b8 !important;
+            cursor: not-allowed;
+            box-shadow: none !important;
+        }
+
+        .btn-add-cart:active, .btn-buy-wa:active {
+            transform: scale(0.98);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--success);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(18, 25, 38, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.65rem 0;
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            gap: 0.2rem;
+            flex: 1;
+            text-align: center;
+        }
+
+        .nav-item.active, .nav-item:hover {
+            color: var(--orange);
+        }
+
+        .nav-icon-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-icon {
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        .nav-badge-count {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: linear-gradient(135deg, var(--orange), #ff3300);
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 8px var(--orange-glow);
+            border: 1.5px solid var(--bg-card);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="index.html" class="back-btn">
+            ‹ Voltar
+        </a>
+        <h1 class="page-title">Gemini AI & Google One</h1>
+        <a href="carrinho.html" class="icon-cart-link">
+            🛒
+            <span class="cart-badge-count" id="topCartBadge">0</span>
+        </a>
+    </div>
+
+    <div class="container">
+        <!-- Hero Banner -->
+        <div class="product-hero">
+            <div class="product-banner">
+                <div class="hero-logo-badge">
+                    <span>✨ Gemini Google AI Pro</span>
+                </div>
+            </div>
+            <div class="product-hero-info">
+                <h2>Assinatura Gemini AI & Google One 🚀</h2>
+                <p>Acesse a Inteligência Artificial mais avançada do Google (Gemini 1.5 Pro/Advanced) com 5 TB de armazenamento em nuvem e navegação sem anúncios.</p>
+            </div>
+        </div>
+
+        <!-- Benefícios Explicados -->
+        <div class="features-card">
+            <div class="features-title">✨ Vantagens da Assinatura Google AI Pro</div>
+            <div class="features-list">
+                <div class="feat-item">
+                    <strong>🤖 Gemini IA Avançada</strong>
+                    Crie, pesquise, programe e analise ficheiros complexos com velocidade máxima.
+                </div>
+                <div class="feat-item">
+                    <strong>☁️ 5 TB de Nuvem</strong>
+                    Espaço gigante para guardar fotos, vídeos e documentos no Fotos, Drive e Gmail.
+                </div>
+                <div class="feat-item">
+                    <strong>👥 Partilha Familiar (6 Pessoas)</strong>
+                    Na Ativação Direta, partilhe os 5 TB com até 5 membros da sua família!
+                </div>
+                <div class="feat-item">
+                    <strong>🔒 Total Privacidade</strong>
+                    Cada membro tem ficheiros e conversas com a IA 100% privados.
+                </div>
+            </div>
+        </div>
+
+        <!-- Aviso de Stock -->
+        <div id="stockWarning" class="stock-warning">
+            🔴 Produto Temporariamente Esgotado no Painel de Administração.
+        </div>
+
+        <!-- Seleção do Modo de Ativação -->
+        <div class="mode-selector-card">
+            <div class="mode-title">1. Escolha o Tipo de Ativação</div>
+            <div class="mode-tabs">
+                <button type="button" id="btnModeConvidado" class="mode-btn active" onclick="setMode('convidado')">
+                    📩 Modo Convidado<br><small>(Económico)</small>
+                </button>
+                <button type="button" id="btnModeDireto" class="mode-btn" onclick="setMode('direto')">
+                    👑 Ativação no Seu E-mail<br><small>(Conta Própria + Família)</small>
+                </button>
+            </div>
+            <div class="mode-desc-box" id="modeDescBox">
+                <strong>📩 Modo Convidado:</strong> Enviamos um convite oficial do Google One para o seu e-mail. Ativa instantaneamente o Gemini Advanced no seu e-mail existente por um preço mais acessível!
+            </div>
+        </div>
+
+        <!-- Dados do Cliente -->
+        <div class="input-card">
+            <div class="input-card-title">2. Dados Obrigatórios para Ativação</div>
+            
+            <div class="form-group">
+                <label for="clientName">Seu Nome Completo *</label>
+                <input type="text" id="clientName" class="form-input" placeholder="Ex: Mamudo Djaló" required>
+            </div>
+
+            <div class="form-group">
+                <label for="clientWhatsApp">Nº de WhatsApp para Confirmação *</label>
+                <input type="tel" id="clientWhatsApp" class="form-input" placeholder="Ex: 955288370 ou 966000000" required>
+            </div>
+
+            <div class="form-group">
+                <label for="clientEmail">Seu E-mail da Conta Google (@gmail.com) *</label>
+                <input type="email" id="clientEmail" class="form-input" placeholder="seuemail@gmail.com" required>
+            </div>
+
+            <!-- Campo de Senha (SÓ APARECE NO MODO DIRETO) -->
+            <div class="form-group" id="passwordGroup" style="display: none;">
+                <label for="clientPassword">Palavra-passe / Senha da Conta Google *</label>
+                <input type="password" id="clientPassword" class="form-input" placeholder="Sua senha do Gmail">
+                <span class="input-hint">🔒 A senha é obrigatória para ativarmos o plano diretamente na sua conta de forma oficial. Seus dados são guardados em total segurança e sigilo.</span>
+            </div>
+        </div>
+
+        <!-- Seleção do Plano / Duração -->
+        <div class="packages-title">3. Selecione a Duração do Plano</div>
+        <div class="package-grid" id="packageGridContainer">
+            <!-- Gerado via JS dependendo do modo selecionado -->
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="action-container">
+            <button id="btnAddCart" class="btn-add-cart" onclick="addToCart()">
+                🛒 Adicionar ao Carrinho
+            </button>
+            <button id="btnBuyWA" class="btn-buy-wa" onclick="buyDirectWhatsApp()">
+                💬 Comprar Directo no WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Item adicionado ao carrinho!</div>
+
+    <!-- Navegação Inferior -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <div class="nav-icon-wrapper"><span class="nav-icon">🏠</span></div>
+            <span>Loja</span>
+        </a>
+        <a href="pedidos.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">📦</span>
+                <span class="nav-badge-count" id="pedidosBadge">0</span>
+            </div>
+            <span>Pedidos</span>
+        </a>
+        <a href="carrinho.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">🛒</span>
+                <span class="nav-badge-count" id="cartBadge">0</span>
+            </div>
+            <span>Carrinho</span>
+        </a>
+        <a href="conta.html" class="nav-item">
+            <div class="nav-icon-wrapper"><span class="nav-icon">👤</span></div>
+            <span>Conta</span>
+        </a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Preços do Modo Convidado
+        const PACKAGES_CONVIDADO = [
+            { label: '1 Mês (Convidado)', price: 750, badge: '' },
+            { label: '3 Meses (Convidado)', price: 2250, badge: 'SUPER DESCONTO' },
+            { label: '6 Meses (Convidado)', price: 4500, badge: 'MAIS VENDIDO' },
+            { label: '1 Ano (Convidado)', price: 9000, badge: 'CUSTO-BENEFÍCIO' }
+        ];
+
+        // Preços da Ativação Direta no E-mail do Cliente (Ativação Total)
+        const PACKAGES_DIRETO = [
+            { label: '1 Mês (Ativação Próprio E-mail + Família)', price: 1500, badge: '' },
+            { label: '3 Meses (Ativação Próprio E-mail + Família)', price: 4000, badge: 'RECOMENDADO' },
+            { label: '6 Meses (Ativação Próprio E-mail + Família)', price: 7500, badge: 'POPULAR' },
+            { label: '1 Ano (Ativação Próprio E-mail + Família)', price: 14000, badge: 'MELHOR OFERTA' }
+        ];
+
+        let currentMode = 'convidado';
+        let selectedLabel = PACKAGES_CONVIDADO[0].label;
+        let selectedPrice = PACKAGES_CONVIDADO[0].price;
+        let isProductEsgotado = false;
+
+        window.setMode = function(mode) {
+            currentMode = mode;
+            const btnConvidado = document.getElementById('btnModeConvidado');
+            const btnDireto = document.getElementById('btnModeDireto');
+            const descBox = document.getElementById('modeDescBox');
+            const pwdGroup = document.getElementById('passwordGroup');
+
+            if (mode === 'convidado') {
+                btnConvidado.classList.add('active');
+                btnDireto.classList.remove('active');
+                descBox.innerHTML = '<strong>📩 Modo Convidado:</strong> Enviamos um convite oficial do Google One para o seu e-mail. Ativa o Gemini Advanced no seu e-mail por um preço super económico!';
+                pwdGroup.style.display = 'none';
+            } else {
+                btnDireto.classList.add('active');
+                btnConvidado.classList.remove('active');
+                descBox.innerHTML = '<strong>👑 Ativação no Seu E-mail:</strong> Ativamos o plano Google AI Pro diretamente na sua conta do Gmail! Dá direito a 5 TB de nuvem e você pode partilhar o acesso com até 5 membros da sua família (6 pessoas no total).';
+                pwdGroup.style.display = 'block';
+            }
+
+            renderPackages();
+        };
+
+        function renderPackages() {
+            const list = currentMode === 'convidado' ? PACKAGES_CONVIDADO : PACKAGES_DIRETO;
+            const grid = document.getElementById('packageGridContainer');
+            if (!grid) return;
+
+            grid.innerHTML = '';
+            
+            list.forEach((opt, index) => {
+                const isSelected = index === 0;
+                if (isSelected) {
+                    selectedLabel = opt.label;
+                    selectedPrice = opt.price;
+                }
+
+                const card = document.createElement('div');
+                card.className = `pkg-card ${isSelected ? 'selected' : ''}`;
+                card.onclick = function() {
+                    selectPackage(card, opt.label, opt.price);
+                };
+
+                const badgeHtml = opt.badge ? `<span class="badge-discount">${opt.badge}</span>` : '';
+
+                card.innerHTML = `
+                    <div class="pkg-info">
+                        <div class="pkg-title">✨ ${opt.label} ${badgeHtml}</div>
+                        <div class="pkg-sub">${currentMode === 'convidado' ? 'Ativação via Convite de Grupo' : 'Ativação Direta + 5 TB + Família'}</div>
+                    </div>
+                    <div class="pkg-price">${opt.price.toLocaleString()} FCFA</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        window.selectPackage = function(element, label, price) {
+            document.querySelectorAll('.pkg-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedLabel = label;
+            selectedPrice = price;
+        };
+
+        function sincronizarComAdmin() {
+            const q = query(collection(db, "produtos"), where("paginaDestino", "==", "gemini.html"));
+            onSnapshot(q, (snapshot) => {
+                if (!snapshot.empty) {
+                    const prodData = snapshot.docs[0].data();
+                    isProductEsgotado = prodData.esgotado || false;
+
+                    const stockWarning = document.getElementById('stockWarning');
+                    const btnAddCart = document.getElementById('btnAddCart');
+                    const btnBuyWA = document.getElementById('btnBuyWA');
+
+                    if (isProductEsgotado) {
+                        if (stockWarning) stockWarning.style.display = 'block';
+                        if (btnAddCart) {
+                            btnAddCart.disabled = true;
+                            btnAddCart.innerText = '🔴 PRODUTO ESGOTADO';
+                        }
+                        if (btnBuyWA) {
+                            btnBuyWA.disabled = true;
+                            btnBuyWA.innerText = '🔴 INDISPONÍVEL';
+                        }
+                    } else {
+                        if (stockWarning) stockWarning.style.display = 'none';
+                        if (btnAddCart) {
+                            btnAddCart.disabled = false;
+                            btnAddCart.innerText = '🛒 ADICIONAR AO CARRINHO';
+                        }
+                        if (btnBuyWA) {
+                            btnBuyWA.disabled = false;
+                            btnBuyWA.innerText = '💬 COMPRAR DIRECTO NO WHATSAPP';
+                        }
+                    }
+                }
+            }, (err) => console.error("Erro ao sincronizar Gemini em tempo real:", err));
+        }
+
+        function updateNavBadges() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+                const totalCarrinho = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
+                
+                const cartBadge = document.getElementById('cartBadge');
+                const topCartBadge = document.getElementById('topCartBadge');
+
+                if (cartBadge) {
+                    if (totalCarrinho > 0) {
+                        cartBadge.innerText = totalCarrinho > 99 ? '99+' : totalCarrinho;
+                        cartBadge.style.display = 'flex';
+                    } else {
+                        cartBadge.style.display = 'none';
+                    }
+                }
+                if (topCartBadge) {
+                    topCartBadge.innerText = totalCarrinho;
+                    topCartBadge.style.display = totalCarrinho > 0 ? 'flex' : 'none';
+                }
+
+                const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
+                const totalPedidos = pedidos.length;
+                const pedidosBadge = document.getElementById('pedidosBadge');
+
+                if (pedidosBadge) {
+                    if (totalPedidos > 0) {
+                        pedidosBadge.innerText = totalPedidos > 99 ? '99+' : totalPedidos;
+                        pedidosBadge.style.display = 'flex';
+                    } else {
+                        pedidosBadge.style.display = 'none';
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        function validarCampos() {
+            const name = document.getElementById('clientName').value.trim();
+            const wa = document.getElementById('clientWhatsApp').value.trim();
+            const email = document.getElementById('clientEmail').value.trim();
+            const password = document.getElementById('clientPassword').value.trim();
+
+            if (!name || !wa || !email) {
+                alert("Por favor, preencha o seu Nome, WhatsApp e E-mail da conta Google!");
+                return false;
+            }
+
+            if (!email.includes('@')) {
+                alert("Por favor, introduza um e-mail válido!");
+                return false;
+            }
+
+            if (currentMode === 'direto' && !password) {
+                alert("No modo de Ativação Direta, a senha da conta Google é obrigatória para podermos ativar o plano no seu e-mail!");
+                document.getElementById('clientPassword').focus();
+                return false;
+            }
+
+            return { name, wa, email, password };
+        }
+
+        window.addToCart = function() {
+            if (isProductEsgotado) {
+                alert("Desculpe, este produto está esgotado no momento.");
+                return;
+            }
+
+            const dados = validarCampos();
+            if (!dados) return;
+
+            const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+
+            let detalhesOpcao = `Cliente: ${dados.name} | WA: ${dados.wa} | Email: ${dados.email}`;
+            if (currentMode === 'direto') {
+                detalhesOpcao += ` | Senha: ${dados.password}`;
+            }
+
+            const newItem = {
+                id: 'gemini_' + Date.now(),
+                nome: 'Gemini AI - ' + selectedLabel,
+                opcao: detalhesOpcao,
+                price: selectedPrice,
+                quantidade: 1,
+                img: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg'
+            };
+
+            cart.push(newItem);
+            localStorage.setItem('bissau_cart', JSON.stringify(cart));
+
+            updateNavBadges();
+            showToast("✅ Assinatura Gemini adicionada ao carrinho!");
+        };
+
+        window.buyDirectWhatsApp = async function() {
+            if (isProductEsgotado) {
+                alert("Desculpe, este produto está esgotado no momento.");
+                return;
+            }
+
+            const dados = validarCampos();
+            if (!dados) return;
+
+            const orderIdCode = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+            const currentUser = auth.currentUser;
+
+            let detalhesEntregaBanco = `E-mail: ${dados.email}`;
+            if (currentMode === 'direto') {
+                detalhesEntregaBanco += ` | Senha: ${dados.password}`;
+            }
+
+            try {
+                await addDoc(collection(db, "pedidos"), {
+                    orderId: orderIdCode,
+                    userId: currentUser ? currentUser.uid : null,
+                    clienteNome: dados.name,
+                    clienteTelefone: dados.wa,
+                    comprovativoFornecido: "WhatsApp Direto",
+                    tipoComprovativo: "WhatsApp",
+                    itens: [{
+                        nome: 'Gemini Google AI Pro - ' + selectedLabel,
+                        opcao: detalhesEntregaBanco,
+                        price: selectedPrice,
+                        quantidade: 1
+                    }],
+                    subtotal: selectedPrice,
+                    desconto: 0,
+                    total: selectedPrice,
+                    status: 'Pendente',
+                    dadosEntregues: '',
+                    criadoEm: serverTimestamp()
+                });
+
+                const pedidosLocais = JSON.parse(localStorage.getItem('bissau_orders')) || [];
+                pedidosLocais.push({
+                    orderId: orderIdCode,
+                    id: orderIdCode,
+                    data: new Date().toLocaleDateString('pt-PT'),
+                    itens: [{ nome: 'Gemini Google AI Pro - ' + selectedLabel, opcao: detalhesEntregaBanco, price: selectedPrice, quantidade: 1 }],
+                    total: selectedPrice,
+                    status: 'Pendente'
+                });
+                localStorage.setItem('bissau_orders', JSON.stringify(pedidosLocais));
+
+            } catch (err) {
+                console.error("Erro ao salvar no Firestore:", err);
+            }
+
+            let text = `✨ *PEDIDO DIRETO - GEMINI GOOGLE AI PRO*\n`;
+            text += `--------------------------------\n`;
+            text += `📦 *Plano:* ${selectedLabel}\n`;
+            text += `⚙ *Modo:* ${currentMode === 'convidado' ? '📩 Convidado' : '👑 Ativação Direta no E-mail'}\n`;
+            text += `💰 *Valor:* ${selectedPrice.toLocaleString()} FCFA\n`;
+            text += `👤 *Nome:* ${dados.name}\n`;
+            text += `📱 *Contacto WhatsApp:* ${dados.wa}\n`;
+            text += `📧 *E-mail Google:* ${dados.email}\n`;
+            if (currentMode === 'direto') {
+                text += `🔑 *Senha Google:* ${dados.password}\n`;
+            }
+            text += `--------------------------------\n`;
+            text += `💳 *Método:* Orange Money (955288370)\n`;
+            text += `Aguardando confirmação de pagamento para ativar o serviço.`;
+
+            const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
+            window.open(waUrl, '_blank');
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPackages();
+            updateNavBadges();
+            sincronizarComAdmin();
+        });
+
+        document.addEventListener('focusin', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                const bottomNav = document.querySelector('.bottom-nav');
+                if (bottomNav) bottomNav.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('focusout', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                const bottomNav = document.querySelector('.bottom-nav');
+                if (bottomNav) bottomNav.style.display = 'flex';
+            }
+        });
+    </script>
+
+</body>
+</html>
