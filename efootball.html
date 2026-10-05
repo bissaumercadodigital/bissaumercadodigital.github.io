@@ -436,9 +436,9 @@
             <h3 class="input-card-title">1. Dados da Conta / Konami ID</h3>
             <div class="form-group">
                 <label for="platformSelect">Plataforma *</label>
-                <select id="platformSelect" class="form-select">
-                    <option value="Android (Google Play)">Android (Mobile)</option>
-                    <option value="iOS (iPhone/iPad)">iOS / iPhone (Mobile)</option>
+                <select id="platformSelect" class="form-select" onchange="renderizarPacotesPorPlataforma()">
+                    <option value="ios">iOS / iPhone</option>
+                    <option value="android">Android (Mobile)</option>
                 </select>
             </div>
             <div class="form-group">
@@ -446,34 +446,15 @@
                 <input type="text" id="konamiId" class="form-input" placeholder="Ex: efootball@gmail.com ou ID" required>
             </div>
             <div class="form-group">
-                <label for="playerName">Nome da Equipa no Jogo (Opcional)</label>
-                <input type="text" id="playerName" class="form-input" placeholder="Ex: Bissau FC">
+                <label for="konamiPassword">Palavra-passe da Conta *</label>
+                <input type="password" id="konamiPassword" class="form-input" placeholder="Sua palavra-passe da conta" required>
             </div>
         </div>
 
         <!-- Seleção de Pacote -->
         <div class="packages-title">2. Escolha a Quantidade de Moedas</div>
         <div class="package-grid" id="packageGridContainer">
-            <div class="pkg-card selected" onclick="selectPackage(this, '130 Moedas', 1200)">
-                <div class="pkg-title">🪙 130</div>
-                <div class="pkg-price">1.200 FCFA</div>
-            </div>
-            <div class="pkg-card" onclick="selectPackage(this, '550 Moedas', 4800)">
-                <div class="pkg-title">🪙 550</div>
-                <div class="pkg-price">4.800 FCFA</div>
-            </div>
-            <div class="pkg-card" onclick="selectPackage(this, '1.040 Moedas', 8800)">
-                <div class="pkg-title">🪙 1.040</div>
-                <div class="pkg-price">8.800 FCFA</div>
-            </div>
-            <div class="pkg-card" onclick="selectPackage(this, '2.130 Moedas', 17500)">
-                <div class="pkg-title">🪙 2.130</div>
-                <div class="pkg-price">17.500 FCFA</div>
-            </div>
-            <div class="pkg-card" onclick="selectPackage(this, '3.250 Moedas', 26000)">
-                <div class="pkg-title">🪙 3.250</div>
-                <div class="pkg-price">26.000 FCFA</div>
-            </div>
+            <!-- Os cards são gerados dinamicamente conforme a plataforma (Android / iOS) -->
         </div>
 
         <!-- Botões de Ação -->
@@ -534,9 +515,73 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let selectedLabel = '130 Moedas';
-        let selectedPrice = 1200;
+        // Tabela de Preços por Plataforma (Android vs iOS)
+        let tabelaPacotes = {
+            ios: [
+                { label: '130', price: 900 },
+                { label: '300', price: 1900 },
+                { label: '550', price: 3900 },
+                { label: '750', price: 4000 },
+                { label: '1.040', price: 5600 },
+					{ label: '2.130', price: 10700 },
+					{ label: '3.250', price: 15300 },
+					{ label: '5.700', price: 26000 },
+					{ label: '12.800', price: 52000 }
+
+            ],
+android: [
+                { label: '🚫 Coin', price: 0 },
+                { label: '🚫 Coin', price: 0 },
+                { label: '🚫 Coin', price: 0 },
+                { label: '🚫 Coin', price: 0 },
+                { label: '🚫 Coin', price: 0 }
+            ]
+        };
+
+        
+
+
+		  let selectedLabel = '';
+        let selectedPrice = 0;
         let isProductEsgotado = false;
+
+        window.renderizarPacotesPorPlataforma = function() {
+            const platformSelect = document.getElementById('platformSelect');
+            const platVal = platformSelect ? platformSelect.value : 'android';
+            const key = platVal.toLowerCase().includes('ios') ? 'ios' : 'android';
+            
+            const grid = document.getElementById('packageGridContainer');
+            if (!grid) return;
+
+            const lista = tabelaPacotes[key] || tabelaPacotes.android;
+            grid.innerHTML = '';
+
+            lista.forEach((pkg, index) => {
+                const isSelected = index === 0;
+                if (isSelected) {
+                    selectedLabel = pkg.label;
+                    selectedPrice = pkg.price;
+                }
+
+                const card = document.createElement('div');
+                card.className = `pkg-card ${isSelected ? 'selected' : ''}`;
+                card.onclick = function() {
+                    selectPackage(card, pkg.label, pkg.price);
+                };
+                card.innerHTML = `
+                    <div class="pkg-title">🌕 ${pkg.label}</div>
+                    <div class="pkg-price">${pkg.price.toLocaleString('pt-PT')} FCFA</div>
+                `;
+                grid.appendChild(card);
+            });
+        };
+
+        window.selectPackage = function(element, label, price) {
+            document.querySelectorAll('.pkg-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedLabel = label;
+            selectedPrice = price;
+        };
 
         function sincronizarComAdmin() {
             const q = query(collection(db, "produtos"), where("paginaDestino", "==", "efootball.html"));
@@ -571,40 +616,22 @@
                         }
                     }
 
-                    if (prodData.opcoes && Array.isArray(prodData.opcoes) && prodData.opcoes.length > 0) {
-                        const grid = document.getElementById('packageGridContainer');
-                        if (grid) {
-                            grid.innerHTML = '';
-                            prodData.opcoes.forEach((opt, index) => {
-                                const isSelected = index === 0;
-                                if (isSelected) {
-                                    selectedLabel = opt.rotulo;
-                                    selectedPrice = opt.preco;
-                                }
-
-                                const card = document.createElement('div');
-                                card.className = `pkg-card ${isSelected ? 'selected' : ''}`;
-                                card.onclick = function() {
-                                    selectPackage(card, opt.rotulo, opt.preco);
-                                };
-                                card.innerHTML = `
-                                    <div class="pkg-title">🪙 ${opt.rotulo}</div>
-                                    <div class="pkg-price">${opt.preco.toLocaleString()} FCFA</div>
-                                `;
-                                grid.appendChild(card);
-                            });
-                        }
+                    if (prodData.opcoesAndroid && Array.isArray(prodData.opcoesAndroid) && prodData.opcoesAndroid.length > 0) {
+                        tabelaPacotes.android = prodData.opcoesAndroid.map(opt => ({ label: opt.rotulo, price: opt.preco }));
+                    } else if (prodData.opcoes && Array.isArray(prodData.opcoes) && prodData.opcoes.length > 0) {
+                        tabelaPacotes.android = prodData.opcoes.map(opt => ({ label: opt.rotulo, price: opt.preco }));
                     }
+
+                    if (prodData.opcoesIos && Array.isArray(prodData.opcoesIos) && prodData.opcoesIos.length > 0) {
+                        tabelaPacotes.ios = prodData.opcoesIos.map(opt => ({ label: opt.rotulo, price: opt.preco }));
+                    } else if (prodData.opcoes && Array.isArray(prodData.opcoes) && prodData.opcoes.length > 0 && !prodData.opcoesIos) {
+                        tabelaPacotes.ios = prodData.opcoes.map(opt => ({ label: opt.rotulo, price: opt.preco }));
+                    }
+
+                    renderizarPacotesPorPlataforma();
                 }
             }, (err) => console.error("Erro ao sincronizar eFootball em tempo real:", err));
         }
-
-        window.selectPackage = function(element, label, price) {
-            document.querySelectorAll('.pkg-card').forEach(card => card.classList.remove('selected'));
-            element.classList.add('selected');
-            selectedLabel = label;
-            selectedPrice = price;
-        };
 
         function updateNavBadges() {
             try {
@@ -659,13 +686,20 @@
                 return;
             }
 
-            const platform = document.getElementById('platformSelect').value;
+            const platformSelect = document.getElementById('platformSelect');
+            const platformName = platformSelect ? platformSelect.options[platformSelect.selectedIndex].text : '';
             const konamiId = document.getElementById('konamiId').value.trim();
-            const playerName = document.getElementById('playerName').value.trim();
+            const konamiPassword = document.getElementById('konamiPassword').value.trim();
 
             if (!konamiId) {
                 alert("Por favor, preencha o seu Konami ID ou E-mail da conta!");
                 document.getElementById('konamiId').focus();
+                return;
+            }
+
+            if (!konamiPassword) {
+                alert("Por favor, preencha a Palavra-passe da sua conta!");
+                document.getElementById('konamiPassword').focus();
                 return;
             }
 
@@ -674,7 +708,7 @@
             const newItem = {
                 id: 'efootball_' + Date.now(),
                 nome: 'eFootball 2027 - ' + selectedLabel,
-                opcao: 'Plataforma: ' + platform + ' | ID/Email: ' + konamiId + (playerName ? ' | Equipa: ' + playerName : ''),
+                opcao: 'Plataforma: ' + platformName + ' | ID/Email: ' + konamiId + ' | Senha: ' + konamiPassword,
                 price: selectedPrice,
                 quantidade: 1,
                 img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNYn4nxb33ZToK-vN5DRyzHXcpRLHemIxihtBo5gEvZgyCLcA-FwUhAKk&s=10'
@@ -693,13 +727,20 @@
                 return;
             }
 
-            const platform = document.getElementById('platformSelect').value;
+            const platformSelect = document.getElementById('platformSelect');
+            const platformName = platformSelect ? platformSelect.options[platformSelect.selectedIndex].text : '';
             const konamiId = document.getElementById('konamiId').value.trim();
-            const playerName = document.getElementById('playerName').value.trim();
+            const konamiPassword = document.getElementById('konamiPassword').value.trim();
 
             if (!konamiId) {
                 alert("Por favor, preencha o seu Konami ID ou E-mail da conta!");
                 document.getElementById('konamiId').focus();
+                return;
+            }
+
+            if (!konamiPassword) {
+                alert("Por favor, preencha a Palavra-passe da sua conta!");
+                document.getElementById('konamiPassword').focus();
                 return;
             }
 
@@ -710,13 +751,13 @@
                 await addDoc(collection(db, "pedidos"), {
                     orderId: orderIdCode,
                     userId: currentUser ? currentUser.uid : null,
-                    clienteNome: playerName || "Jogador eFootball",
+                    clienteNome: konamiId || "Jogador eFootball",
                     clienteTelefone: "WhatsApp Direto",
                     comprovativoFornecido: "WhatsApp Direto",
                     tipoComprovativo: "WhatsApp",
                     itens: [{
                         nome: 'eFootball 2027 - ' + selectedLabel,
-                        opcao: 'Plataforma: ' + platform + ' | ID/Email: ' + konamiId + (playerName ? ' | Equipa: ' + playerName : ''),
+                        opcao: 'Plataforma: ' + platformName + ' | ID/Email: ' + konamiId + ' | Senha: ' + konamiPassword,
                         price: selectedPrice,
                         quantidade: 1
                     }],
@@ -746,10 +787,10 @@
             let text = `⚽ *PEDIDO DIRETO - eFOOTBALL 2027*\n`;
             text += `--------------------------------\n`;
             text += `📦 *Pacote:* ${selectedLabel}\n`;
-            text += `💰 *Valor:* ${selectedPrice.toLocaleString()} FCFA\n`;
-            text += `📱 *Plataforma:* ${platform}\n`;
+            text += `💰 *Valor:* ${selectedPrice.toLocaleString('pt-PT')} FCFA\n`;
+            text += `📱 *Plataforma:* ${platformName}\n`;
             text += `🆔 *Konami ID/Email:* ${konamiId}\n`;
-            if (playerName) text += `👤 *Equipa:* ${playerName}\n`;
+            text += `🔑 *Palavra-passe:* ${konamiPassword}\n`;
             text += `--------------------------------\n`;
             text += `💳 *Método:* Orange Money (955288370)\n`;
             text += `Aguardando confirmação para recarga.`;
@@ -759,6 +800,7 @@
         };
 
         document.addEventListener('DOMContentLoaded', () => {
+            renderizarPacotesPorPlataforma();
             updateNavBadges();
             sincronizarComAdmin();
         });
