@@ -392,15 +392,58 @@
             }
         };
 
-        window.checkoutSite = function() {
+        window.checkoutSite = async function() {
             const cart = getCart();
             const name = document.getElementById('clientName').value.trim();
             const phone = document.getElementById('clientPhone').value.trim();
+            const totals = JSON.parse(localStorage.getItem('bissau_checkout_totals')) || { subtotal: 0, desconto: 0, total: 0 };
 
             if (cart.length === 0) { alert("O seu carrinho está vazio!"); return; }
             if (!name || !phone) { alert("Por favor, preencha o seu Nome e Número de WhatsApp para continuar."); return; }
 
             localStorage.setItem('bissau_client_info', JSON.stringify({ name, phone }));
+            const orderIdCode = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+
+            try {
+                await addDoc(collection(db, "pedidos"), {
+                    orderId: orderIdCode,
+                    userId: currentUserGlobal ? currentUserGlobal.uid : null,
+                    clienteNome: name, 
+                    clienteTelefone: phone,
+                    comprovativoFornecido: "Pendente (Site)", 
+                    tipoComprovativo: "Pagamento pelo Site",
+                    itens: cart, 
+                    subtotal: totals.subtotal, 
+                    desconto: totals.desconto, 
+                    total: totals.total,
+                    status: 'Pendente', 
+                    dadosEntregues: '', 
+                    criadoEm: serverTimestamp()
+                });
+            } catch (err) { 
+                console.error("Erro ao guardar pedido no Firestore:", err); 
+            }
+
+            const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || [];
+            pedidos.push({ orderId: orderIdCode, id: orderIdCode, data: new Date().toLocaleDateString('pt-PT'), itens: cart, total: totals.total, status: 'Pendente' });
+            localStorage.setItem('bissau_orders', JSON.stringify(pedidos));
+
+            let text = `🚨 *NOVO PEDIDO GERADO NO SITE!*\n`;
+            text += `--------------------------------\n`;
+            text += `🆔 *Pedido:* ${orderIdCode}\n`;
+            text += `👤 *Cliente:* ${name}\n`;
+            text += `📱 *Contacto:* ${phone}\n\n`;
+            text += `📦 *ITENS:* \n`;
+            cart.forEach((item, idx) => {
+                text += `${idx + 1}. ${item.nome} (${item.quantidade || 1}x)\n`;
+            });
+            text += `--------------------------------\n`;
+            text += `💰 *TOTAL A PAGAR:* ${totals.total.toLocaleString()} FCFA\n`;
+            text += `⏳ *Status:* A aguardar depósito Orange Money (955288370).`;
+
+            const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
+            window.open(waUrl, '_blank');
+
             window.location.href = 'checkout.html';
         };
 
