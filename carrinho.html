@@ -428,22 +428,7 @@
             pedidos.push({ orderId: orderIdCode, id: orderIdCode, data: new Date().toLocaleDateString('pt-PT'), itens: cart, total: totals.total, status: 'Pendente' });
             localStorage.setItem('bissau_orders', JSON.stringify(pedidos));
 
-            let text = `🚨 *NOVO PEDIDO GERADO NO SITE!*\n`;
-            text += `--------------------------------\n`;
-            text += `🆔 *Pedido:* ${orderIdCode}\n`;
-            text += `👤 *Cliente:* ${name}\n`;
-            text += `📱 *Contacto:* ${phone}\n\n`;
-            text += `📦 *ITENS:* \n`;
-            cart.forEach((item, idx) => {
-                text += `${idx + 1}. ${item.nome} (${item.quantidade || 1}x)\n`;
-            });
-            text += `--------------------------------\n`;
-            text += `💰 *TOTAL A PAGAR:* ${totals.total.toLocaleString()} FCFA\n`;
-            text += `⏳ *Status:* A aguardar depósito Orange Money (955288370).`;
-
-            const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
-            window.open(waUrl, '_blank');
-
+            // VAI DIRETAMENTE PARA A PÁGINA DE PAGAMENTO DO SITE
             window.location.href = 'checkout.html';
         };
 
@@ -503,7 +488,6 @@
             } else { pointsBox.style.display = 'none'; }
         });
 
-        // ESCONDER A BARRA INFERIOR QUANDO O TECLADO É ATIVADO E MOSTRAR QUANDO É FECHADO
         document.addEventListener('focusin', (e) => {
             if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
                 const bottomNav = document.querySelector('.bottom-nav');
