@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Renovação de Assinatura - Mercado Digital Bissau</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #121926;
+            --primary: #7c3aed;
+            --orange: #ff6600;
+            --orange-glow: rgba(255, 102, 0, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #1e293b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); padding: 20px; padding-bottom: 100px; }
+
+        .container { max-width: 500px; margin: 20px auto; }
+        
+        .card-renovacao {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .icon-box { font-size: 3rem; margin-bottom: 1rem; }
+        h2 { font-weight: 800; font-size: 1.3rem; margin-bottom: 0.5rem; }
+        p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem; }
+
+        .service-details {
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-details p { margin-bottom: 0.4rem; color: #ffffff; }
+
+        .badge-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .badge-warning { background: rgba(255, 102, 0, 0.2); color: var(--orange); border: 1px solid var(--orange); }
+        .badge-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            outline: none;
+        }
+
+        .btn-renew {
+            width: 100%;
+            background: linear-gradient(135deg, var(--orange), #d95300);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--orange-glow);
+            text-transform: uppercase;
+        }
+
+        .loading-state { font-size: 0.9rem; color: var(--text-muted); text-align: center; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="loadingBox" class="loading-state">A carregar os dados da sua assinatura...</div>
+
+        <div id="renewCard" class="card-renovacao" style="display: none;">
+            <div class="icon-box" id="productIcon">📺</div>
+            <h2>Renovação de Assinatura</h2>
+            <p>Os seus dias restantes serão acumulados automaticamente!</p>
+
+            <div id="statusBadgeContainer"></div>
+
+            <div class="service-details">
+                <p><strong>Cliente:</strong> <span id="clientNameText">-</span></p>
+                <p><strong>Serviço Atual:</strong> <span id="serviceNameText">-</span></p>
+                <p><strong>Dias Restantes:</strong> <span id="daysLeftText">-</span></p>
+            </div>
+
+            <label style="display: block; text-align: left; font-size: 0.8rem; font-weight: 800; color: var(--orange); margin-bottom: 6px;">
+                ⚙ Escolha o Plano de Renovação:
+            </label>
+            <select id="selectPlanoRenovacao" class="form-select">
+                <option value="">A carregar opções do serviço...</option>
+            </select>
+
+            <button class="btn-renew" onclick="efetuarRenovacao()">🔄 ADICIONAR RENOVAÇÃO AO CARRINHO</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let assinaturaAtual = null;
+        let assinaturaDocId = null;
+        let produtoEncontrado = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            assinaturaDocId = urlParams.get('id');
+
+            if (!assinaturaDocId) {
+                document.getElementById('loadingBox').innerText = "❌ ID de assinatura não fornecido.";
+                return;
+            }
+
+            try {
+                const docSnap = await getDoc(doc(db, "assinaturas", assinaturaDocId));
+
+                if (!docSnap.exists()) {
+                    document.getElementById('loadingBox').innerText = "❌ Assinatura não encontrada.";
+                    return;
+                }
+
+                assinaturaAtual = docSnap.data();
+                document.getElementById('clientNameText').innerText = assinaturaAtual.clienteNome || 'Cliente';
+                document.getElementById('serviceNameText').innerText = assinaturaAtual.servicoNome || 'Serviço Digital';
+
+                let diasRestantesText = "Vitalício";
+                let statusBadgeHtml = '<span class="badge-status badge-warning">Serviço Vitalício</span>';
+
+                if (assinaturaAtual.dataFim) {
+                    const agora = new Date();
+                    const dataFim = new Date(assinaturaAtual.dataFim);
+                    const diffTime = dataFim - agora;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (diffDays <= 0) {
+                        diasRestantesText = "Expirado";
+                        statusBadgeHtml = '<span class="badge-status badge-danger">⚠️ ASSINATURA EXPIRADA</span>';
+                    } else {
+                        diasRestantesText = `${diffDays} Dia(s)`;
+                        statusBadgeHtml = `<span class="badge-status badge-warning">⏳ Expira em ${diffDays} dia(s) (+ Serão acumulados)</span>`;
+                    }
+                }
+
+                document.getElementById('daysLeftText').innerText = diasRestantesText;
+                document.getElementById('statusBadgeContainer').innerHTML = statusBadgeHtml;
+
+                // CARREGAR OPÇÕES DINÂMICAS
+                await carregarOpcoesDoProduto(assinaturaAtual.servicoNome);
+
+                document.getElementById('loadingBox').style.display = 'none';
+                document.getElementById('renewCard').style.display = 'block';
+
+            } catch (e) {
+                console.error(e);
+                document.getElementById('loadingBox').innerText = "❌ Erro ao carregar informações.";
+            }
+        });
+
+        async function carregarOpcoesDoProduto(nomeServico) {
+            const selectContainer = document.getElementById('selectPlanoRenovacao');
+            selectContainer.innerHTML = '';
+
+            let opcoesEncontradas = [];
+            
+            // Limpa palavras como "1m", "1 mês", "3 meses" do nome do serviço para encontrar o produto base
+            let termoBusca = (nomeServico || '')
+                .toLowerCase()
+                .replace(/\b(1\s*m|1\s*mes|1\s*mês|3\s*meses|6\s*meses|1\s*ano)\b/g, '')
+                .trim();
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "produtos"));
+
+                querySnapshot.forEach(docSnap => {
+                    const prod = docSnap.data();
+                    const prodNomeLower = (prod.nome || '').toLowerCase();
+
+                    if (termoBusca && (prodNomeLower.includes(termoBusca) || termoBusca.includes(prodNomeLower))) {
+                        produtoEncontrado = prod;
+                        if (prod.opcoes && Array.isArray(prod.opcoes) && prod.opcoes.length > 0) {
+                            opcoesEncontradas = prod.opcoes;
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Erro ao procurar no Firestore:", error);
+            }
+
+            // SE ENCONTROU O PRODUTO NO FIRESTORE COM DIVERSAS OPÇÕES:
+            if (opcoesEncontradas.length > 0) {
+                opcoesEncontradas.forEach(opt => {
+                    const optionElement = document.createElement('option');
+                    let dias = 30;
+                    const rotuloLower = opt.rotulo.toLowerCase();
+                    
+                    if (rotuloLower.includes('3 mês') || rotuloLower.includes('3 meses')) dias = 90;
+                    else if (rotuloLower.includes('6 mês') || rotuloLower.includes('6 meses')) dias = 180;
+                    else if (rotuloLower.includes('1 ano') || rotuloLower.includes('12 meses') || rotuloLower.includes('365')) dias = 365;
+
+                    optionElement.value = `${dias}|${opt.preco}|${opt.rotulo}`;
+                    optionElement.innerText = `${opt.rotulo} - ${opt.preco.toLocaleString()} FCFA`;
+                    selectContainer.appendChild(optionElement);
+                });
+            } else {
+                // SE NÃO ENCONTROU OU SÓ TINHA 1 OPÇÃO, GERA AUTOMATICAMENTE 1M, 3M, 6M E 1 ANO COM DESCONTO
+                let precoMensal = 1500; // Valor padrão
+                if (assinaturaAtual.itemDetalhe && assinaturaAtual.itemDetalhe[0] && assinaturaAtual.itemDetalhe[0].price) {
+                    precoMensal = parseFloat(assinaturaAtual.itemDetalhe[0].price) || 1500;
+                }
+
+                const planosAuto = [
+                    { rotulo: "1 Mês (30 Dias)", dias: 30, preco: precoMensal },
+                    { rotulo: "3 Meses (90 Dias)", dias: 90, preco: Math.round(precoMensal * 3 * 0.9) }, // 10% desconto
+                    { rotulo: "6 Meses (180 Dias)", dias: 180, preco: Math.round(precoMensal * 6 * 0.85) }, // 15% desconto
+                    { rotulo: "1 Ano (365 Dias)", dias: 365, preco: Math.round(precoMensal * 12 * 0.8) } // 20% desconto
+                ];
+
+                planosAuto.forEach(plano => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = `${plano.dias}|${plano.preco}|${plano.rotulo}`;
+                    optionElement.innerText = `${plano.rotulo} - ${plano.preco.toLocaleString()} FCFA`;
+                    selectContainer.appendChild(optionElement);
+                });
+            }
+        }
+
+        window.efetuarRenovacao = function() {
+            if (!assinaturaAtual) return;
+
+            const selectVal = document.getElementById('selectPlanoRenovacao').value.split('|');
+            const diasSelecionados = parseInt(selectVal[0]);
+            const precoSelecionado = parseFloat(selectVal[1]);
+            const rotuloSelecionado = selectVal[2] || 'Renovação';
+
+            const imagemProduto = (produtoEncontrado && produtoEncontrado.imagem) ? produtoEncontrado.imagem : 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=200';
+
+            const itemParaCarrinho = {
+                id: 'renovacao_' + Date.now(),
+                nome: `Renovação: ${assinaturaAtual.servicoNome}`,
+                opcao: `RefAssinatura: ${assinaturaDocId} | Plano: ${rotuloSelecionado}`,
+                price: precoSelecionado,
+                quantidade: 1,
+                diasRenovacao: diasSelecionados,
+                assinaturaRefId: assinaturaDocId,
+                img: imagemProduto
+            };
+
+            let cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+            cart.push(itemParaCarrinho);
+            localStorage.setItem('bissau_cart', JSON.stringify(cart));
+
+            window.location.href = 'carrinho.html';
+        };
+    </script>
+</body>
+</html>
