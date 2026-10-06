@@ -255,6 +255,65 @@
         .opcao-row { display: flex; gap: 10px; margin-bottom: 8px; }
 
         #loadingMsg, #emptyMsg, #loadingMsgAssinaturas, #loadingMsgProdutos { text-align: center; color: var(--text-muted); padding: 30px; font-weight: 600; }
+
+        .btn-edit-sub {
+            background: rgba(124, 58, 237, 0.18);
+            color: #c4b5fd;
+            border: 1px solid #7c3aed;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.78rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-edit-sub:hover { background: var(--primary); color: white; }
+        .section-heading {
+            display:flex; justify-content:space-between; align-items:flex-end;
+            gap:15px; margin-bottom:14px;
+        }
+        .section-heading h2 { font-size:1.05rem; margin-bottom:3px; }
+        .section-heading p { color:var(--text-muted); font-size:.78rem; }
+        .manual-add-card {
+            box-shadow: 0 12px 30px rgba(0,0,0,.22);
+            border-style: solid;
+            background: linear-gradient(145deg, rgba(18,25,38,.98), rgba(13,18,29,.98));
+        }
+        .modal-overlay {
+            position:fixed; inset:0; z-index:9999;
+            background:rgba(0,0,0,.72); backdrop-filter:blur(6px);
+            display:none; align-items:center; justify-content:center; padding:18px;
+        }
+        .modal-overlay.open { display:flex; }
+        .edit-modal {
+            width:min(560px, 100%); max-height:92vh; overflow:auto;
+            background:var(--bg-card); border:1px solid var(--border);
+            border-radius:18px; box-shadow:0 25px 70px rgba(0,0,0,.55); padding:20px;
+        }
+        .edit-modal-header {
+            display:flex; justify-content:space-between; align-items:center;
+            gap:12px; margin-bottom:18px;
+        }
+        .edit-modal-header h3 { color:var(--orange); font-size:1.05rem; }
+        .modal-close {
+            width:34px; height:34px; border-radius:9px; border:1px solid var(--border);
+            background:rgba(255,255,255,.04); color:white; cursor:pointer; font-size:18px;
+        }
+        .modal-close:hover { background:var(--danger); }
+        .modal-actions { display:flex; gap:10px; margin-top:15px; }
+        .btn-cancel-edit {
+            flex:1; padding:10px; border-radius:8px; background:transparent;
+            color:var(--text-muted); border:1px solid var(--border); font-weight:700; cursor:pointer;
+        }
+        .btn-save-edit {
+            flex:2; padding:10px; border-radius:8px;
+            background:linear-gradient(135deg,var(--primary),#5b21b6);
+            color:white; border:none; font-weight:800; cursor:pointer;
+        }
+        .btn-save-edit:disabled { opacity:.6; cursor:not-allowed; }
+
     </style>
 </head>
 <body>
@@ -317,6 +376,13 @@
         <!-- Conteúdo das Assinaturas -->
         <div id="secAssinaturas" style="display: none;">
             
+            <div class="section-heading">
+                <div>
+                    <h2>Gestão de Assinaturas</h2>
+                    <p>Registe clientes manualmente e corrija qualquer informação diretamente na tabela.</p>
+                </div>
+            </div>
+
             <div class="manual-add-card">
                 <h3>➕ Registo Manual de Assinatura (Cliente WhatsApp)</h3>
                 
@@ -440,6 +506,53 @@
                 </table>
             </div>
 
+        </div>
+    </div>
+
+
+    <!-- Modal de Edição de Assinatura -->
+    <div class="modal-overlay" id="editAssinaturaModal" onclick="fecharModalEdicao(event)">
+        <div class="edit-modal" onclick="event.stopPropagation()">
+            <div class="edit-modal-header">
+                <div>
+                    <h3>✏️ Editar Assinatura</h3>
+                    <p style="color:var(--text-muted);font-size:.75rem;margin-top:3px;">
+                        Corrija os dados sem apagar o registo do cliente.
+                    </p>
+                </div>
+                <button class="modal-close" onclick="fecharModalEdicao()">×</button>
+            </div>
+
+            <input type="hidden" id="editAssinaturaId">
+
+            <div class="grid-2">
+                <input type="text" id="editNome" class="form-input" placeholder="Nome do Cliente">
+                <input type="tel" id="editTelefone" class="form-input" placeholder="WhatsApp">
+            </div>
+            <div class="grid-2">
+                <input type="text" id="editServico" class="form-input" placeholder="Serviço">
+                <input type="number" id="editPreco" class="form-input" placeholder="Preço (FCFA)">
+            </div>
+            <div class="grid-2">
+                <select id="editValidade" class="form-select">
+                    <option value="30">30 Dias (1 Mês)</option>
+                    <option value="90">90 Dias (3 Meses)</option>
+                    <option value="180">180 Dias (6 Meses)</option>
+                    <option value="365">365 Dias (1 Ano)</option>
+                    <option value="custom">⚙ Dias Personalizados</option>
+                    <option value="0">Vitalício / Sem Expiração</option>
+                </select>
+                <input type="number" id="editDiasCustom" class="form-input"
+                       placeholder="Nº de dias" style="display:none;">
+            </div>
+            <textarea id="editDados" class="delivery-input" rows="4"
+                      placeholder="Dados de Acesso"></textarea>
+
+            <div class="modal-actions">
+                <button class="btn-cancel-edit" onclick="fecharModalEdicao()">Cancelar</button>
+                <button class="btn-save-edit" id="btnSalvarEdicao"
+                        onclick="salvarEdicaoAssinatura()">💾 Guardar Alterações</button>
+            </div>
         </div>
     </div>
 
@@ -1087,6 +1200,136 @@
             }
         };
 
+
+        window.abrirEdicaoAssinatura = function(assId, ass) {
+            document.getElementById('editAssinaturaId').value = assId;
+            document.getElementById('editNome').value = ass.clienteNome || '';
+            document.getElementById('editTelefone').value =
+                (ass.clienteTelefone || '').replace(/^245/, '');
+            document.getElementById('editServico').value = ass.servicoNome || '';
+
+            const preco = ass.itemDetalhe && ass.itemDetalhe[0]
+                ? ass.itemDetalhe[0].price : '';
+            document.getElementById('editPreco').value = preco ?? '';
+            document.getElementById('editDados').value = ass.dadosEntrega || '';
+
+            const dias = Number(ass.diasContratados);
+            const select = document.getElementById('editValidade');
+            const custom = document.getElementById('editDiasCustom');
+            const opcoes = ['30','90','180','365','0'];
+
+            if (opcoes.includes(String(dias))) {
+                select.value = String(dias);
+                custom.style.display = 'none';
+                custom.value = '';
+            } else if (dias > 0) {
+                select.value = 'custom';
+                custom.style.display = 'block';
+                custom.value = dias;
+            } else {
+                select.value = '0';
+                custom.style.display = 'none';
+            }
+
+            document.getElementById('editAssinaturaModal').classList.add('open');
+        };
+
+        window.fecharModalEdicao = function(event) {
+            if (event && event.target &&
+                event.target.id !== 'editAssinaturaModal') return;
+            document.getElementById('editAssinaturaModal').classList.remove('open');
+        };
+
+        document.addEventListener('change', (event) => {
+            if (event.target.id === 'editValidade') {
+                document.getElementById('editDiasCustom').style.display =
+                    event.target.value === 'custom' ? 'block' : 'none';
+            }
+        });
+
+        window.salvarEdicaoAssinatura = async function() {
+            const id = document.getElementById('editAssinaturaId').value;
+            const nome = document.getElementById('editNome').value.trim();
+            let telefone = document.getElementById('editTelefone').value
+                .trim().replace(/\D/g, '');
+            const servico = document.getElementById('editServico').value.trim();
+            const preco = parseFloat(document.getElementById('editPreco').value) || 0;
+            const dados = document.getElementById('editDados').value.trim();
+            const validade = document.getElementById('editValidade').value;
+
+            let dias = validade === 'custom'
+                ? parseInt(document.getElementById('editDiasCustom').value) || 0
+                : parseInt(validade);
+
+            if (!nome || !telefone || !servico || !dados) {
+                alert('Preencha Nome, WhatsApp, Serviço e Dados de Acesso.');
+                return;
+            }
+
+            if (!telefone.startsWith('245')) telefone = '245' + telefone;
+
+            const btn = document.getElementById('btnSalvarEdicao');
+            btn.disabled = true;
+            btn.innerText = '⏳ A guardar...';
+
+            try {
+                const ref = doc(db, 'assinaturas', id);
+                const snap = await getDoc(ref);
+                if (!snap.exists()) throw new Error('Assinatura não encontrada.');
+
+                const atual = snap.data();
+                let dataFim = null;
+
+                if (dias > 0) {
+                    const base = atual.dataInicio
+                        ? new Date(atual.dataInicio) : new Date();
+                    base.setDate(base.getDate() + dias);
+                    dataFim = base.toISOString();
+                }
+
+                const itemDetalhe = Array.isArray(atual.itemDetalhe)
+                    ? [...atual.itemDetalhe] : [];
+
+                if (itemDetalhe.length) {
+                    itemDetalhe[0] = {
+                        ...itemDetalhe[0],
+                        nome: servico,
+                        price: preco,
+                        quantidade: itemDetalhe[0].quantidade || 1
+                    };
+                } else {
+                    itemDetalhe.push({
+                        nome: servico,
+                        opcao: 'Registo Manual WhatsApp',
+                        price: preco,
+                        quantidade: 1
+                    });
+                }
+
+                await updateDoc(ref, {
+                    clienteNome: nome,
+                    clienteTelefone: telefone,
+                    servicoNome: servico,
+                    dadosEntrega: dados,
+                    diasContratados: dias,
+                    dataFim: dataFim,
+                    status: dataFim && new Date(dataFim) <= new Date()
+                        ? 'Expirada' : 'Ativa',
+                    itemDetalhe: itemDetalhe,
+                    updatedAt: new Date().toISOString()
+                });
+
+                alert('✅ Assinatura atualizada com sucesso!');
+                fecharModalEdicao();
+            } catch (error) {
+                console.error('Erro ao editar assinatura:', error);
+                alert('Erro ao guardar as alterações. Tente novamente.');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = '💾 Guardar Alterações';
+            }
+        };
+
         window.deletarAssinatura = async function(assId, clienteNome) {
             const confirmacao = confirm(`Tem certeza de que deseja apagar a assinatura do cliente "${clienteNome}"? Esta ação não pode ser desfeita.`);
             if (!confirmacao) return;
@@ -1101,8 +1344,10 @@
         };
 
         function escutarAssinaturas() {
+            window.assinaturasCache = {};
             unsubAssinaturas = onSnapshot(collection(db, "assinaturas"), (querySnapshot) => {
                 assinaturasTableBody.innerHTML = '';
+                window.assinaturasCache = {};
 
                 if (querySnapshot.empty) {
                     assinaturasTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">📺 Nenhuma assinatura registada de momento.</td></tr>';
@@ -1114,6 +1359,7 @@
                 querySnapshot.forEach((documento) => {
                     const ass = documento.data();
                     const assId = documento.id;
+                    window.assinaturasCache[assId] = ass;
 
                     let diasRestantesText = "Vitalício";
                     let badgeClass = "";
@@ -1166,7 +1412,10 @@
                                         🔔 Avisar
                                     </button>
                                 ` : '<span style="color: var(--success); font-weight:700; font-size: 0.78rem;">Em Dia</span>'}
-                                <button class="btn-delete-sub" onclick="deletarAssinatura('${assId}', '${ass.clienteNome}')" title="Apagar Assinatura">
+                                <button class="btn-edit-sub" onclick="abrirEdicaoAssinatura('${assId}', window.assinaturasCache['${assId}'])" title="Editar Assinatura">
+                                    ✏️ Editar
+                                </button>
+                                <button class="btn-delete-sub" onclick="deletarAssinatura('${assId}', '${String(ass.clienteNome || '').replace(/'/g, "\'")}')" title="Apagar Assinatura">
                                     🗑️ Apagar
                                 </button>
                             </div>
