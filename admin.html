@@ -911,7 +911,7 @@
                 return;
             }
 
-            const confirmacao = confirm(`Tem certeza que deseja confirmar a entrega deste pedido?`);
+            const confirmacao = confirm(`Tem certeza que deseja confirmar a entrega/renovação deste pedido?`);
             if(!confirmacao) return;
 
             try {
@@ -924,33 +924,65 @@
                     dadosEntregues: dadosEntrega
                 });
 
-                const servicoNome = (pedidoData.itens && pedidoData.itens[0]) ? pedidoData.itens[0].nome : 'Produto Digital';
+                const primeiroItem = (pedidoData.itens && pedidoData.itens[0]) ? pedidoData.itens[0] : {};
+                const servicoNome = primeiroItem.nome || 'Produto Digital';
+                
+                // Verificar se é uma renovação vinculada a uma assinatura existente
+                const refAssinaturaId = primeiroItem.assinaturaRefId || null;
 
                 if (diasValidade !== -1) {
-                    const dataInicio = new Date();
-                    let dataFim = null;
+                    if (refAssinaturaId) {
+                        // RENOVAÇÃO: Atualizar assinatura existente acumulando dias
+                        const assRef = doc(db, "assinaturas", refAssinaturaId);
+                        const assSnap = await getDoc(assRef);
 
-                    if (diasValidade > 0) {
-                        dataFim = new Date();
-                        dataFim.setDate(dataFim.getDate() + diasValidade);
+                        if (assSnap.exists()) {
+                            const assData = assSnap.data();
+                            let novaDataFim = new Date();
+
+                            // Se a assinatura ainda está válida, soma aos dias restantes
+                            if (assData.dataFim && new Date(assData.dataFim) > new Date()) {
+                                novaDataFim = new Date(assData.dataFim);
+                            }
+
+                            if (diasValidade > 0) {
+                                novaDataFim.setDate(novaDataFim.getDate() + diasValidade);
+                            }
+
+                            await updateDoc(assRef, {
+                                dataFim: novaDataFim.toISOString(),
+                                dadosEntrega: dadosEntrega,
+                                status: "Ativa"
+                            });
+                        }
+                    } else {
+                        // NOVA ASSINATURA: Criar registo novo do zero
+                        const dataInicio = new Date();
+                        let dataFim = null;
+
+                        if (diasValidade > 0) {
+                            dataFim = new Date();
+                            dataFim.setDate(dataFim.getDate() + diasValidade);
+                        }
+
+                        const assinaturaRef = doc(collection(db, "assinaturas"));
+                        await setDoc(assinaturaRef, {
+                            pedidoId: orderId,
+                            userId: pedidoData.userId || null,
+                            clienteNome: clienteNome,
+                            clienteTelefone: telefone,
+                            servicoNome: servicoNome,
+                            dadosEntrega: dadosEntrega,
+                            dataInicio: dataInicio.toISOString(),
+                            dataFim: dataFim ? dataFim.toISOString() : null,
+                            diasContratados: diasValidade,
+                            status: "Ativa",
+                            itemDetalhe: pedidoData.itens || []
+                        });
                     }
-
-                    const assinaturaRef = doc(collection(db, "assinaturas"));
-                    await setDoc(assinaturaRef, {
-                        pedidoId: orderId,
-                        userId: pedidoData.userId || null,
-                        clienteNome: clienteNome,
-                        clienteTelefone: telefone,
-                        servicoNome: servicoNome,
-                        dadosEntrega: dadosEntrega,
-                        dataInicio: dataInicio.toISOString(),
-                        dataFim: dataFim ? dataFim.toISOString() : null,
-                        diasContratados: diasValidade,
-                        status: "Ativa",
-                        itemDetalhe: pedidoData.itens || []
-                    });
                 }
 
+                // Sistema de comissão de pontos do programa de afiliados
                 if (pedidoData && pedidoData.userId) {
                     const compradorRef = doc(db, "usuarios", pedidoData.userId);
                     const compradorSnap = await getDoc(compradorRef);
@@ -973,7 +1005,7 @@
                     }
                 }
 
-                const msg = `Olá *${clienteNome}*! O seu pedido foi entregue com sucesso! 🎉\n\n*Serviço:* ${servicoNome}\n*Detalhes/Acesso:* \n${dadosEntrega}\n\nObrigado por comprar na Bissau Mercado Digital!`;
+                const msg = `Olá *${clienteNome}*! O seu pedido/renovação foi confirmado com sucesso! 🎉\n\n*Serviço:* ${servicoNome}\n*Detalhes/Acesso:* \n${dadosEntrega}\n\nObrigado por comprar no Mercado Digital!`;
                 const whatsappUrl = `https://wa.me/${telefone}?text=${encodeURIComponent(msg)}`;
 
                 window.open(whatsappUrl, '_blank');
@@ -984,7 +1016,7 @@
             }
         };
 
-        window.registarAssinaturaManual = async function() {
+   window.registarAssinaturaManual = async function() {
             const nome = document.getElementById('manualNome').value.trim();
             let telefone = document.getElementById('manualTelefone').value.trim().replace(/\D/g, '');
             const servico = document.getElementById('manualServico').value.trim();
