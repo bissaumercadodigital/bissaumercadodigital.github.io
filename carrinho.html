@@ -166,6 +166,7 @@
             background: rgba(18, 25, 38, 0.95); backdrop-filter: blur(12px);
             display: flex; justify-content: space-around; padding: 0.65rem 0;
             border-top: 1px solid var(--border); z-index: 1000;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
         }
 
         .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; color: var(--text-muted); font-weight: 600; gap: 0.2rem; flex: 1; text-align: center; }
@@ -457,6 +458,21 @@
                     renderCart();
                 } else { pointsBox.style.display = 'none'; }
             } else { pointsBox.style.display = 'none'; }
+        });
+
+        // ESCONDER A BARRA INFERIOR QUANDO O TECLADO É ATIVADO E MOSTRAR QUANDO É FECHADO
+        document.addEventListener('focusin', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                const bottomNav = document.querySelector('.bottom-nav');
+                if (bottomNav) bottomNav.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('focusout', (e) => {
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+                const bottomNav = document.querySelector('.bottom-nav');
+                if (bottomNav) bottomNav.style.display = 'flex';
+            }
         });
 
         document.addEventListener('DOMContentLoaded', () => { renderCart(); atualizarContadoresNav(); });

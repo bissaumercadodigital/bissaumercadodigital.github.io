@@ -171,7 +171,7 @@
 
                     if (diffDays <= 0) {
                         diasRestantesText = "Expirado";
-                        statusBadgeHtml = '<span class="badge-status badge-danger">⚠️️ ASSINATURA EXPIRADA</span>';
+                        statusBadgeHtml = '<span class="badge-status badge-danger">⚠️ ASSINATURA EXPIRADA</span>';
                     } else {
                         diasRestantesText = `${diffDays} Dia(s)`;
                         statusBadgeHtml = `<span class="badge-status badge-warning">⏳ Expira em ${diffDays} dia(s) (+ Serão acumulados)</span>`;
@@ -181,7 +181,7 @@
                 document.getElementById('daysLeftText').innerText = diasRestantesText;
                 document.getElementById('statusBadgeContainer').innerHTML = statusBadgeHtml;
 
-                // CARREGAR OPÇÕES E IMAGEM OFICIAIS DO SERVIÇO
+                // CARREGAR OPÇÕES DINÂMICAS
                 await carregarOpcoesDoProduto(assinaturaAtual.servicoNome);
 
                 document.getElementById('loadingBox').style.display = 'none';
@@ -198,7 +198,12 @@
             selectContainer.innerHTML = '';
 
             let opcoesEncontradas = [];
-            const servicoLower = (nomeServico || '').toLowerCase();
+            
+            // Limpa palavras como "1m", "1 mês", "3 meses" do nome do serviço para encontrar o produto base
+            let termoBusca = (nomeServico || '')
+                .toLowerCase()
+                .replace(/\b(1\s*m|1\s*mes|1\s*mês|3\s*meses|6\s*meses|1\s*ano)\b/g, '')
+                .trim();
 
             try {
                 const querySnapshot = await getDocs(collection(db, "produtos"));
@@ -207,17 +212,7 @@
                     const prod = docSnap.data();
                     const prodNomeLower = (prod.nome || '').toLowerCase();
 
-                    if (servicoLower.includes('prime') && prodNomeLower.includes('prime')) {
-                        produtoEncontrado = prod;
-                        if (prod.opcoes && Array.isArray(prod.opcoes) && prod.opcoes.length > 0) {
-                            opcoesEncontradas = prod.opcoes;
-                        }
-                    } else if (servicoLower.includes('netflix') && prodNomeLower.includes('netflix')) {
-                        produtoEncontrado = prod;
-                        if (prod.opcoes && Array.isArray(prod.opcoes) && prod.opcoes.length > 0) {
-                            opcoesEncontradas = prod.opcoes;
-                        }
-                    } else if (servicoLower.includes(prodNomeLower) || prodNomeLower.includes(servicoLower)) {
+                    if (termoBusca && (prodNomeLower.includes(termoBusca) || termoBusca.includes(prodNomeLower))) {
                         produtoEncontrado = prod;
                         if (prod.opcoes && Array.isArray(prod.opcoes) && prod.opcoes.length > 0) {
                             opcoesEncontradas = prod.opcoes;
@@ -228,6 +223,7 @@
                 console.error("Erro ao procurar no Firestore:", error);
             }
 
+            // SE ENCONTROU O PRODUTO NO FIRESTORE COM DIVERSAS OPÇÕES:
             if (opcoesEncontradas.length > 0) {
                 opcoesEncontradas.forEach(opt => {
                     const optionElement = document.createElement('option');
@@ -243,36 +239,20 @@
                     selectContainer.appendChild(optionElement);
                 });
             } else {
-                let tabelaPlanos = [];
-
-                if (servicoLower.includes('prime')) {
-                    tabelaPlanos = [
-                        { rotulo: "1 Mês (30 Dias)", dias: 30, preco: 1500 },
-                        { rotulo: "3 Meses (90 Dias)", dias: 90, preco: 4000 },
-                        { rotulo: "6 Meses (180 Dias)", dias: 180, preco: 7500 },
-                        { rotulo: "1 Ano (365 Dias)", dias: 365, preco: 12000 }
-                    ];
-                } else if (servicoLower.includes('netflix')) {
-                    tabelaPlanos = [
-                        { rotulo: "1 Mês (30 Dias)", dias: 30, preco: 2500 },
-                        { rotulo: "3 Meses (90 Dias)", dias: 90, preco: 7000 },
-                        { rotulo: "6 Meses (180 Dias)", dias: 180, preco: 13000 },
-                        { rotulo: "1 Ano (365 Dias)", dias: 365, preco: 24000 }
-                    ];
-                } else {
-                    let precoPadrao = 2500;
-                    if (assinaturaAtual.itemDetalhe && assinaturaAtual.itemDetalhe[0] && assinaturaAtual.itemDetalhe[0].price) {
-                        precoPadrao = parseFloat(assinaturaAtual.itemDetalhe[0].price) || 2500;
-                    }
-                    tabelaPlanos = [
-                        { rotulo: "1 Mês (30 Dias)", dias: 30, preco: precoPadrao },
-                        { rotulo: "3 Meses (90 Dias)", dias: 90, preco: precoPadrao * 3 },
-                        { rotulo: "6 Meses (180 Dias)", dias: 180, preco: precoPadrao * 6 },
-                        { rotulo: "1 Ano (365 Dias)", dias: 365, preco: precoPadrao * 12 }
-                    ];
+                // SE NÃO ENCONTROU OU SÓ TINHA 1 OPÇÃO, GERA AUTOMATICAMENTE 1M, 3M, 6M E 1 ANO COM DESCONTO
+                let precoMensal = 1500; // Valor padrão
+                if (assinaturaAtual.itemDetalhe && assinaturaAtual.itemDetalhe[0] && assinaturaAtual.itemDetalhe[0].price) {
+                    precoMensal = parseFloat(assinaturaAtual.itemDetalhe[0].price) || 1500;
                 }
 
-                tabelaPlanos.forEach(plano => {
+                const planosAuto = [
+                    { rotulo: "1 Mês (30 Dias)", dias: 30, preco: precoMensal },
+                    { rotulo: "3 Meses (90 Dias)", dias: 90, preco: Math.round(precoMensal * 3 * 0.9) }, // 10% desconto
+                    { rotulo: "6 Meses (180 Dias)", dias: 180, preco: Math.round(precoMensal * 6 * 0.85) }, // 15% desconto
+                    { rotulo: "1 Ano (365 Dias)", dias: 365, preco: Math.round(precoMensal * 12 * 0.8) } // 20% desconto
+                ];
+
+                planosAuto.forEach(plano => {
                     const optionElement = document.createElement('option');
                     optionElement.value = `${plano.dias}|${plano.preco}|${plano.rotulo}`;
                     optionElement.innerText = `${plano.rotulo} - ${plano.preco.toLocaleString()} FCFA`;
@@ -289,25 +269,7 @@
             const precoSelecionado = parseFloat(selectVal[1]);
             const rotuloSelecionado = selectVal[2] || 'Renovação';
 
-            // DEFINIÇÃO DINÂMICA DA IMAGEM CONFORME O SERVIÇO
-            let imagemProduto = '';
-            const servicoLower = (assinaturaAtual.servicoNome || '').toLowerCase();
-
-            if (produtoEncontrado && produtoEncontrado.imagem) {
-                imagemProduto = produtoEncontrado.imagem;
-            } else if (servicoLower.includes('prime')) {
-                imagemProduto = 'https://m.media-amazon.com/images/G/01/primevideo/seo/primevideo-seo-logo.png';
-            } else if (servicoLower.includes('netflix')) {
-                imagemProduto = 'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg';
-            } else if (servicoLower.includes('canva')) {
-                imagemProduto = 'https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg';
-            } else if (servicoLower.includes('free fire') || servicoLower.includes('diamantes')) {
-                imagemProduto = 'https://play-lh.googleusercontent.com/WW892w8XpY7aZ1IvhT-S99QvYf12e8-G4Xv9=w240-h380';
-            } else if (servicoLower.includes('efootball') || servicoLower.includes('pes')) {
-                imagemProduto = 'https://play-lh.googleusercontent.com/1-hR3A4A7L2iY0_G5d_G61S6h1H1z0a.jpg';
-            } else {
-                imagemProduto = 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=200';
-            }
+            const imagemProduto = (produtoEncontrado && produtoEncontrado.imagem) ? produtoEncontrado.imagem : 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=200';
 
             const itemParaCarrinho = {
                 id: 'renovacao_' + Date.now(),
