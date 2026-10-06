@@ -96,7 +96,7 @@
         <div id="loadingBox" class="loading-state">A carregar os dados da sua assinatura...</div>
 
         <div id="renewCard" class="card-renovacao" style="display: none;">
-            <div class="icon-box">📺</div>
+            <div class="icon-box" id="productIcon">📺</div>
             <h2>Renovação de Assinatura</h2>
             <p>Os seus dias restantes serão acumulados automaticamente!</p>
 
@@ -112,10 +112,7 @@
                 ⚙ Escolha o Plano de Renovação:
             </label>
             <select id="selectPlanoRenovacao" class="form-select">
-                <option value="30|2500">1 Mês (30 Dias) - 2.500 FCFA</option>
-                <option value="90|7000">3 Meses (90 Dias) - 7.000 FCFA</option>
-                <option value="180|13000">6 Meses (180 Dias) - 13.000 FCFA</option>
-                <option value="365|24000">1 Ano (365 Dias) - 24.000 FCFA</option>
+                <option value="">A carregar opções do serviço...</option>
             </select>
 
             <button class="btn-renew" onclick="efetuarRenovacao()">🔄 ADICIONAR RENOVAÇÃO AO CARRINHO</button>
@@ -124,7 +121,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
@@ -140,6 +137,7 @@
 
         let assinaturaAtual = null;
         let assinaturaDocId = null;
+        let produtoEncontrado = null;
 
         document.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -173,7 +171,7 @@
 
                     if (diffDays <= 0) {
                         diasRestantesText = "Expirado";
-                        statusBadgeHtml = '<span class="badge-status badge-danger">⚠️️ ASSINATURA EXPIRADA</span>';
+                        statusBadgeHtml = '<span class="badge-status badge-danger">⚠️ ASSINATURA EXPIRADA</span>';
                     } else {
                         diasRestantesText = `${diffDays} Dia(s)`;
                         statusBadgeHtml = `<span class="badge-status badge-warning">⏳ Expira em ${diffDays} dia(s) (+ Serão acumulados)</span>`;
@@ -182,6 +180,9 @@
 
                 document.getElementById('daysLeftText').innerText = diasRestantesText;
                 document.getElementById('statusBadgeContainer').innerHTML = statusBadgeHtml;
+
+                // Carrega do Firestore as opções cadastradas no Admin para este serviço
+                await carregarOpcoesDoProduto(assinaturaAtual.servicoNome);
 
                 document.getElementById('loadingBox').style.display = 'none';
                 document.getElementById('renewCard').style.display = 'block';
@@ -192,22 +193,77 @@
             }
         });
 
+        async function carregarOpcoesDoProduto(nomeServico) {
+            const selectContainer = document.getElementById('selectPlanoRenovacao');
+            selectContainer.innerHTML = '';
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "produtos"));
+                let opcoesEncontradas = [];
+                let servicoBaseLower = (nomeServico || '').toLowerCase();
+
+                querySnapshot.forEach(docSnap => {
+                    const prod = docSnap.data();
+                    const prodNomeLower = (prod.nome || '').toLowerCase();
+
+                    // Compara o nome do serviço da assinatura com o nome do produto no BD
+                    if (servicoBaseLower.includes(prodNomeLower) || prodNomeLower.includes(servicoBaseLower.split(' ')[0])) {
+                        produtoEncontrado = prod;
+                        if (prod.opcoes && Array.isArray(prod.opcoes)) {
+                            opcoesEncontradas = prod.opcoes;
+                        }
+                    }
+                });
+
+                if (opcoesEncontradas.length > 0) {
+                    opcoesEncontradas.forEach(opt => {
+                        const optionElement = document.createElement('option');
+                        
+                        let dias = 30;
+                        const rotuloLower = opt.rotulo.toLowerCase();
+                        if (rotuloLower.includes('3 mês') || rotuloLower.includes('3 meses')) dias = 90;
+                        else if (rotuloLower.includes('6 mês') || rotuloLower.includes('6 meses')) dias = 180;
+                        else if (rotuloLower.includes('1 ano') || rotuloLower.includes('12 meses') || rotuloLower.includes('365')) dias = 365;
+
+                        optionElement.value = `${dias}|${opt.preco}|${opt.rotulo}`;
+                        optionElement.innerText = `${opt.rotulo} - ${opt.preco.toLocaleString()} FCFA`;
+                        selectContainer.appendChild(optionElement);
+                    });
+                } else {
+                    // Preço de contingência caso o produto não seja encontrado
+                    let precoPadrao = 2500;
+                    if (assinaturaAtual.itemDetalhe && assinaturaAtual.itemDetalhe[0]) {
+                        precoPadrao = assinaturaAtual.itemDetalhe[0].price || 2500;
+                    }
+                    selectContainer.innerHTML = `
+                        <option value="30|${precoPadrao}|1 Mês">1 Mês (30 Dias) - ${precoPadrao.toLocaleString()} FCFA</option>
+                    `;
+                }
+
+            } catch (error) {
+                console.error("Erro ao procurar opções no Firestore:", error);
+            }
+        }
+
         window.efetuarRenovacao = function() {
             if (!assinaturaAtual) return;
 
             const selectVal = document.getElementById('selectPlanoRenovacao').value.split('|');
             const diasSelecionados = parseInt(selectVal[0]);
             const precoSelecionado = parseFloat(selectVal[1]);
+            const rotuloSelecionado = selectVal[2] || 'Renovação';
+
+            const imagemProduto = (produtoEncontrado && produtoEncontrado.imagem) ? produtoEncontrado.imagem : 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=200';
 
             const itemParaCarrinho = {
                 id: 'renovacao_' + Date.now(),
                 nome: `Renovação: ${assinaturaAtual.servicoNome}`,
-                opcao: `RefAssinatura: ${assinaturaDocId} | Cliente: ${assinaturaAtual.clienteNome}`,
+                opcao: `RefAssinatura: ${assinaturaDocId} | Plano: ${rotuloSelecionado}`,
                 price: precoSelecionado,
                 quantidade: 1,
                 diasRenovacao: diasSelecionados,
                 assinaturaRefId: assinaturaDocId,
-                img: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=200'
+                img: imagemProduto
             };
 
             let cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
