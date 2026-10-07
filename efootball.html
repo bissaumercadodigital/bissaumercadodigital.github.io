@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Recarga eFootball 2027 Moedas - Mercado Digital Bissau</title>
+    <title>Recarga eFootball 2027 - Mercado Digital Bissau</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,11 +15,13 @@
         }
 
         :root {
-            --bg-dark: #090d16;
-            --bg-card: #121926;
-            --bg-card-hover: #1c273e;
-            --primary: #7c3aed;
-            --primary-glow: rgba(124, 58, 237, 0.4);
+            --bg-dark: #070a12;
+            --bg-card: #0e1526;
+            --bg-card-hover: #16223d;
+            /* CORES OFICIAIS EFOOTBALL / KONAMI */
+            --efootball-yellow: #facc15;
+            --efootball-blue: #2563eb;
+            --efootball-glow: rgba(250, 204, 21, 0.4);
             --orange: #ff6600;
             --orange-glow: rgba(255, 102, 0, 0.4);
             --text-main: #ffffff;
@@ -27,7 +29,7 @@
             --success: #10b981;
             --danger: #ef4444;
             --border: #1e293b;
-            --border-highlight: rgba(124, 58, 237, 0.35);
+            --border-highlight: rgba(250, 204, 21, 0.35);
         }
 
         * {
@@ -56,7 +58,7 @@
 
         /* Top Bar */
         .top-bar {
-            background: rgba(9, 13, 22, 0.92);
+            background: rgba(7, 10, 18, 0.92);
             backdrop-filter: blur(12px);
             padding: 1rem;
             position: sticky;
@@ -80,7 +82,7 @@
         .page-title {
             font-size: 1.05rem;
             font-weight: 800;
-            color: #ffffff;
+            color: var(--efootball-yellow);
         }
 
         .icon-cart-link {
@@ -127,7 +129,7 @@
 
         .product-banner {
             height: 160px;
-            background: linear-gradient(180deg, rgba(9, 13, 22, 0.2) 0%, var(--bg-card) 100%),
+            background: linear-gradient(180deg, rgba(7, 10, 18, 0.2) 0%, var(--bg-card) 100%),
                         url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNYn4nxb33ZToK-vN5DRyzHXcpRLHemIxihtBo5gEvZgyCLcA-FwUhAKk&s=10') center/cover no-repeat;
             position: relative;
             display: flex;
@@ -149,6 +151,22 @@
         .product-hero-info p {
             font-size: 0.8rem;
             color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Alertas Especiais de Plataforma */
+        .platform-notice {
+            background: rgba(250, 204, 21, 0.1);
+            border: 1px solid var(--efootball-yellow);
+            color: var(--efootball-yellow);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
             line-height: 1.4;
         }
 
@@ -181,6 +199,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            color: var(--efootball-yellow);
         }
 
         .form-group {
@@ -195,7 +214,7 @@
             margin-bottom: 0.35rem;
         }
 
-        .form-input, .form-select, .form-textarea {
+        .form-input, .form-select {
             width: 100%;
             padding: 11px 13px;
             background-color: var(--bg-dark);
@@ -206,6 +225,10 @@
             font-weight: 600;
             outline: none;
             transition: border-color 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--efootball-yellow);
         }
 
         /* Package Grid Selection */
@@ -237,26 +260,33 @@
         }
 
         .pkg-card.selected {
-            border-color: var(--orange);
-            background-color: rgba(255, 102, 0, 0.08);
-            box-shadow: 0 0 15px var(--orange-glow);
+            border-color: var(--efootball-yellow);
+            background-color: rgba(250, 204, 21, 0.08);
+            box-shadow: 0 0 15px var(--efootball-glow);
         }
 
         .pkg-title {
-            font-size: 1.05rem;
+            font-size: 0.92rem;
             font-weight: 800;
             color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 4px;
+            line-height: 1.2;
+        }
+
+        .pkg-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
         }
 
         .pkg-price {
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             font-weight: 800;
-            color: var(--orange);
-            margin-top: 0.3rem;
+            color: var(--efootball-yellow);
+            margin-top: 0.4rem;
         }
 
         /* Action Buttons */
@@ -269,15 +299,15 @@
 
         .btn-add-cart {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary), #5b21b6);
-            color: #ffffff;
+            background: linear-gradient(135deg, var(--efootball-yellow), #d97706);
+            color: #000000;
             border: none;
             padding: 13px;
             border-radius: 12px;
             font-weight: 800;
             font-size: 0.88rem;
             cursor: pointer;
-            box-shadow: 0 4px 15px var(--primary-glow);
+            box-shadow: 0 4px 15px var(--efootball-glow);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -342,7 +372,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(18, 25, 38, 0.95);
+            background: rgba(14, 21, 38, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             display: flex;
@@ -367,7 +397,7 @@
         }
 
         .nav-item.active, .nav-item:hover {
-            color: var(--orange);
+            color: var(--efootball-yellow);
         }
 
         .nav-icon-wrapper {
@@ -421,8 +451,8 @@
         <div class="product-hero">
             <div class="product-banner"></div>
             <div class="product-hero-info">
-                <h2>eFootball 2027 Moedas ⚽</h2>
-                <p>Adquira moedas eFootball oficiais para Android e iPhone. Monte o seu Dream Team na Guiné-Bissau.</p>
+                <h2>eFootball 2027 - Moedas & Pacotes ⚽</h2>
+                <p>Compre Moedas e Pacotes Especiais de Jogadores (Luis Suárez, Iker Casillas) com recarga direta via Konami ID.</p>
             </div>
         </div>
 
@@ -432,29 +462,60 @@
         </div>
 
         <!-- Dados do Jogador -->
-        <div class="input-card">
-            <h3 class="input-card-title">1. Dados da Conta / Konami ID</h3>
+<div class="input-card">
+            
+<!-- Alerta de Verificação em Dois Passos (2FA) -->
+<div class="verification-notice" style="background: rgba(37, 99, 235, 0.15); border: 1px solid var(--efootball-blue); color: #93c5fd; padding: 12px; border-radius: 12px; font-size: 0.82rem; font-weight: 700; margin-top: 10px; display: flex; align-items: flex-start; gap: 10px; line-height: 1.4;">
+    <span style="font-size: 1.1rem;">📲</span>
+    <div>
+        <strong>Atenção à caixa de entrada do seu E-mail!</strong><br>
+        Ao realizar a recarga, entrarei na sua conta Konami ID. Fique atento ao seu e-mail/WhatsApp para me enviar o <u>código de autorização</u>,  <strong>o mais rápido possível para concluir a compra!</strong> 
+    </div>
+</div>
+
+
+<h3 class="input-card-title">1. Configuração da Plataforma & Konami ID</h3>
+            
             <div class="form-group">
-                <label for="platformSelect">Plataforma *</label>
-                <select id="platformSelect" class="form-select" onchange="renderizarPacotesPorPlataforma()">
-                    <option value="ios">iOS / iPhone</option>
-                    <option value="android">Android (Mobile)</option>
+                <label for="platformSelect">Sua Plataforma de Jogo *</label>
+                <select id="platformSelect" class="form-select" onchange="alterarPlataforma()">
+                    <option value="ios" selected>📱 iOS / iPhone</option>
+                    <option value="android">🤖 Android (Mobile)</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="konamiId">E-mail Konami ID ou ID de Jogador *</label>
-                <input type="text" id="konamiId" class="form-input" placeholder="Ex: efootball@gmail.com ou ID" required>
+
+            <!-- Alerta dinâmico dependendo da plataforma -->
+            <div id="androidNotice" class="platform-notice" style="display: none;">
+                <span>⚠️</span>
+                <div>
+                    <strong>Aviso Importante para Android:</strong><br>
+                    Nos pacotes de jogadores (Starter Set: Suárez / Casillas), os utilizadores de Android recebem <u>apenas os Jogadores</u>. As moedas bónus não são creditadas em sistemas Android.
+                </div>
             </div>
+
+            <div id="iosNotice" class="platform-notice">
+                <span>✅</span>
+                <div>
+                    <strong>Modo iOS Selecionado:</strong><br>
+                    Irá receber o Pacote Completo (Jogadores + Moedas Bónus associadas ao pacote).
+                </div>
+            </div>
+
             <div class="form-group">
-                <label for="konamiPassword">Palavra-passe da Conta *</label>
-                <input type="password" id="konamiPassword" class="form-input" placeholder="Sua palavra-passe da conta" required>
+                <label for="konamiEmail">E-mail do Konami ID *</label>
+                <input type="email" id="konamiEmail" class="form-input" placeholder="Ex: efootball@gmail.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="konamiPassword">Palavra-passe do Konami ID *</label>
+                <input type="password" id="konamiPassword" class="form-input" placeholder="Sua palavra-passe da conta Konami" required>
             </div>
         </div>
 
         <!-- Seleção de Pacote -->
-        <div class="packages-title">2. Escolha a Quantidade de Moedas</div>
+        <div class="packages-title">2. Escolha o Pacote Desejado</div>
         <div class="package-grid" id="packageGridContainer">
-            <!-- Os cards são gerados dinamicamente conforme a plataforma (Android / iOS) -->
+            <!-- Os cards são gerados dinamicamente via JavaScript -->
         </div>
 
         <!-- Botões de Ação -->
@@ -515,45 +576,61 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Tabela de Preços por Plataforma (Android vs iOS)
+        // Tabela com Pacotes iOS (Jogadores + Moedas) e Android (Apenas Jogadores / Moedas)
         let tabelaPacotes = {
             ios: [
-                { label: '130', price: 900 },
-                { label: '300', price: 1900 },
-                { label: '550', price: 3900 },
-                { label: '750', price: 4000 },
-                { label: '1.040', price: 5600 },
-					{ label: '2.130', price: 10700 },
-					{ label: '3.250', price: 15300 },
-					{ label: '5.700', price: 26000 },
-					{ label: '12.800', price: 52000 }
-
+                { label: '50 Moedas + Luis Suárez 🇺🇾', sub: 'Starter Set: Jogador + 50 Coins', price: 1200 },
+                { label: 'Starter Set: Iker Casillas 🇪🇸', sub: 'Jogadores + Moedas Bónus', price: 2200 },
+                { label: '130 Moedas', sub: 'Pacote Básico de Moedas', price: 900 },
+                { label: '300 Moedas', sub: 'Pacote de Moedas', price: 1900 },
+                { label: '550 Moedas', sub: 'Pacote de Moedas', price: 3900 },
+                { label: '1.040 Moedas', sub: 'Pacote Avançado', price: 5600 },
+                { label: '2.130 Moedas', sub: 'Pacote Premium', price: 10700 },
+                { label: '3.250 Moedas', sub: 'Pacote Pro', price: 15300 },
+                { label: '5.700 Moedas', sub: 'Pacote Elite', price: 26000 }
             ],
-android: [
-                { label: '🚫 Coin', price: 0 },
-                { label: '🚫 Coin', price: 0 },
-                { label: '🚫 Coin', price: 0 },
-                { label: '🚫 Coin', price: 0 },
-                { label: '🚫 Coin', price: 0 }
+            android: [
+                { label: 'Luis Suárez 🇺🇾 (Sem Moedas)', sub: 'Apenas Jogador (Sem Moedas)', price: 1200 },
+                { label: 'Starter Set: Iker Casillas 🇪🇸', sub: 'Apenas Jogadores (Sem Moedas)', price: 2200 },
+                { label: '0 Moedas', sub: 'Indisponível no Momento', price: 0 },
+                { label: '0 Moedas', sub: 'Indisponível no Momento', price: 0 },
+                { label: '0 Moedas', sub: 'Indisponível no Momento', price: 0 },
+                { label: '0 Moedas', sub: 'Indisponível no Momento', price: 0 },
+                { label: '0 Moedas', sub: 'Indisponível no Momento', price: 0 },
+                { label: '0 Moedas', sub: 'Indisponível no Momento', price: 0 },
+                { label: '0 Moedas', sub: 'Indisponível no Momento', price: 0 }
             ]
         };
 
-        
-
-
-		  let selectedLabel = '';
+        let selectedLabel = '';
         let selectedPrice = 0;
         let isProductEsgotado = false;
 
-        window.renderizarPacotesPorPlataforma = function() {
+        window.alterarPlataforma = function() {
             const platformSelect = document.getElementById('platformSelect');
-            const platVal = platformSelect ? platformSelect.value : 'android';
-            const key = platVal.toLowerCase().includes('ios') ? 'ios' : 'android';
+            const platVal = platformSelect ? platformSelect.value : 'ios';
             
+            const androidNotice = document.getElementById('androidNotice');
+            const iosNotice = document.getElementById('iosNotice');
+
+            if (platVal === 'android') {
+                if (androidNotice) androidNotice.style.display = 'flex';
+                if (iosNotice) iosNotice.style.display = 'none';
+            } else {
+                if (androidNotice) androidNotice.style.display = 'none';
+                if (iosNotice) iosNotice.style.display = 'flex';
+            }
+
+            renderizarPacotes();
+        };
+
+        function renderizarPacotes() {
+            const platformSelect = document.getElementById('platformSelect');
+            const platVal = platformSelect ? platformSelect.value : 'ios';
             const grid = document.getElementById('packageGridContainer');
             if (!grid) return;
 
-            const lista = tabelaPacotes[key] || tabelaPacotes.android;
+            const lista = tabelaPacotes[platVal] || tabelaPacotes.ios;
             grid.innerHTML = '';
 
             lista.forEach((pkg, index) => {
@@ -569,12 +646,13 @@ android: [
                     selectPackage(card, pkg.label, pkg.price);
                 };
                 card.innerHTML = `
-                    <div class="pkg-title">🌕 ${pkg.label}</div>
+                    <div class="pkg-title">⚽ ${pkg.label}</div>
+                    <div class="pkg-sub">${pkg.sub}</div>
                     <div class="pkg-price">${pkg.price.toLocaleString('pt-PT')} FCFA</div>
                 `;
                 grid.appendChild(card);
             });
-        };
+        }
 
         window.selectPackage = function(element, label, price) {
             document.querySelectorAll('.pkg-card').forEach(card => card.classList.remove('selected'));
@@ -615,20 +693,6 @@ android: [
                             btnBuyWA.innerText = '💬 COMPRAR DIRECTO NO WHATSAPP';
                         }
                     }
-
-                    if (prodData.opcoesAndroid && Array.isArray(prodData.opcoesAndroid) && prodData.opcoesAndroid.length > 0) {
-                        tabelaPacotes.android = prodData.opcoesAndroid.map(opt => ({ label: opt.rotulo, price: opt.preco }));
-                    } else if (prodData.opcoes && Array.isArray(prodData.opcoes) && prodData.opcoes.length > 0) {
-                        tabelaPacotes.android = prodData.opcoes.map(opt => ({ label: opt.rotulo, price: opt.preco }));
-                    }
-
-                    if (prodData.opcoesIos && Array.isArray(prodData.opcoesIos) && prodData.opcoesIos.length > 0) {
-                        tabelaPacotes.ios = prodData.opcoesIos.map(opt => ({ label: opt.rotulo, price: opt.preco }));
-                    } else if (prodData.opcoes && Array.isArray(prodData.opcoes) && prodData.opcoes.length > 0 && !prodData.opcoesIos) {
-                        tabelaPacotes.ios = prodData.opcoes.map(opt => ({ label: opt.rotulo, price: opt.preco }));
-                    }
-
-                    renderizarPacotesPorPlataforma();
                 }
             }, (err) => console.error("Erro ao sincronizar eFootball em tempo real:", err));
         }
@@ -687,19 +751,12 @@ android: [
             }
 
             const platformSelect = document.getElementById('platformSelect');
-            const platformName = platformSelect ? platformSelect.options[platformSelect.selectedIndex].text : '';
-            const konamiId = document.getElementById('konamiId').value.trim();
+            const platformName = platformSelect ? platformSelect.options[platformSelect.selectedIndex].text : 'iOS';
+            const konamiEmail = document.getElementById('konamiEmail').value.trim();
             const konamiPassword = document.getElementById('konamiPassword').value.trim();
 
-            if (!konamiId) {
-                alert("Por favor, preencha o seu Konami ID ou E-mail da conta!");
-                document.getElementById('konamiId').focus();
-                return;
-            }
-
-            if (!konamiPassword) {
-                alert("Por favor, preencha a Palavra-passe da sua conta!");
-                document.getElementById('konamiPassword').focus();
+            if (!konamiEmail || !konamiPassword) {
+                alert("Por favor, preencha o E-mail do Konami ID e a Palavra-passe da sua conta!");
                 return;
             }
 
@@ -707,8 +764,8 @@ android: [
 
             const newItem = {
                 id: 'efootball_' + Date.now(),
-                nome: 'eFootball 2027 - ' + selectedLabel,
-                opcao: 'Plataforma: ' + platformName + ' | ID/Email: ' + konamiId + ' | Senha: ' + konamiPassword,
+                nome: 'eFootball - ' + selectedLabel,
+                opcao: 'Plataforma: ' + platformName + ' | E-mail: ' + konamiEmail + ' | Senha: ' + konamiPassword,
                 price: selectedPrice,
                 quantidade: 1,
                 img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNYn4nxb33ZToK-vN5DRyzHXcpRLHemIxihtBo5gEvZgyCLcA-FwUhAKk&s=10'
@@ -718,7 +775,7 @@ android: [
             localStorage.setItem('bissau_cart', JSON.stringify(cart));
 
             updateNavBadges();
-            showToast("✅ " + selectedLabel + " adicionado ao carrinho!");
+            showToast("✅ Item adicionado ao carrinho!");
         };
 
         window.buyDirectWhatsApp = async function() {
@@ -728,19 +785,12 @@ android: [
             }
 
             const platformSelect = document.getElementById('platformSelect');
-            const platformName = platformSelect ? platformSelect.options[platformSelect.selectedIndex].text : '';
-            const konamiId = document.getElementById('konamiId').value.trim();
+            const platformName = platformSelect ? platformSelect.options[platformSelect.selectedIndex].text : 'iOS';
+            const konamiEmail = document.getElementById('konamiEmail').value.trim();
             const konamiPassword = document.getElementById('konamiPassword').value.trim();
 
-            if (!konamiId) {
-                alert("Por favor, preencha o seu Konami ID ou E-mail da conta!");
-                document.getElementById('konamiId').focus();
-                return;
-            }
-
-            if (!konamiPassword) {
-                alert("Por favor, preencha a Palavra-passe da sua conta!");
-                document.getElementById('konamiPassword').focus();
+            if (!konamiEmail || !konamiPassword) {
+                alert("Por favor, preencha o E-mail do Konami ID e a Palavra-passe da sua conta!");
                 return;
             }
 
@@ -751,13 +801,13 @@ android: [
                 await addDoc(collection(db, "pedidos"), {
                     orderId: orderIdCode,
                     userId: currentUser ? currentUser.uid : null,
-                    clienteNome: konamiId || "Jogador eFootball",
+                    clienteNome: konamiEmail,
                     clienteTelefone: "WhatsApp Direto",
                     comprovativoFornecido: "WhatsApp Direto",
                     tipoComprovativo: "WhatsApp",
                     itens: [{
-                        nome: 'eFootball 2027 - ' + selectedLabel,
-                        opcao: 'Plataforma: ' + platformName + ' | ID/Email: ' + konamiId + ' | Senha: ' + konamiPassword,
+                        nome: 'eFootball - ' + selectedLabel,
+                        opcao: 'Plataforma: ' + platformName + ' | E-mail: ' + konamiEmail + ' | Senha: ' + konamiPassword,
                         price: selectedPrice,
                         quantidade: 1
                     }],
@@ -774,7 +824,7 @@ android: [
                     orderId: orderIdCode,
                     id: orderIdCode,
                     data: new Date().toLocaleDateString('pt-PT'),
-                    itens: [{ nome: 'eFootball 2027 - ' + selectedLabel, opcao: 'Konami ID: ' + konamiId, price: selectedPrice, quantidade: 1 }],
+                    itens: [{ nome: 'eFootball - ' + selectedLabel, opcao: 'E-mail Konami: ' + konamiEmail, price: selectedPrice, quantidade: 1 }],
                     total: selectedPrice,
                     status: 'Pendente'
                 });
@@ -789,18 +839,18 @@ android: [
             text += `📦 *Pacote:* ${selectedLabel}\n`;
             text += `💰 *Valor:* ${selectedPrice.toLocaleString('pt-PT')} FCFA\n`;
             text += `📱 *Plataforma:* ${platformName}\n`;
-            text += `🆔 *Konami ID/Email:* ${konamiId}\n`;
+            text += `📧 *E-mail Konami ID:* ${konamiEmail}\n`;
             text += `🔑 *Palavra-passe:* ${konamiPassword}\n`;
             text += `--------------------------------\n`;
             text += `💳 *Método:* Orange Money (955288370)\n`;
-            text += `Aguardando confirmação para recarga.`;
+            text += `Aguardando confirmação para a recarga na conta.`;
 
             const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
             window.open(waUrl, '_blank');
         };
 
         document.addEventListener('DOMContentLoaded', () => {
-            renderizarPacotesPorPlataforma();
+            renderizarPacotes();
             updateNavBadges();
             sincronizarComAdmin();
         });
