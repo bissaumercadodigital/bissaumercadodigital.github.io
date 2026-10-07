@@ -384,7 +384,7 @@
             </div>
 
             <div class="manual-add-card">
-                <h3>➕ Registo Manual de Assinatura (Cliente WhatsApp)</h3>
+                <h3>➕ Registo Manual de Assinatura (Cliente WhatsApp / Antigo)</h3>
                 
                 <div class="grid-2">
                     <input type="text" id="manualNome" class="form-input" placeholder="Nome do Cliente">
@@ -397,21 +397,29 @@
                 </div>
 
                 <div class="grid-2">
-                    <select id="manualValidade" class="form-select" onchange="verificarOpcaoCustomizada()">
-                        <option value="30">30 Dias (1 Mês)</option>
-                        <option value="90">90 Dias (3 Meses)</option>
-                        <option value="180">180 Dias (6 Meses)</option>
-                        <option value="365">365 Dias (1 Ano)</option>
-                        <option value="custom">⚙ Dias Personalizados (Introduzir Manualmente)</option>
-                        <option value="0">Vitalício / Sem Expiração</option>
-                    </select>
+                    <div>
+                        <label style="font-size: 0.75rem; font-weight: 700; color: var(--orange); display: block; margin-bottom: 4px;">📅 Data em que o cliente assinou:</label>
+                        <input type="date" id="manualDataInicio" class="form-input">
+                    </div>
 
-                    <input type="number" id="manualDiasCustom" class="form-input" placeholder="Nº de Dias Restantes (Ex: 23)" style="display: none;">
+                    <div>
+                        <label style="font-size: 0.75rem; font-weight: 700; color: var(--orange); display: block; margin-bottom: 4px;">⏱️ Plano / Duração Contratada:</label>
+                        <select id="manualValidade" class="form-select" onchange="verificarOpcaoCustomizada()">
+                            <option value="30">30 Dias (1 Mês)</option>
+                            <option value="90">90 Dias (3 Meses)</option>
+                            <option value="180">180 Dias (6 Meses)</option>
+                            <option value="365">365 Dias (1 Ano)</option>
+                            <option value="custom">⚙ Dias Personalizados (Total do Plano)</option>
+                            <option value="0">Vitalício / Sem Expiração</option>
+                        </select>
+                    </div>
                 </div>
+
+                <input type="number" id="manualDiasCustom" class="form-input" placeholder="Total de Dias do Plano (Ex: 90 para 3 meses)" style="display: none;">
 
                 <textarea id="manualDados" class="delivery-input" rows="2" placeholder="Dados de Acesso (Ex: Email: x@x.com, Senha: 123)"></textarea>
 
-                <button class="btn-approve" onclick="registarAssinaturaManual()">⚡ Ativar Assinatura Manual e Adicionar à Tabela</button>
+                <button class="btn-approve" onclick="registarAssinaturaManual()">⚡ Ativar Assinatura e Calcular Dias Restantes Automático</button>
             </div>
 
             <div class="table-responsive">
@@ -688,85 +696,84 @@
         };
 
         window.sincronizarProdutosIndex = async function() {
-    let produtosLocais = JSON.parse(localStorage.getItem('bissau_produtos')) || JSON.parse(localStorage.getItem('bissau_products')) || [];
+            let produtosLocais = JSON.parse(localStorage.getItem('bissau_produtos')) || JSON.parse(localStorage.getItem('bissau_products')) || [];
 
-    if (!produtosLocais || produtosLocais.length === 0) {
-        produtosLocais = [
-            {
-                nome: "Free Fire - Recarga de Diamantes",
-                tipo: "jogo",
-                categoria: "Jogos",
-                paginaDestino: "freefire.html",
-                badge: "HOT",
-                imagem: "https://play-lh.googleusercontent.com/WW892w8XpY7aZ1IvhT-S99QvYf12e8-G4Xv9=w240-h380",
-                descricao: "Recarga direta de Diamantes Free Fire via ID do Jogador.",
-                opcoes: [
-                    { rotulo: "100 Diamantes", preco: 1000 },
-                    { rotulo: "310 Diamantes", preco: 3000 },
-                    { rotulo: "520 Diamantes", preco: 5000 },
-                    { rotulo: "1060 Diamantes", preco: 10000 }
-                ],
-                esgotado: false
-            },
-            {
-                nome: "eFootball - Moedas myClub",
-                tipo: "jogo",
-                categoria: "Jogos",
-                paginaDestino: "efootball.html",
-                badge: "POPULAR",
-                imagem: "https://play-lh.googleusercontent.com/1-hR3A4A7L2iY0_G5d_G61S6h1H1z0a.jpg",
-                descricao: "Moedas eFootball PES para contratar jogadores lendários.",
-                opcoes: [
-                    { rotulo: "130 Moedas", preco: 1200 },
-                    { rotulo: "550 Moedas", preco: 4800 },
-                    { rotulo: "1040 Moedas", preco: 9000 }
-                ],
-                esgotado: false
-            },
-            {
-                nome: "Netflix 4K Ultra HD",
-                tipo: "assinatura",
-                categoria: "Streaming",
-                paginaDestino: "netflix.html",
-                badge: "TOP",
-                imagem: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
-                descricao: "Conta Netflix Premium 4K com perfil individual e código PIN.",
-                opcoes: [
-                    { rotulo: "1 Mês - 1 Tela", preco: 2500 },
-                    { rotulo: "3 Meses - 1 Tela", preco: 9500 }
-                ],
-                esgotado: false
+            if (!produtosLocais || produtosLocais.length === 0) {
+                produtosLocais = [
+                    {
+                        nome: "Free Fire - Recarga de Diamantes",
+                        tipo: "jogo",
+                        categoria: "Jogos",
+                        paginaDestino: "freefire.html",
+                        badge: "HOT",
+                        imagem: "https://play-lh.googleusercontent.com/WW892w8XpY7aZ1IvhT-S99QvYf12e8-G4Xv9=w240-h380",
+                        descricao: "Recarga direta de Diamantes Free Fire via ID do Jogador.",
+                        opcoes: [
+                            { rotulo: "100 Diamantes", preco: 1000 },
+                            { rotulo: "310 Diamantes", preco: 3000 },
+                            { rotulo: "520 Diamantes", preco: 5000 },
+                            { rotulo: "1060 Diamantes", preco: 10000 }
+                        ],
+                        esgotado: false
+                    },
+                    {
+                        nome: "eFootball - Moedas myClub",
+                        tipo: "jogo",
+                        categoria: "Jogos",
+                        paginaDestino: "efootball.html",
+                        badge: "POPULAR",
+                        imagem: "https://play-lh.googleusercontent.com/1-hR3A4A7L2iY0_G5d_G61S6h1H1z0a.jpg",
+                        descricao: "Moedas eFootball PES para contratar jogadores lendários.",
+                        opcoes: [
+                            { rotulo: "130 Moedas", preco: 1200 },
+                            { rotulo: "550 Moedas", preco: 4800 },
+                            { rotulo: "1040 Moedas", preco: 9000 }
+                        ],
+                        esgotado: false
+                    },
+                    {
+                        nome: "Netflix 4K Ultra HD",
+                        tipo: "assinatura",
+                        categoria: "Streaming",
+                        paginaDestino: "netflix.html",
+                        badge: "TOP",
+                        imagem: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
+                        descricao: "Conta Netflix Premium 4K com perfil individual e código PIN.",
+                        opcoes: [
+                            { rotulo: "1 Mês - 1 Tela", preco: 2500 },
+                            { rotulo: "3 Meses - 1 Tela", preco: 9500 }
+                        ],
+                        esgotado: false
+                    }
+                ];
             }
-        ];
-    }
 
-    const confirmacao = confirm(`Deseja publicar/sincronizar os ${produtosLocais.length} produtos padrão com a base de dados do Firestore?`);
-    if (!confirmacao) return;
+            const confirmacao = confirm(`Deseja publicar/sincronizar os ${produtosLocais.length} produtos padrão com a base de dados do Firestore?`);
+            if (!confirmacao) return;
 
-    try {
-        let cont = 0;
-        for (const prod of produtosLocais) {
-            await addDoc(collection(db, "produtos"), {
-                nome: prod.nome || prod.title || 'Produto',
-                tipo: prod.tipo || 'assinatura',
-                categoria: prod.categoria || 'Geral',
-                paginaDestino: prod.paginaDestino || prod.link || '#',
-                badge: prod.badge || 'POPULAR',
-                imagem: prod.imagem || prod.image || '',
-                descricao: prod.descricao || prod.description || '',
-                opcoes: prod.opcoes || [{ rotulo: 'Padrão', preco: prod.preco || prod.price || 0 }],
-                esgotado: prod.esgotado || false,
-                createdAt: new Date().toISOString()
-            });
-            cont++;
-        }
-        alert(`${cont} produtos foram sincronizados com sucesso no banco do Firestore!`);
-    } catch (error) {
-        console.error("Erro ao sincronizar produtos:", error);
-        alert("Ocorreu um erro ao conectar ao Firestore para sincronizar.");
-    }
-};
-
+            try {
+                let cont = 0;
+                for (const prod of produtosLocais) {
+                    await addDoc(collection(db, "produtos"), {
+                        nome: prod.nome || prod.title || 'Produto',
+                        tipo: prod.tipo || 'assinatura',
+                        categoria: prod.categoria || 'Geral',
+                        paginaDestino: prod.paginaDestino || prod.link || '#',
+                        badge: prod.badge || 'POPULAR',
+                        imagem: prod.imagem || prod.image || '',
+                        descricao: prod.descricao || prod.description || '',
+                        opcoes: prod.opcoes || [{ rotulo: 'Padrão', preco: prod.preco || prod.price || 0 }],
+                        esgotado: prod.esgotado || false,
+                        createdAt: new Date().toISOString()
+                    });
+                    cont++;
+                }
+                alert(`${cont} produtos foram sincronizados com sucesso no banco do Firestore!`);
+            } catch (error) {
+                console.error("Erro ao sincronizar produtos:", error);
+                alert("Ocorreu um erro ao conectar ao Firestore para sincronizar.");
+            }
+        };
 
         window.salvarProduto = async function() {
             const nome = document.getElementById('prodNome').value.trim();
@@ -846,7 +853,7 @@
                 produtosTableBody.innerHTML = '';
 
                 if (querySnapshot.empty) {
-                    produtosTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">🛍️️ Nenhum produto publicado no painel. Adicione os seus produtos no formulário acima!</td></tr>';
+                    produtosTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">🛍 Nenhum produto publicado no painel. Adicione os seus produtos no formulário acima!</td></tr>';
                     return;
                 }
 
@@ -1040,12 +1047,10 @@
                 const primeiroItem = (pedidoData.itens && pedidoData.itens[0]) ? pedidoData.itens[0] : {};
                 const servicoNome = primeiroItem.nome || 'Produto Digital';
                 
-                // Verificar se é uma renovação vinculada a uma assinatura existente
                 const refAssinaturaId = primeiroItem.assinaturaRefId || null;
 
                 if (diasValidade !== -1) {
                     if (refAssinaturaId) {
-                        // RENOVAÇÃO: Atualizar assinatura existente acumulando dias
                         const assRef = doc(db, "assinaturas", refAssinaturaId);
                         const assSnap = await getDoc(assRef);
 
@@ -1053,7 +1058,6 @@
                             const assData = assSnap.data();
                             let novaDataFim = new Date();
 
-                            // Se a assinatura ainda está válida, soma aos dias restantes
                             if (assData.dataFim && new Date(assData.dataFim) > new Date()) {
                                 novaDataFim = new Date(assData.dataFim);
                             }
@@ -1069,7 +1073,6 @@
                             });
                         }
                     } else {
-                        // NOVA ASSINATURA: Criar registo novo do zero
                         const dataInicio = new Date();
                         let dataFim = null;
 
@@ -1095,7 +1098,6 @@
                     }
                 }
 
-                // Sistema de comissão de pontos do programa de afiliados
                 if (pedidoData && pedidoData.userId) {
                     const compradorRef = doc(db, "usuarios", pedidoData.userId);
                     const compradorSnap = await getDoc(compradorRef);
@@ -1118,7 +1120,7 @@
                     }
                 }
 
-                const msg = `Olá *${clienteNome}*! O seu pedido/renovação foi confirmado com sucesso! 🎉\n\n*Serviço:* ${servicoNome}\n*Detalhes/Acesso:* \n${dadosEntrega}\n\nObrigado por comprar no Mercado Digital!`;
+                const msg = `Olá *${clienteNome}*! O seu pedido/renovação foi confirmedo com sucesso! 🎉\n\n*Serviço:* ${servicoNome}\n*Detalhes/Acesso:* \n${dadosEntrega}\n\nObrigado por comprar no Mercado Digital!`;
                 const whatsappUrl = `https://wa.me/${telefone}?text=${encodeURIComponent(msg)}`;
 
                 window.open(whatsappUrl, '_blank');
@@ -1129,11 +1131,13 @@
             }
         };
 
-   window.registarAssinaturaManual = async function() {
+        // REGISTO MANUAL DE ASSINATURA COM SELEÇÃO DE DATA DE INÍCIO PASSADA
+        window.registarAssinaturaManual = async function() {
             const nome = document.getElementById('manualNome').value.trim();
             let telefone = document.getElementById('manualTelefone').value.trim().replace(/\D/g, '');
             const servico = document.getElementById('manualServico').value.trim();
             const preco = parseFloat(document.getElementById('manualPreco').value) || 0;
+            const inputDataInicio = document.getElementById('manualDataInicio').value;
             const selectValidade = document.getElementById('manualValidade').value;
             const dados = document.getElementById('manualDados').value.trim();
 
@@ -1154,11 +1158,16 @@
             }
 
             try {
-                const dataInicio = new Date();
-                let dataFim = null;
+                // Definir Data de Início (Escolha manual ou Hoje)
+                let dataInicio = new Date();
+                if (inputDataInicio) {
+                    const partesData = inputDataInicio.split('-');
+                    dataInicio = new Date(partesData[0], partesData[1] - 1, partesData[2]);
+                }
 
+                let dataFim = null;
                 if (diasValidade > 0) {
-                    dataFim = new Date();
+                    dataFim = new Date(dataInicio);
                     dataFim.setDate(dataFim.getDate() + diasValidade);
                 }
 
@@ -1174,7 +1183,7 @@
                     dataInicio: dataInicio.toISOString(),
                     dataFim: dataFim ? dataFim.toISOString() : null,
                     diasContratados: diasValidade,
-                    status: "Ativa",
+                    status: (dataFim && dataFim < new Date()) ? "Expirada" : "Ativa",
                     itemDetalhe: [{
                         nome: servico,
                         opcao: 'Registo Manual WhatsApp',
@@ -1183,12 +1192,13 @@
                     }]
                 });
 
-                alert("Assinatura manual adicionada com sucesso!");
+                alert("Assinatura manual registada! Os dias restantes foram calculados automaticamente.");
                 
                 document.getElementById('manualNome').value = '';
                 document.getElementById('manualTelefone').value = '';
                 document.getElementById('manualServico').value = '';
                 document.getElementById('manualPreco').value = '';
+                document.getElementById('manualDataInicio').value = '';
                 document.getElementById('manualDados').value = '';
                 document.getElementById('manualDiasCustom').value = '';
                 document.getElementById('manualValidade').value = '30';
@@ -1199,7 +1209,6 @@
                 alert("Erro ao registar assinatura manual. Tente novamente.");
             }
         };
-
 
         window.abrirEdicaoAssinatura = function(assId, ass) {
             document.getElementById('editAssinaturaId').value = assId;
