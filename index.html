@@ -76,8 +76,7 @@
                 <span class="location-badge">GW</span>
                 <a href="conta.html" id="topPointsContainer" class="points-badge-top" style="display: none;"><span id="topUserPoints">0 Pts</span></a>
             </div>
-                        <div class="user-action-area">
-                <!-- Botão de Entrar (Login) com Ícone de Entrada -->
+            <div class="user-action-area">
                 <div id="guestTopBar">
                     <button class="btn-auth-header" onclick="window.location.href='conta.html'" title="Entrar na Conta" style="display: flex; align-items: center; gap: 4px; padding: 6px 10px;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -88,7 +87,6 @@
                     </button>
                 </div>
 
-                <!-- Botão de Sair (Logout) com Ícone de Saída -->
                 <div id="userTopBar" class="user-logged-menu" style="display: none;">
                     <a href="conta.html"><img src="https://ui-avatars.com/api/?name=User&background=ff6600&color=fff" id="topAvatarImg" class="profile-avatar-top"></a>
                     <button class="btn-logout-header" onclick="handleLogout()" title="Sair da Conta" style="display: flex; align-items: center; justify-content: center; padding: 6px; border-radius: 50%; width: 32px; height: 32px;">
@@ -100,11 +98,10 @@
                     </button>
                 </div>
             </div>
-
         </div>
         <div class="search-container">
             <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            <input type="text" id="searchInput" onkeyup="filtrarProdutos()" placeholder="Pesquisar PUBG, Netflix, Criar Site...">
+            <input type="text" id="searchInput" onkeyup="filtrarProdutos()" placeholder="Pesquisar PUBG, Duolingo, Netflix, Criar Site...">
         </div>
     </div>
 
@@ -142,8 +139,18 @@
         </a>
     </div>
 
-    <div class="section-header" id="streaming-section"><h2>Streaming e TV</h2></div>
+    <div class="section-header" id="streaming-section"><h2>Idiomas, Streaming e TV Ao Vivo</h2></div>
     <div class="product-grid" id="gridStreaming">
+        <a href="duolingo.html" class="card product-card" data-page="duolingo.html" data-title="duolingo super idiomas curso ingles">
+            <div class="card-banner" style="background-image: url('https://i0.wp.com/imgs.hipertextual.com/wp-content/uploads/2026/01/buho-duolingo.jpg?fit=1200%2C751&quality=70&strip=all&ssl=1');">
+                <span class="card-badge">1 ANO</span>
+            </div>
+            <div class="card-info">
+                <h3>DUOLINGO SUPER</h3>
+                <p>Aprenda idiomas sem anúncios e vidas infinitas.</p>
+                <span class="card-action-btn">10.000 FCFA</span>
+            </div>
+        </a>
         <a href="primevideo.html" class="card product-card" data-page="primevideo.html" data-title="prime video amazon">
             <div class="card-banner" style="background-image: url('https://m.media-amazon.com/images/G/01/primevideo/seo/primevideo-seo-logo.png');"><span class="card-badge">4K ULTRA HD</span></div>
             <div class="card-info"><h3>PRIME VIDEO</h3><p>Filmes e séries sem anúncios.</p><span class="card-action-btn">Ver Opções</span></div>
@@ -158,29 +165,23 @@
         </a>
     </div>
 
-<div class="section-header" id="edicao-section"><h2>Design e Edição</h2></div>
-<div class="product-grid" id="gridEdicao">
-
-    <!-- 1. PRODUTO CANVA PRO -->
-    <a href="canva.html" class="card product-card" data-page="canva.html" data-title="canva pro premium">
-        <div class="card-banner" style="background-image: url('https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=600');"><span class="card-badge">PRO IA</span></div>
-        <div class="card-info"><h3>CANVA PRO</h3><p>Ferramentas de design e IA.</p><span class="card-action-btn">Ver Opções</span></div>
-    </a>
-
-    <!-- 2. PRODUTO GEMINI PRO (COLE ESTE BLOCO AQUI) -->
-    <a href="gemini.html" class="card product-card" data-page="gemini.html" data-title="gemini google ai pro ia edicao design">
-        <div class="card-banner" style="background-image: url('https://static0.anpoimages.com/wordpress/wp-content/uploads/2026/03/the-gemini-logo-is-surrounded-by-sparkle-icons-on-a-dark-blue-background.png?w=1600&h=900&fit=crop');">
-            <span class="card-badge">PRO IA</span>
-        </div>
-        <div class="card-info">
-            <h3>GEMINI PRO</h3>
-            <p>IA Avançada do Google & 5TB.</p>
-            <span class="card-action-btn">Ver Opções</span>
-        </div>
-    </a>
-
-</div>
-
+    <div class="section-header" id="edicao-section"><h2>Design e Edição</h2></div>
+    <div class="product-grid" id="gridEdicao">
+        <a href="canva.html" class="card product-card" data-page="canva.html" data-title="canva pro premium">
+            <div class="card-banner" style="background-image: url('https://admin.roy-shop.com/uploads/custom-images/thumb_image17811165971157.png');"><span class="card-badge">PRO IA</span></div>
+            <div class="card-info"><h3>CANVA PRO</h3><p>Ferramentas de design e IA.</p><span class="card-action-btn">Ver Opções</span></div>
+        </a>
+        <a href="gemini.html" class="card product-card" data-page="gemini.html" data-title="gemini google ai pro ia edicao design">
+            <div class="card-banner" style="background-image: url('https://static0.anpoimages.com/wordpress/wp-content/uploads/2026/03/the-gemini-logo-is-surrounded-by-sparkle-icons-on-a-dark-blue-background.png?w=1600&h=900&fit=crop');">
+                <span class="card-badge">PRO IA</span>
+            </div>
+            <div class="card-info">
+                <h3>GEMINI PRO</h3>
+                <p>IA Avançada do Google & 5TB.</p>
+                <span class="card-action-btn">Ver Opções</span>
+            </div>
+        </a>
+    </div>
 
     <div class="section-header" id="websites-section"><h2>Criação de Websites & Lojas</h2></div>
     <div class="product-grid" id="gridWebsites">
@@ -238,7 +239,7 @@
         window.addEventListener('DOMContentLoaded', atualizarContadoresNav);
     </script>
 
-    <!-- Script do Firebase para Monitorar Login, Pontos e Estado de Stock -->
+    <!-- Script do Firebase: Carrega produtos dinamicamente e atualiza Stock -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -299,29 +300,65 @@
             }
         });
 
-        // Sincronizar estado de esgotado dos produtos na Home Page
+        // Sincronizar e injetar produtos do Firestore dinamicamente
         onSnapshot(collection(db, "produtos"), (snapshot) => {
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
-                if (data.paginaDestino) {
-                    const card = document.querySelector(`.product-card[data-page="${data.paginaDestino}"]`);
-                    if (card) {
-                        const badge = card.querySelector('.card-badge');
-                        const btn = card.querySelector('.card-action-btn');
+                if (!data.paginaDestino) return;
 
-                        if (data.esgotado) {
-                            card.classList.add('is-esgotado');
-                            if (badge) {
-                                badge.innerText = 'ESGOTADO 🔴';
-                                badge.classList.add('esgotado-badge');
-                            }
-                            if (btn) btn.innerText = 'Esgotado';
-                        } else {
-                            card.classList.remove('is-esgotado');
-                            if (badge) badge.classList.remove('esgotado-badge');
-                            if (btn) btn.innerText = 'Ver Opções';
-                        }
+                let card = document.querySelector(`.product-card[data-page="${data.paginaDestino}"]`);
+
+                // Se o produto foi cadastrado no painel admin e não está estático no HTML, adiciona-o automaticamente
+                if (!card) {
+                    card = document.createElement('a');
+                    card.href = data.paginaDestino;
+                    card.className = 'card product-card';
+                    card.setAttribute('data-page', data.paginaDestino);
+                    card.setAttribute('data-title', `${data.nome} ${data.categoria}`.toLowerCase());
+
+                    card.innerHTML = `
+                        <div class="card-banner" style="background-image: url('${data.imagem}');">
+                            <span class="card-badge">${data.badge || 'POPULAR'}</span>
+                        </div>
+                        <div class="card-info">
+                            <h3>${data.nome.toUpperCase()}</h3>
+                            <p>${data.descricao || 'Acesso digital imediato.'}</p>
+                            <span class="card-action-btn">Ver Opções</span>
+                        </div>
+                    `;
+
+                    const catLower = (data.categoria || '').toLowerCase();
+                    const tipoLower = (data.tipo || '').toLowerCase();
+
+                    if (catLower.includes('jogo') || tipoLower.includes('jogo')) {
+                        document.getElementById('gridJogos')?.appendChild(card);
+                    } else if (catLower.includes('design') || catLower.includes('edição') || catLower.includes('edicao')) {
+                        document.getElementById('gridEdicao')?.appendChild(card);
+                    } else if (catLower.includes('site') || catLower.includes('web')) {
+                        document.getElementById('gridWebsites')?.appendChild(card);
+                    } else {
+                        document.getElementById('gridStreaming')?.appendChild(card);
                     }
+                }
+
+                // Atualizar estado de esgotado/disponível
+                const badge = card.querySelector('.card-badge');
+                const btn = card.querySelector('.card-action-btn');
+
+                if (data.esgotado) {
+                    card.classList.add('is-esgotado');
+                    if (badge) {
+                        badge.innerText = 'ESGOTADO 🔴';
+                        badge.classList.add('esgotado-badge');
+                    }
+                    if (btn) btn.innerText = 'Esgotado';
+                } else {
+                    card.classList.remove('is-esgotado');
+                    if (badge) {
+                        badge.innerText = data.badge || 'POPULAR';
+                        badge.classList.remove('esgotado-badge');
+                    }
+                    if (btn) btn.innerText = 'Ver Opções';
                 }
             });
         });

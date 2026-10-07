@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Netflix 4K Ultra HD - Mercado Digital Bissau</title>
+    <title>Duolingo Super Anual - Mercado Digital Bissau</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,14 +22,16 @@
             --primary-glow: rgba(124, 58, 237, 0.4);
             --orange: #ff6600;
             --orange-glow: rgba(255, 102, 0, 0.4);
-            --netflix-red: #e50914;
-            --netflix-glow: rgba(229, 9, 20, 0.4);
+            /* CORES OFICIAIS DO DUOLINGO */
+            --duo-green: #58cc02;
+            --duo-green-dark: #46a302;
+            --duo-glow: rgba(88, 204, 2, 0.4);
             --text-main: #ffffff;
             --text-muted: #94a3b8;
             --success: #10b981;
             --danger: #ef4444;
             --border: #1e293b;
-            --border-highlight: rgba(229, 9, 20, 0.35);
+            --border-highlight: rgba(88, 204, 2, 0.35);
         }
 
         * {
@@ -129,8 +131,8 @@
 
         .product-banner {
             height: 160px;
-            background: linear-gradient(180deg, rgba(9, 13, 22, 0.2) 0%, var(--bg-card) 100%),
-                        url('https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2020/02/netflix_logo.png') center/cover no-repeat;
+            background: linear-gradient(180deg, rgba(9, 13, 22, 0.3) 0%, var(--bg-card) 100%),
+                        url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0126tfVjLvqUBfQsey6I18egH_hEy84H2X-Rq8aDX8L2v1pSIKH5egiOw&s=10') center/cover no-repeat;
             position: relative;
             display: flex;
             align-items: flex-end;
@@ -142,16 +144,58 @@
         }
 
         .product-hero-info h2 {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             font-weight: 800;
             color: #ffffff;
             margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .product-hero-info p {
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
             line-height: 1.4;
+        }
+
+        /* Benefícios do Duolingo Super */
+        .benefits-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 1.1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .benefits-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--duo-green);
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.82rem;
+            color: #ffffff;
+            margin-bottom: 0.65rem;
+            line-height: 1.3;
+        }
+
+        .benefit-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .benefit-icon {
+            color: var(--duo-green);
+            font-size: 1.1rem;
+            line-height: 1;
         }
 
         .stock-warning {
@@ -211,7 +255,7 @@
         }
 
         .form-input:focus {
-            border-color: var(--netflix-red);
+            border-color: var(--duo-green);
         }
 
         /* Package Grid Selection */
@@ -244,9 +288,9 @@
         }
 
         .pkg-card.selected {
-            border-color: var(--netflix-red);
-            background-color: rgba(229, 9, 20, 0.08);
-            box-shadow: 0 0 15px var(--netflix-glow);
+            border-color: var(--duo-green);
+            background-color: rgba(88, 204, 2, 0.08);
+            box-shadow: 0 0 15px var(--duo-glow);
         }
 
         .pkg-info {
@@ -266,9 +310,9 @@
         }
 
         .pkg-price {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 800;
-            color: var(--netflix-red);
+            color: var(--duo-green);
             white-space: nowrap;
         }
 
@@ -282,7 +326,7 @@
 
         .btn-add-cart {
             width: 100%;
-            background: linear-gradient(135deg, var(--netflix-red), #b91c1c);
+            background: linear-gradient(135deg, var(--duo-green), var(--duo-green-dark));
             color: #ffffff;
             border: none;
             padding: 13px;
@@ -290,7 +334,7 @@
             font-weight: 800;
             font-size: 0.88rem;
             cursor: pointer;
-            box-shadow: 0 4px 15px var(--netflix-glow);
+            box-shadow: 0 4px 15px var(--duo-glow);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -422,7 +466,7 @@
         <a href="index.html" class="back-btn">
             ‹ Voltar
         </a>
-        <h1 class="page-title">Netflix 4K</h1>
+        <h1 class="page-title">Duolingo Super</h1>
         <a href="carrinho.html" class="icon-cart-link">
             🛒
             <span class="cart-badge-count" id="topCartBadge">0</span>
@@ -434,8 +478,29 @@
         <div class="product-hero">
             <div class="product-banner"></div>
             <div class="product-hero-info">
-                <h2>Netflix Premium 4K UHD🍿</h2>
-                <p>Assinaturas de telas privadas ou contas completas em qualidade 4K Ultra HD sem travamentos. Dados enviados por WhatsApp.</p>
+                <h2>Duolingo Super (Anual) 🦉</h2>
+                <p>Aprenda Inglês, Francês, Espanhol e mais de 30 idiomas sem interrupções. Ativação direta no seu e-mail pessoal para 1 ano inteiro!</p>
+            </div>
+        </div>
+
+        <!-- Card de Benefícios -->
+        <div class="benefits-card">
+            <h3 class="benefits-title">⚡ Benefícios da Conta Super:</h3>
+            <div class="benefit-item">
+                <span class="benefit-icon">💚</span>
+                <span><strong>Vidas Infinitas:</strong> Erre quantas vezes precisar sem ter que esperar ou pagar para continuar a estudar.</span>
+            </div>
+            <div class="benefit-item">
+                <span class="benefit-icon">🚫</span>
+                <span><strong>Zero Anúncios:</strong> Concentre-se no aprendizado sem nenhuma publicidade a interromper as suas lições.</span>
+            </div>
+            <div class="benefit-item">
+                <span class="benefit-icon">🎯</span>
+                <span><strong>Treino de Erros Personalizado:</strong> Reveja as suas falhas anteriores para dominar a matéria rapidamente.</span>
+            </div>
+            <div class="benefit-item">
+                <span class="benefit-icon">🏆</span>
+                <span><strong>Testes de Nível Ilimitados:</strong> Avance nas unidades rapidamente sem gastar gemas.</span>
             </div>
         </div>
 
@@ -446,55 +511,28 @@
 
         <!-- Dados do Cliente -->
         <div class="input-card">
-            <h3 class="input-card-title">1. Dados para Entrega</h3>
+            <h3 class="input-card-title">1. Dados para Ativação</h3>
             <div class="form-group">
                 <label for="clientName">Seu Nome Completo *</label>
                 <input type="text" id="clientName" class="form-input" placeholder="Ex: Du Black" required>
             </div>
             <div class="form-group">
-                <label for="clientWhatsApp">Nº de WhatsApp para Envio do Acesso *</label>
+                <label for="clientEmail">E-mail da sua conta Duolingo (Para Ativação) *</label>
+                <input type="email" id="clientEmail" class="form-input" placeholder="Ex: seuemail@gmail.com" required>
+            </div>
+            <div class="form-group">
+                <label for="clientWhatsApp">Nº de WhatsApp para Confirmação *</label>
                 <input type="tel" id="clientWhatsApp" class="form-input" placeholder="Ex: 95/96-5555555" required>
             </div>
         </div>
 
         <!-- Seleção do Plano -->
-        <div class="packages-title">2. Escolha a Opção Desejada</div>
+        <div class="packages-title">2. Plano Selecionado</div>
         <div class="package-grid" id="packageGridContainer">
-            <div class="pkg-card selected" onclick="selectPackage(this, 'Celular / Ecrã Ultra HD (1 Mês)', 2000)">
+            <div class="pkg-card selected" onclick="selectPackage(this, 'Duolingo Super (1 Ano Completo)', 10000)">
                 <div class="pkg-info">
-                    <div class="pkg-title">Celular Ultra HD (1 Mês)</div>
-                    <div class="pkg-sub">Perfil Compartilhado sem PIN exclusivo</div>
-                </div>
-                <div class="pkg-price">2.000 FCFA</div>
-            </div>
-
-            <div class="pkg-card" onclick="selectPackage(this, 'Celular Ultra HD (3 Meses)', 6000)">
-                <div class="pkg-info">
-                    <div class="pkg-title">Celular Ultra HD (3 Meses)</div>
-                    <div class="pkg-sub">Perfil Compartilhado sem PIN exclusivo</div>
-                </div>
-                <div class="pkg-price">6.000 FCFA</div>
-            </div>
-
-            <div class="pkg-card" onclick="selectPackage(this, 'SmartTV (1 Mês)', 2500)">
-                <div class="pkg-info">
-                    <div class="pkg-title">SmartTV Ultra HD (1 Mês)</div>
-                    <div class="pkg-sub">Perfil Compartilhado sem PIN exclusivo</div>
-                </div>
-                <div class="pkg-price">2.500 FCFA</div>
-            </div>
-<div class="pkg-card" onclick="selectPackage(this, 'SmartTV (3 Meses)', 7500)">
-                <div class="pkg-info">
-                    <div class="pkg-title">SmartTV Ultra HD (3 Meses)</div>
-                    <div class="pkg-sub">Perfil Compartilhado sem PIN exclusivo</div>
-                </div>
-                <div class="pkg-price">7.500 FCFA</div>
-            </div>
-
-<div class="pkg-card" onclick="selectPackage(this, 'Conta Família (1 Mês)', 10000)">
-                <div class="pkg-info">
-                    <div class="pkg-title">Conta Família Premium</div>
-                    <div class="pkg-sub">Conta para a Família toda 4K UHD</div>
+                    <div class="pkg-title">Duolingo Super (1 Ano Completo)</div>
+                    <div class="pkg-sub">Ativação individual direta no seu próprio e-mail</div>
                 </div>
                 <div class="pkg-price">10.000 FCFA</div>
             </div>
@@ -558,12 +596,12 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let selectedLabel = '1 Tela / Ecrã Ultra HD (1 Mês)';
-        let selectedPrice = 2000;
+        let selectedLabel = 'Duolingo Super (1 Ano Completo)';
+        let selectedPrice = 10000;
         let isProductEsgotado = false;
 
         function sincronizarComAdmin() {
-            const q = query(collection(db, "produtos"), where("paginaDestino", "==", "netflix.html"));
+            const q = query(collection(db, "produtos"), where("paginaDestino", "==", "duolingo.html"));
             onSnapshot(q, (snapshot) => {
                 if (!snapshot.empty) {
                     const prodData = snapshot.docs[0].data();
@@ -613,8 +651,8 @@
                                 };
                                 card.innerHTML = `
                                     <div class="pkg-info">
-                                        <div class="pkg-title">🎬 ${opt.rotulo}</div>
-                                        <div class="pkg-sub">Acesso 4K Ultra HD sem travamentos</div>
+                                        <div class="pkg-title">🦉 ${opt.rotulo}</div>
+                                        <div class="pkg-sub">Ativação direta no seu e-mail</div>
                                     </div>
                                     <div class="pkg-price">${opt.preco.toLocaleString()} FCFA</div>
                                 `;
@@ -623,7 +661,7 @@
                         }
                     }
                 }
-            }, (err) => console.error("Erro ao sincronizar Netflix em tempo real:", err));
+            }, (err) => console.error("Erro ao sincronizar Duolingo em tempo real:", err));
         }
 
         window.selectPackage = function(element, label, price) {
@@ -687,30 +725,30 @@
             }
 
             const name = document.getElementById('clientName').value.trim();
+            const email = document.getElementById('clientEmail').value.trim();
             const wa = document.getElementById('clientWhatsApp').value.trim();
 
-            if (!name || !wa) {
-                alert("Por favor, preencha o seu Nome e Número de WhatsApp!");
-                document.getElementById('clientName').focus();
+            if (!name || !email || !wa) {
+                alert("Por favor, preencha o seu Nome, E-mail do Duolingo e Número de WhatsApp!");
                 return;
             }
 
             const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
 
             const newItem = {
-                id: 'net_' + Date.now(),
-                nome: 'Netflix - ' + selectedLabel,
-                opcao: 'Cliente: ' + name + ' | WA: ' + wa,
+                id: 'duo_' + Date.now(),
+                nome: 'Duolingo Super - ' + selectedLabel,
+                opcao: 'Cliente: ' + name + ' | E-mail: ' + email + ' | WA: ' + wa,
                 price: selectedPrice,
                 quantidade: 1,
-                img: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=200'
+                img: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?q=80&w=200'
             };
 
             cart.push(newItem);
             localStorage.setItem('bissau_cart', JSON.stringify(cart));
 
             updateNavBadges();
-            showToast("✅ Netflix adicionada ao carrinho!");
+            showToast("✅ Duolingo Super adicionado ao carrinho!");
         };
 
         window.buyDirectWhatsApp = async function() {
@@ -720,11 +758,11 @@
             }
 
             const name = document.getElementById('clientName').value.trim();
+            const email = document.getElementById('clientEmail').value.trim();
             const wa = document.getElementById('clientWhatsApp').value.trim();
 
-            if (!name || !wa) {
-                alert("Por favor, preencha o seu Nome e Número de WhatsApp!");
-                document.getElementById('clientName').focus();
+            if (!name || !email || !wa) {
+                alert("Por favor, preencha o seu Nome, E-mail do Duolingo e Número de WhatsApp!");
                 return;
             }
 
@@ -740,8 +778,8 @@
                     comprovativoFornecido: "WhatsApp Direto",
                     tipoComprovativo: "WhatsApp",
                     itens: [{
-                        nome: 'Netflix - ' + selectedLabel,
-                        opcao: 'Cliente: ' + name + ' | WA: ' + wa,
+                        nome: 'Duolingo Super - ' + selectedLabel,
+                        opcao: 'Cliente: ' + name + ' | E-mail: ' + email + ' | WA: ' + wa,
                         price: selectedPrice,
                         quantidade: 1
                     }],
@@ -758,7 +796,7 @@
                     orderId: orderIdCode,
                     id: orderIdCode,
                     data: new Date().toLocaleDateString('pt-PT'),
-                    itens: [{ nome: 'Netflix - ' + selectedLabel, opcao: 'Cliente: ' + name, price: selectedPrice, quantidade: 1 }],
+                    itens: [{ nome: 'Duolingo Super - ' + selectedLabel, opcao: 'E-mail: ' + email, price: selectedPrice, quantidade: 1 }],
                     total: selectedPrice,
                     status: 'Pendente'
                 });
@@ -768,15 +806,16 @@
                 console.error("Erro ao salvar no Firestore:", err);
             }
 
-            let text = `🍿 *PEDIDO DIRETO - NETFLIX 4K*\n`;
+            let text = `🦉 *PEDIDO DIRETO - DUOLINGO SUPER (1 ANO)*\n`;
             text += `--------------------------------\n`;
             text += `📦 *Plano:* ${selectedLabel}\n`;
             text += `💰 *Valor:* ${selectedPrice.toLocaleString()} FCFA\n`;
             text += `👤 *Nome:* ${name}\n`;
+            text += `📧 *E-mail para Ativação:* ${email}\n`;
             text += `📱 *Contacto WhatsApp:* ${wa}\n`;
             text += `--------------------------------\n`;
             text += `💳 *Método:* Orange Money (955288370)\n`;
-            text += `Aguardando confirmação para ativação do acesso.`;
+            text += `Aguardando confirmação para ativação do plano de 1 ano.`;
 
             const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
             window.open(waUrl, '_blank');
