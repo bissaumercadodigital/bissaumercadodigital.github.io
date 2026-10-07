@@ -564,6 +564,57 @@
         </div>
     </div>
 
+    <!-- Modal de Edição de Produto -->
+    <div class="modal-overlay" id="editProdutoModal" onclick="fecharModalEdicaoProd(event)">
+        <div class="edit-modal" onclick="event.stopPropagation()">
+            <div class="edit-modal-header">
+                <div>
+                    <h3>✏️ Editar Produto</h3>
+                    <p style="color:var(--text-muted);font-size:.75rem;margin-top:3px;">
+                        Altere os dados e preços do produto.
+                    </p>
+                </div>
+                <button class="modal-close" onclick="fecharModalEdicaoProd()">×</button>
+            </div>
+
+            <input type="hidden" id="editProdId">
+
+            <div class="grid-2">
+                <input type="text" id="editProdNome" class="form-input" placeholder="Nome do Produto/Jogo">
+                <select id="editProdTipo" class="form-select">
+                    <option value="assinatura">📺 Assinatura Recorrente</option>
+                    <option value="jogo">🎮 Jogo / Recarga</option>
+                </select>
+            </div>
+
+            <div class="grid-2">
+                <input type="text" id="editProdCategoria" class="form-input" placeholder="Categoria">
+                <input type="text" id="editProdPaginaDestino" class="form-input" placeholder="Página de Destino">
+            </div>
+
+            <div class="grid-2">
+                <input type="text" id="editProdBadge" class="form-input" placeholder="Badge/Etiqueta">
+                <input type="url" id="editProdImagem" class="form-input" placeholder="URL da Imagem">
+            </div>
+
+            <textarea id="editProdDescricao" class="delivery-input" rows="2" placeholder="Descrição curta..."></textarea>
+
+            <label style="font-size: 0.85rem; font-weight: 700; color: var(--orange); display: block; margin-bottom: 8px;">
+                💰 Opções de Pacotes e Preços (FCFA):
+            </label>
+            
+            <div id="editOpcoesContainer"></div>
+
+            <button type="button" class="btn-add-opt" onclick="adicionarLinhaOpcaoEdit()">➕ Adicionar Mais Uma Opção</button>
+
+            <div class="modal-actions">
+                <button class="btn-cancel-edit" onclick="fecharModalEdicaoProd()">Cancelar</button>
+                <button class="btn-save-edit" id="btnSalvarEdicaoProd" onclick="salvarEdicaoProduto()">💾 Guardar Alterações</button>
+            </div>
+        </div>
+    </div>
+
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -862,6 +913,8 @@
                     const prodId = documento.id;
                     const isEsgotado = prod.esgotado || false;
 
+                    window.produtosCache[prodId] = prod;
+
                     let listaOpcoesText = '';
                     if (prod.opcoes && Array.isArray(prod.opcoes)) {
                         prod.opcoes.forEach(o => {
@@ -882,7 +935,14 @@
                             </button>
                         </td>
                         <td>
-                            <button class="btn-delete-sub" onclick="deletarProduto('${prodId}', '${prod.nome}')">🗑️ Eliminar</button>
+                            <div style="display: flex; gap: 6px; flex-direction: column;">
+                                <button class="btn-edit-sub" onclick="abrirEdicaoProduto('${prodId}')">
+                                    ✏️ Editar
+                                </button>
+                                <button class="btn-delete-sub" onclick="deletarProduto('${prodId}', '${prod.nome}')">
+                                    🗑️ Eliminar
+                                </button>
+                            </div>
                         </td>
                     `;
                     produtosTableBody.appendChild(tr);
@@ -1158,7 +1218,6 @@
             }
 
             try {
-                // Definir Data de Início (Escolha manual ou Hoje)
                 let dataInicio = new Date();
                 if (inputDataInicio) {
                     const partesData = inputDataInicio.split('-');
@@ -1437,6 +1496,108 @@
                 assinaturasTableBody.innerHTML = '<tr><td colspan="6" style="color: var(--danger); text-align:center;">Erro ao carregar assinaturas.</td></tr>';
             });
         }
+
+        // --- LÓGICA DE EDIÇÃO DE PRODUTOS ---
+        window.produtosCache = {};
+
+        window.adicionarLinhaOpcaoEdit = function(rotulo = '', preco = '') {
+            const container = document.getElementById('editOpcoesContainer');
+            const row = document.createElement('div');
+            row.className = 'opcao-row';
+            row.innerHTML = `
+                <input type="text" class="form-input edit-opt-nome" value="${rotulo}" placeholder="Pacote/Duração">
+                <input type="number" class="form-input edit-opt-preco" value="${preco}" placeholder="Preço (FCFA)">
+            `;
+            container.appendChild(row);
+        };
+
+        window.abrirEdicaoProduto = function(prodId) {
+            const prod = window.produtosCache[prodId];
+            if (!prod) return;
+
+            document.getElementById('editProdId').value = prodId;
+            document.getElementById('editProdNome').value = prod.nome || '';
+            document.getElementById('editProdTipo').value = prod.tipo || 'assinatura';
+            document.getElementById('editProdCategoria').value = prod.categoria || '';
+            document.getElementById('editProdPaginaDestino').value = prod.paginaDestino || '';
+            document.getElementById('editProdBadge').value = prod.badge || '';
+            document.getElementById('editProdImagem').value = prod.imagem || '';
+            document.getElementById('editProdDescricao').value = prod.descricao || '';
+
+            const container = document.getElementById('editOpcoesContainer');
+            container.innerHTML = '';
+
+            if (prod.opcoes && Array.isArray(prod.opcoes) && prod.opcoes.length > 0) {
+                prod.opcoes.forEach(opt => {
+                    adicionarLinhaOpcaoEdit(opt.rotulo || '', opt.preco || '');
+                });
+            } else {
+                adicionarLinhaOpcaoEdit();
+            }
+
+            document.getElementById('editProdutoModal').classList.add('open');
+        };
+
+        window.fecharModalEdicaoProd = function(event) {
+            if (event && event.target && event.target.id !== 'editProdutoModal') return;
+            document.getElementById('editProdutoModal').classList.remove('open');
+        };
+
+        window.salvarEdicaoProduto = async function() {
+            const prodId = document.getElementById('editProdId').value;
+            const nome = document.getElementById('editProdNome').value.trim();
+            const tipo = document.getElementById('editProdTipo').value;
+            const categoria = document.getElementById('editProdCategoria').value.trim();
+            const paginaDestino = document.getElementById('editProdPaginaDestino').value.trim();
+            const badge = document.getElementById('editProdBadge').value.trim();
+            const imagem = document.getElementById('editProdImagem').value.trim();
+            const descricao = document.getElementById('editProdDescricao').value.trim();
+
+            const nomesOpcoes = document.querySelectorAll('.edit-opt-nome');
+            const precosOpcoes = document.querySelectorAll('.edit-opt-preco');
+            
+            let opcoes = [];
+            for (let i = 0; i < nomesOpcoes.length; i++) {
+                const optNome = nomesOpcoes[i].value.trim();
+                const optPreco = parseFloat(precosOpcoes[i].value) || 0;
+                if (optNome && optPreco > 0) {
+                    opcoes.push({ rotulo: optNome, preco: optPreco });
+                }
+            }
+
+            if (!nome || !imagem || opcoes.length === 0) {
+                alert("Preencha o Nome do Produto, a URL da Imagem e pelo menos 1 Opção de Preço!");
+                return;
+            }
+
+            const btn = document.getElementById('btnSalvarEdicaoProd');
+            btn.disabled = true;
+            btn.innerText = "⏳ A guardar...";
+
+            try {
+                const prodRef = doc(db, "produtos", prodId);
+                await updateDoc(prodRef, {
+                    nome: nome,
+                    tipo: tipo,
+                    categoria: categoria || (tipo === 'assinatura' ? 'Streaming' : 'Jogos'),
+                    paginaDestino: paginaDestino || '#',
+                    badge: badge || 'HOT',
+                    imagem: imagem,
+                    descricao: descricao,
+                    opcoes: opcoes,
+                    updatedAt: new Date().toISOString()
+                });
+
+                alert("✅ Produto atualizado com sucesso!");
+                fecharModalEdicaoProd();
+            } catch (error) {
+                console.error("Erro ao atualizar produto:", error);
+                alert("Erro ao guardar as alterações.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "💾 Guardar Alterações";
+            }
+        };
     </script>
 </body>
 </html>
