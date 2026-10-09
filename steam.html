@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Steam Gift Cards - Mercado Digital Bissau</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        #netlify-badge, .netlify-badge, a[href*="netlify.com"] {
+            display: none !important;
+        }
+
+        :root {
+            --bg-dark: #070a12;
+            --bg-card: #0e1526;
+            --bg-card-hover: #16223d;
+            /* CORES OFICIAIS STEAM */
+            --steam-blue: #66c0f4;
+            --steam-dark-blue: #1b2838;
+            --steam-glow: rgba(102, 192, 244, 0.4);
+            --orange: #ff6600;
+            --orange-glow: rgba(255, 102, 0, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #1e293b;
+            --border-highlight: rgba(102, 192, 244, 0.35);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 100px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(7, 10, 18, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .page-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--steam-blue);
+        }
+
+        .icon-cart-link {
+            position: relative;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-badge-count {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background-color: var(--orange);
+            color: #ffffff;
+            font-size: 0.6rem;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 6px var(--orange-glow);
+        }
+
+        .container {
+            padding: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        /* Hero Product Card */
+        .product-hero {
+            background-color: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-highlight);
+            overflow: hidden;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .product-banner {
+            height: 160px;
+            background: linear-gradient(180deg, rgba(7, 10, 18, 0.3) 0%, var(--bg-card) 100%),
+                        url('https://cdn.neowin.com/news/images/uploaded/2020/05/1589491195_6dbd33d4d78755e4518e3b3496ba664babea93c8.jpg') center/cover no-repeat;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding: 1rem;
+        }
+
+        .product-hero-info {
+            padding: 1.1rem;
+        }
+
+        .product-hero-info h2 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.3rem;
+        }
+
+        .product-hero-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .platform-notice {
+            background: rgba(102, 192, 244, 0.1);
+            border: 1px solid var(--steam-blue);
+            color: var(--steam-blue);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.4;
+        }
+
+        .stock-warning {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        /* Form Inputs */
+        .input-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 1.1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .input-card-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--steam-blue);
+        }
+
+        .form-group {
+            margin-bottom: 0.85rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 11px 13px;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-select:focus {
+            border-color: var(--steam-blue);
+        }
+
+        /* Package Grid Selection */
+        .packages-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 1.25rem;
+        }
+
+        .pkg-card {
+            background-color: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 0.9rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .pkg-card.selected {
+            border-color: var(--steam-blue);
+            background-color: rgba(102, 192, 244, 0.08);
+            box-shadow: 0 0 15px var(--steam-glow);
+        }
+
+        .pkg-title {
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            line-height: 1.2;
+        }
+
+        .pkg-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .pkg-price {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: var(--steam-blue);
+            margin-top: 0.4rem;
+        }
+
+        /* Outros Paises Custom Card */
+        .other-country-box {
+            background-color: var(--bg-card);
+            border: 1px dashed var(--steam-blue);
+            border-radius: 16px;
+            padding: 1.2rem;
+            text-align: center;
+            margin-bottom: 1.25rem;
+            display: none;
+        }
+
+        .other-country-box h4 {
+            font-size: 1rem;
+            color: #ffffff;
+            margin-bottom: 0.4rem;
+        }
+
+        .other-country-box p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* Action Buttons */
+        .action-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 1.25rem;
+        }
+
+        .btn-add-cart {
+            width: 100%;
+            background: linear-gradient(135deg, var(--steam-blue), #2563eb);
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.88rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--steam-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+
+        .btn-buy-wa {
+            width: 100%;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.88rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+
+        .btn-add-cart:disabled, .btn-buy-wa:disabled {
+            background: #334155 !important;
+            color: #94a3b8 !important;
+            cursor: not-allowed;
+            box-shadow: none !important;
+        }
+
+        .btn-add-cart:active, .btn-buy-wa:active {
+            transform: scale(0.98);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--success);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Navigation Inferior */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(14, 21, 38, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.65rem 0;
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            gap: 0.2rem;
+            flex: 1;
+            text-align: center;
+        }
+
+        .nav-item.active, .nav-item:hover {
+            color: var(--steam-blue);
+        }
+
+        .nav-icon-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-icon {
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        .nav-badge-count {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: linear-gradient(135deg, var(--orange), #ff3300);
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 8px var(--orange-glow);
+            border: 1.5px solid var(--bg-card);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="index.html" class="back-btn">
+            ‹ Voltar
+        </a>
+        <h1 class="page-title">Steam Gift Cards</h1>
+        <a href="carrinho.html" class="icon-cart-link">
+            🛒
+            <span class="cart-badge-count" id="topCartBadge">0</span>
+        </a>
+    </div>
+
+    <div class="container">
+        <!-- Hero Banner -->
+        <div class="product-hero">
+            <div class="product-banner"></div>
+            <div class="product-hero-info">
+                <h2>Steam Gift Cards 🎮</h2>
+                <p>Adicione saldo instantâneo à sua carteira Steam sem partilhar os dados da sua conta. Receba o código de ativação direto e seguro.</p>
+            </div>
+        </div>
+
+        <!-- Aviso de Entrega Segura -->
+        <div class="platform-notice">
+            <span style="font-size: 1.1rem;">⚡</span>
+            <div>
+                <strong>Entrega via Código Digital:</strong><br>
+                Não é necessário fornecer os dados de acesso da sua conta. Após o pagamento via Orange Money, enviaremos o código para resgate direto na sua Steam.
+            </div>
+        </div>
+
+        <!-- Aviso de Stock -->
+        <div id="stockWarning" class="stock-warning">
+            🔴 Produto Temporariamente Esgotado no Painel de Administração.
+        </div>
+
+        <!-- Região do Gift Card -->
+        <div class="input-card">
+            <h3 class="input-card-title">1. Selecione a Região da sua Conta Steam</h3>
+            <div class="form-group">
+                <label for="regionSelect">Região / País da Conta *</label>
+                <select id="regionSelect" class="form-select" onchange="alterarRegiao()">
+                    <option value="eu" selected>🇪🇺 Europa (Euro - EUR)</option>
+                    <option value="us">🇺🇸 Estados Unidos (Dólar - USD)</option>
+                    <option value="br">🇧🇷 Brasil (Reais - R$)</option>
+                    <option value="outros">🌐 Outros Países / Regiões</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Bloco para Outros Países -->
+        <div id="otherCountryBox" class="other-country-box">
+            <h4>Precisa de Gift Card de outra Região? 🌍</h4>
+            <p>Atendemos contas Steam registradas em outros países, Reino Unido, Canadá e muito mais. Clique abaixo para enviar um inquérito pelo WhatsApp e receber a cotação exata.</p>
+            <button class="btn-buy-wa" onclick="enviarInqueritoOutrosPaises()">
+                💬 Consultar Valores no WhatsApp
+            </button>
+        </div>
+
+        <!-- Seleção de Valor do Card -->
+        <div id="packagesSection">
+            <div class="packages-title">2. Escolha o Valor do Gift Card</div>
+            <div class="package-grid" id="packageGridContainer">
+                <!-- Os cards são gerados dinamicamente via JavaScript -->
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="action-container">
+                <button id="btnAddCart" class="btn-add-cart" onclick="addToCart()">
+                    🛒 Adicionar ao Carrinho
+                </button>
+                <button id="btnBuyWA" class="btn-buy-wa" onclick="buyDirectWhatsApp()">
+                    💬 Comprar Directo no WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Item adicionado ao carrinho!</div>
+
+    <!-- Navegação Inferior -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <div class="nav-icon-wrapper"><span class="nav-icon">🏠</span></div>
+            <span>Loja</span>
+        </a>
+        <a href="pedidos.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">📦</span>
+                <span class="nav-badge-count" id="pedidosBadge">0</span>
+            </div>
+            <span>Pedidos</span>
+        </a>
+        <a href="carrinho.html" class="nav-item">
+            <div class="nav-icon-wrapper">
+                <span class="nav-icon">🛒</span>
+                <span class="nav-badge-count" id="cartBadge">0</span>
+            </div>
+            <span>Carrinho</span>
+        </a>
+        <a href="conta.html" class="nav-item">
+            <div class="nav-icon-wrapper"><span class="nav-icon">👤</span></div>
+            <span>Conta</span>
+        </a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAk18pVSpBKX2kH6GtsNUXlIbfGPTLxKpo",
+            authDomain: "mercado-digital-bissau.firebaseapp.com",
+            projectId: "mercado-digital-bissau",
+            storageBucket: "mercado-digital-bissau.firebasestorage.app",
+            messagingSenderId: "171260734990",
+            appId: "1:171260734990:web:130c33169923af3437165f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Tabelas de Preços de Gift Cards por Região
+        let tabelaPacotes = {
+            eu: [
+                { label: 'Steam Gift Card 5€', sub: 'Euro - Europa', price: 4100 },
+                { label: 'Steam Gift Card 20€', sub: 'Euro - Europa', price: 16500 },
+                { label: 'Steam Gift Card 30€', sub: 'Euro - Europa', price: 21000 },
+                { label: 'Steam Gift Card 50€', sub: 'Euro - Europa', price: 38300 }
+            ],
+            us: [
+                { label: 'Steam Gift Card $5', sub: 'Dólar - Estados Unidos 🇺🇸', price: 3700 },
+                { label: 'Steam Gift Card $10', sub: 'Dólar - Estados Unidos 🇺🇸', price: 7300 },
+                { label: 'Steam Gift Card $20', sub: 'Dólar - Estados Unidos 🇺🇸', price: 14300 },
+                { label: 'Steam Gift Card $30', sub: 'Dólar - Estados Unidos 🇺🇸', price: 21500 }
+            ],
+            br: [
+                { label: 'Steam Gift Card 55R$', sub: 'Reais - Brasil 🇧🇷', price: 7600 },
+                { label: 'Steam Gift Card 105R$', sub: 'Reais - Brasil 🇧🇷', price: 14300 },
+                { label: 'Steam Gift Card 110R$', sub: 'Reais - Brasil 🇧🇷', price: 14800 },
+                { label: 'Steam Gift Card 165R$', sub: 'Reais - Brasil 🇧🇷', price: 22300 }
+            ]
+        };
+
+        let selectedLabel = '';
+        let selectedPrice = 0;
+        let isProductEsgotado = false;
+
+        window.alterarRegiao = function() {
+            const regionSelect = document.getElementById('regionSelect');
+            const regVal = regionSelect ? regionSelect.value : 'pt';
+            
+            const otherCountryBox = document.getElementById('otherCountryBox');
+            const packagesSection = document.getElementById('packagesSection');
+
+            if (regVal === 'outros') {
+                if (otherCountryBox) otherCountryBox.style.display = 'block';
+                if (packagesSection) packagesSection.style.display = 'none';
+            } else {
+                if (otherCountryBox) otherCountryBox.style.display = 'none';
+                if (packagesSection) packagesSection.style.display = 'block';
+                renderizarPacotes();
+            }
+        };
+
+        function renderizarPacotes() {
+            const regionSelect = document.getElementById('regionSelect');
+            const regVal = regionSelect ? regionSelect.value : 'pt';
+            const grid = document.getElementById('packageGridContainer');
+            if (!grid) return;
+
+            const lista = tabelaPacotes[regVal] || tabelaPacotes.pt;
+            grid.innerHTML = '';
+
+            lista.forEach((pkg, index) => {
+                const isSelected = index === 0;
+                if (isSelected) {
+                    selectedLabel = pkg.label;
+                    selectedPrice = pkg.price;
+                }
+
+                const card = document.createElement('div');
+                card.className = `pkg-card ${isSelected ? 'selected' : ''}`;
+                card.onclick = function() {
+                    selectPackage(card, pkg.label, pkg.price);
+                };
+                card.innerHTML = `
+                    <div class="pkg-title">💳 ${pkg.label}</div>
+                    <div class="pkg-sub">${pkg.sub}</div>
+                    <div class="pkg-price">${pkg.price.toLocaleString('pt-PT')} FCFA</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        window.selectPackage = function(element, label, price) {
+            document.querySelectorAll('.pkg-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedLabel = label;
+            selectedPrice = price;
+        };
+
+        window.enviarInqueritoOutrosPaises = function() {
+            let text = `🎮 *INQUÉRITO STEAM GIFT CARD - OUTRAS REGIÕES*\n`;
+            text += `--------------------------------\n`;
+            text += `Olá! Gostaria de consultar a disponibilidade e o valor de um Gift Card da Steam para uma região diferente (ex: Brasil, Reino Unido, Canadá, etc.).\n\n`;
+            text += `Poderia me informar os preços disponíveis?`;
+
+            const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
+            window.open(waUrl, '_blank');
+        };
+
+        function sincronizarComAdmin() {
+            const q = query(collection(db, "produtos"), where("paginaDestino", "==", "steam.html"));
+            onSnapshot(q, (snapshot) => {
+                if (!snapshot.empty) {
+                    const prodData = snapshot.docs[0].data();
+                    isProductEsgotado = prodData.esgotado || false;
+
+                    const stockWarning = document.getElementById('stockWarning');
+                    const btnAddCart = document.getElementById('btnAddCart');
+                    const btnBuyWA = document.getElementById('btnBuyWA');
+
+                    if (isProductEsgotado) {
+                        if (stockWarning) stockWarning.style.display = 'block';
+                        if (btnAddCart) {
+                            btnAddCart.disabled = true;
+                            btnAddCart.innerText = '🔴 PRODUTO ESGOTADO';
+                        }
+                        if (btnBuyWA) {
+                            btnBuyWA.disabled = true;
+                            btnBuyWA.innerText = '🔴 INDISPONÍVEL';
+                        }
+                    } else {
+                        if (stockWarning) stockWarning.style.display = 'none';
+                        if (btnAddCart) {
+                            btnAddCart.disabled = false;
+                            btnAddCart.innerText = '🛒 ADICIONAR AO CARRINHO';
+                        }
+                        if (btnBuyWA) {
+                            btnBuyWA.disabled = false;
+                            btnBuyWA.innerText = '💬 COMPRAR DIRECTO NO WHATSAPP';
+                        }
+                    }
+                }
+            }, (err) => console.error("Erro ao sincronizar Steam em tempo real:", err));
+        }
+
+        function updateNavBadges() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+                const totalCarrinho = cart.reduce((sum, item) => sum + (item.quantidade || 1), 0);
+                
+                const cartBadge = document.getElementById('cartBadge');
+                const topCartBadge = document.getElementById('topCartBadge');
+
+                if (cartBadge) {
+                    if (totalCarrinho > 0) {
+                        cartBadge.innerText = totalCarrinho > 99 ? '99+' : totalCarrinho;
+                        cartBadge.style.display = 'flex';
+                    } else {
+                        cartBadge.style.display = 'none';
+                    }
+                }
+                if (topCartBadge) {
+                    topCartBadge.innerText = totalCarrinho;
+                    topCartBadge.style.display = totalCarrinho > 0 ? 'flex' : 'none';
+                }
+
+                const pedidos = JSON.parse(localStorage.getItem('bissau_orders')) || JSON.parse(localStorage.getItem('bissau_pedidos')) || [];
+                const totalPedidos = pedidos.length;
+                const pedidosBadge = document.getElementById('pedidosBadge');
+
+                if (pedidosBadge) {
+                    if (totalPedidos > 0) {
+                        pedidosBadge.innerText = totalPedidos > 99 ? '99+' : totalPedidos;
+                        pedidosBadge.style.display = 'flex';
+                    } else {
+                        pedidosBadge.style.display = 'none';
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        window.addToCart = function() {
+            if (isProductEsgotado) {
+                alert("Desculpe, este produto está esgotado no momento.");
+                return;
+            }
+
+            const regionSelect = document.getElementById('regionSelect');
+            const regionName = regionSelect ? regionSelect.options[regionSelect.selectedIndex].text : 'Portugal';
+
+            const cart = JSON.parse(localStorage.getItem('bissau_cart')) || [];
+
+            const newItem = {
+                id: 'steam_' + Date.now(),
+                nome: 'Steam - ' + selectedLabel,
+                opcao: 'Região: ' + regionName + ' | Entrega: Código Digital no WhatsApp',
+                price: selectedPrice,
+                quantidade: 1,
+                img: 'https://cdn.cloudflare.steamstatic.com/steam/clusters/takeover_winter2023/5d8c366479b1df0bb47b/hero_btn_bg_english.jpg?t=1703182103'
+            };
+
+            cart.push(newItem);
+            localStorage.setItem('bissau_cart', JSON.stringify(cart));
+
+            updateNavBadges();
+            showToast("✅ Item adicionado ao carrinho!");
+        };
+
+        window.buyDirectWhatsApp = async function() {
+            if (isProductEsgotado) {
+                alert("Desculpe, este produto está esgotado no momento.");
+                return;
+            }
+
+            const regionSelect = document.getElementById('regionSelect');
+            const regionName = regionSelect ? regionSelect.options[regionSelect.selectedIndex].text : 'Portugal';
+
+            const orderIdCode = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+            const currentUser = auth.currentUser;
+
+            try {
+                await addDoc(collection(db, "pedidos"), {
+                    orderId: orderIdCode,
+                    userId: currentUser ? currentUser.uid : null,
+                    clienteNome: "Cliente Steam",
+                    clienteTelefone: "WhatsApp Direto",
+                    comprovativoFornecido: "WhatsApp Direto",
+                    tipoComprovativo: "WhatsApp",
+                    itens: [{
+                        nome: 'Steam - ' + selectedLabel,
+                        opcao: 'Região: ' + regionName,
+                        price: selectedPrice,
+                        quantidade: 1
+                    }],
+                    subtotal: selectedPrice,
+                    desconto: 0,
+                    total: selectedPrice,
+                    status: 'Pendente',
+                    dadosEntregues: '',
+                    criadoEm: serverTimestamp()
+                });
+
+                const pedidosLocais = JSON.parse(localStorage.getItem('bissau_orders')) || [];
+                pedidosLocais.push({
+                    orderId: orderIdCode,
+                    id: orderIdCode,
+                    data: new Date().toLocaleDateString('pt-PT'),
+                    itens: [{ nome: 'Steam - ' + selectedLabel, opcao: 'Região: ' + regionName, price: selectedPrice, quantidade: 1 }],
+                    total: selectedPrice,
+                    status: 'Pendente'
+                });
+                localStorage.setItem('bissau_orders', JSON.stringify(pedidosLocais));
+
+            } catch (err) {
+                console.error("Erro ao salvar no Firestore:", err);
+            }
+
+            let text = `🎮 *PEDIDO DIRETO - STEAM GIFT CARD*\n`;
+            text += `--------------------------------\n`;
+            text += `📦 *Produto:* ${selectedLabel}\n`;
+            text += `🌐 *Região:* ${regionName}\n`;
+            text += `💰 *Valor:* ${selectedPrice.toLocaleString('pt-PT')} FCFA\n`;
+            text += `--------------------------------\n`;
+            text += `💳 *Método:* Orange Money (957410145)\n`;
+            text += `Aguardando confirmação de pagamento para o envio do Código Digital.`;
+
+            const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
+            window.open(waUrl, '_blank');
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarPacotes();
+            updateNavBadges();
+            sincronizarComAdmin();
+        });
+    </script>
+
+</body>
+</html>
