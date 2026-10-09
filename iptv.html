@@ -15,21 +15,23 @@
         }
 
         :root {
-            --bg-dark: #090d16;
-            --bg-card: #121926;
-            --bg-card-hover: #1c273e;
-            --primary: #7c3aed;
-            --primary-glow: rgba(124, 58, 237, 0.4);
+            /* Cores inspiradas na interface do IPTV Smarters Player Lite */
+            --bg-dark: #070b12;
+            --bg-card: #0e1626;
+            --bg-card-hover: #162238;
+            --primary: #0078ff;
+            --primary-glow: rgba(0, 120, 255, 0.4);
             --orange: #ff6600;
             --orange-glow: rgba(255, 102, 0, 0.4);
-            --iptv-cyan: #06b6d4;
-            --iptv-glow: rgba(6, 182, 212, 0.4);
+            --iptv-cyan: #00d2ff;
+            --iptv-cyan-dark: #1c4e5e;
+            --iptv-glow: rgba(0, 210, 255, 0.35);
             --text-main: #ffffff;
-            --text-muted: #94a3b8;
+            --text-muted: #8e9bb0;
             --success: #10b981;
             --danger: #ef4444;
-            --border: #1e293b;
-            --border-highlight: rgba(6, 182, 212, 0.35);
+            --border: #1a263d;
+            --border-highlight: rgba(0, 210, 255, 0.4);
         }
 
         * {
@@ -58,7 +60,7 @@
 
         /* Top Bar */
         .top-bar {
-            background: rgba(9, 13, 22, 0.92);
+            background: rgba(7, 11, 18, 0.92);
             backdrop-filter: blur(12px);
             padding: 1rem;
             position: sticky;
@@ -124,12 +126,12 @@
             border: 1px solid var(--border-highlight);
             overflow: hidden;
             margin-bottom: 1.25rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
         }
 
         .product-banner {
-            height: 160px;
-            background: linear-gradient(180deg, rgba(9, 13, 22, 0.2) 0%, var(--bg-card) 100%),
+            height: 170px;
+            background: linear-gradient(180deg, rgba(7, 11, 18, 0.1) 0%, var(--bg-card) 100%),
                         url('https://static.ndmais.com.br/2025/05/iptv-smart-tv.jpg') center/cover no-repeat;
             position: relative;
             display: flex;
@@ -142,14 +144,14 @@
         }
 
         .product-hero-info h2 {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             font-weight: 800;
             color: #ffffff;
             margin-bottom: 0.3rem;
         }
 
         .product-hero-info p {
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
             line-height: 1.4;
         }
@@ -167,8 +169,21 @@
             display: none;
         }
 
-        /* Form Inputs */
-        .input-card {
+        /* Section Title Styling */
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--iptv-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Channels Preview Box */
+        .channels-card {
             background-color: var(--bg-card);
             border-radius: 16px;
             border: 1px solid var(--border);
@@ -176,13 +191,51 @@
             margin-bottom: 1.25rem;
         }
 
-        .input-card-title {
-            font-size: 0.95rem;
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .channel-item {
+            background: #09101d;
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--iptv-cyan);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 0.78rem;
+        }
+
+        .channel-item strong {
+            display: block;
+            color: #ffffff;
+            font-size: 0.82rem;
+            margin-bottom: 2px;
+        }
+
+        .channel-item span {
+            color: var(--text-muted);
+            font-size: 0.72rem;
+        }
+
+        .badge-count {
+            background: var(--iptv-cyan-dark);
+            color: var(--iptv-cyan);
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
             font-weight: 800;
-            margin-bottom: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            margin-left: auto;
+        }
+
+        /* Form Inputs */
+        .input-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 1.1rem;
+            margin-bottom: 1.25rem;
         }
 
         .form-group {
@@ -197,29 +250,24 @@
             margin-bottom: 0.35rem;
         }
 
-        .form-input, .form-select, .form-textarea {
+        .form-input, .form-select {
             width: 100%;
             padding: 11px 13px;
             background-color: var(--bg-dark);
             border: 1px solid var(--border);
             border-radius: 10px;
             color: #ffffff;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             outline: none;
             transition: border-color 0.2s;
         }
 
-        /* Package Grid Selection */
-        .packages-title {
-            font-size: 0.95rem;
-            font-weight: 800;
-            margin-bottom: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .form-input:focus, .form-select:focus {
+            border-color: var(--iptv-cyan);
         }
 
+        /* Package Grid Selection */
         .package-grid {
             display: grid;
             grid-template-columns: repeat(1, 1fr);
@@ -241,7 +289,7 @@
 
         .pkg-card.selected {
             border-color: var(--iptv-cyan);
-            background-color: rgba(6, 182, 212, 0.08);
+            background-color: rgba(0, 210, 255, 0.08);
             box-shadow: 0 0 15px var(--iptv-glow);
         }
 
@@ -278,10 +326,10 @@
 
         .btn-add-cart {
             width: 100%;
-            background: linear-gradient(135deg, var(--iptv-cyan), #0284c7);
+            background: linear-gradient(135deg, var(--iptv-cyan), #0078ff);
             color: #ffffff;
             border: none;
-            padding: 13px;
+            padding: 14px;
             border-radius: 12px;
             font-weight: 800;
             font-size: 0.88rem;
@@ -292,6 +340,7 @@
             justify-content: center;
             gap: 8px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn-buy-wa {
@@ -299,7 +348,7 @@
             background: linear-gradient(135deg, #25d366, #128c7e);
             color: #ffffff;
             border: none;
-            padding: 13px;
+            padding: 14px;
             border-radius: 12px;
             font-weight: 800;
             font-size: 0.88rem;
@@ -310,11 +359,12 @@
             justify-content: center;
             gap: 8px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn-add-cart:disabled, .btn-buy-wa:disabled {
-            background: #334155 !important;
-            color: #94a3b8 !important;
+            background: #1e293b !important;
+            color: #64748b !important;
             cursor: not-allowed;
             box-shadow: none !important;
         }
@@ -351,7 +401,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(18, 25, 38, 0.95);
+            background: rgba(14, 22, 38, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             display: flex;
@@ -360,7 +410,6 @@
             border-top: 1px solid var(--border);
             z-index: 1000;
             transform: translateZ(0);
-            will-change: transform;
         }
 
         .nav-item {
@@ -376,7 +425,7 @@
         }
 
         .nav-item.active, .nav-item:hover {
-            color: var(--orange);
+            color: var(--iptv-cyan);
         }
 
         .nav-icon-wrapper {
@@ -430,8 +479,8 @@
         <div class="product-hero">
             <div class="product-banner"></div>
             <div class="product-hero-info">
-                <h2>IPTV Premium 📡</h2>
-                <p>Mais de 20.000 canais abertos e fechados, futebol ao vivo, filmes e séries em HD, Full HD e 4K com servidor anti-travamento.</p>
+                <h2>IPTV Premium 📡 </h2>
+                <p>Acesso completo a mais de 20.000 canais ao vivo, desporto em direto, filmes e séries em HD, Full HD e 4K com servidor anti-travamento de alta estabilidade.</p>
             </div>
         </div>
 
@@ -440,9 +489,45 @@
             🔴 Produto Temporariamente Esgotado no Painel de Administração.
         </div>
 
+        <!-- O QUE ESTÁ INCLUSO (Baseado no teu aplicativo IPTV) -->
+        <div class="channels-card">
+            <div class="section-title">
+                ⚽ Canais & Conteúdos Inclusos
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">
+                A tua assinatura inclui acesso direto a todas as listas de desporto, filmes e entretenimento sem custos extra:
+            </p>
+            <div class="channels-grid">
+                <div class="channel-item">
+                    <strong>⚽ PT Desporto</strong>
+                    <span>Sport TV 1 a 7, DAZN / ELEVEN 1 a 6, BTV, Sporting TV, Eurosport 1 e 2, PFC, NBA TV, Combat.</span>
+                </div>
+                <div class="channel-item">
+                    <strong>🎬 Filmes & Séries (VOD)</strong>
+                    <span>Estreias de cinema, Netflix, HBO Max, Amazon Prime, Disney+ com legendas e dobragem em PT.</span>
+                </div>
+                <div class="channel-item">
+                    <strong>🌍 PT Brasil & África</strong>
+                    <span>Canais generalistas e de entretenimento de Portugal, Brasil, Angola, Cabo Verde e Guiné-Bissau.</span>
+                </div>
+                <div class="channel-item">
+                    <strong>📰 Notícias & Doc.</strong>
+                    <span>CNN, SIC Notícias, RTP Informação, Discovery, National Geographic, History Channel.</span>
+                </div>
+                <div class="channel-item">
+                    <strong>👶 Crianças & Música</strong>
+                    <span>Disney Channel, Panda, Cartoon Network, MTV, MCM Pop, canais de rádio e áudio.</span>
+                </div>
+                <div class="channel-item">
+                    <strong>⚡ Qualidade 4K / HD</strong>
+                    <span>Servidores dedicados com tecnologia anti-freeze para jogos sem travamento.</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Dados do Dispositivo -->
         <div class="input-card">
-            <h3 class="input-card-title">1. Dispositivo & Contacto</h3>
+            <div class="section-title">1. Dispositivo & Contacto</div>
             <div class="form-group">
                 <label for="deviceSelect">Onde vai assistir? *</label>
                 <select id="deviceSelect" class="form-select">
@@ -463,14 +548,14 @@
         </div>
 
         <!-- Seleção do Plano -->
-        <div class="packages-title">2. Escolha o Plano Desejado</div>
+        <div class="section-title">2. Escolha o Plano Desejado</div>
         <div class="package-grid" id="packageGridContainer">
-            <div class="pkg-card selected" onclick="selectPackage(this, 'IPTV Premium (1 Mês)', 5000)">
+            <div class="pkg-card selected" onclick="selectPackage(this, 'IPTV Premium (1 Mês)', 3500)">
                 <div class="pkg-info">
                     <div class="pkg-title">📺 Plano 1 Mês</div>
-                    <div class="pkg-sub">+20.000 Canais + Filmes/Séries | 30 Dias</div>
+                    <div class="pkg-sub">+19.000 Canais + Filmes/Séries | 30 Dias</div>
                 </div>
-                <div class="pkg-price">5.000 FCFA</div>
+                <div class="pkg-price">3.500 FCFA</div>
             </div>
 
             <div class="pkg-card" onclick="selectPackage(this, 'IPTV Premium (3 Meses)', 10000)">
@@ -776,7 +861,7 @@
             text += `👤 *Nome:* ${name}\n`;
             text += `📱 *Contacto WhatsApp:* ${wa}\n`;
             text += `--------------------------------\n`;
-            text += `💳 *Método:* Orange Money (955288370)\n`;
+            text += `💳 *Método:* Orange Money (957410145)\n`;
             text += `Aguardando teste/ativação da lista de canais.`;
 
             const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
