@@ -469,7 +469,7 @@
     <span style="font-size: 1.1rem;">📲</span>
     <div>
         <strong>Atenção à caixa de entrada do seu E-mail!</strong><br>
-        Ao realizar a recarga, entrarei na sua conta Konami ID. Fique atento ao seu e-mail/WhatsApp para me enviar o <u>código de autorização</u>,  <strong>o mais rápido possível para concluir a compra!</strong> 
+        Ao realizar o depôsito, entrarei na sua conta Konami ID. Fique atento ao seu e-mail/WhatsApp para me enviar o <u>código de autorização</u>,  <strong>o mais rápido possível para concluir a compra!</strong> 
     </div>
 </div>
 
@@ -486,10 +486,10 @@
 
             <!-- Alerta dinâmico dependendo da plataforma -->
             <div id="androidNotice" class="platform-notice" style="display: none;">
-                <span>⚠️</span>
+                <span>✅</span>
                 <div>
-                    <strong>Aviso Importante para Android:</strong><br>
-                    Nos pacotes de jogadores (Starter Set: Suárez / Casillas), os utilizadores de Android recebem <u>apenas os Jogadores</u>. As moedas bónus não são creditadas em sistemas Android.
+                    <strong>Modo Android Selecionado:</strong><br>
+                    Irá receber o Pacote Completo (Jogadores + Moedas Bónus associadas ao pacote).<u></u>
                 </div>
             </div>
 
@@ -590,15 +590,15 @@
                 { label: '5.700 Moedas', sub: 'Pacote Elite', price: 26000 }
             ],
             android: [
-                { label: 'Luis Suárez 🇺🇾 (Sem Moedas)', sub: 'Apenas Jogador (Sem Moedas)', price: 1200 },
-                { label: 'Starter Set: Iker Casillas 🇪🇸', sub: 'Apenas Jogadores (Sem Moedas)', price: 2200 },
-                { label: '0 Moedas', sub: 'Indisponível no Momento', price: 0 },
-                { label: '0 Moedas', sub: 'Indisponível no Momento', price: 0 },
-                { label: '0 Moedas', sub: 'Indisponível no Momento', price: 0 },
-                { label: '0 Moedas', sub: 'Indisponível no Momento', price: 0 },
-                { label: '0 Moedas', sub: 'Indisponível no Momento', price: 0 },
-                { label: '0 Moedas', sub: 'Indisponível no Momento', price: 0 },
-                { label: '0 Moedas', sub: 'Indisponível no Momento', price: 0 }
+                { label: 'Luis Suárez 🇺🇾', sub: 'Jogadore + Moedas', price: 1200 },
+                { label: 'Starter Set: Iker Casillas 🇪🇸', sub: 'Jogadores + Moedas', price: 2200 },
+                { label: '130 Moedas', sub: 'Pacote Básico de Moedas', price: 1200 },
+                { label: '300 Moedas', sub: 'Pacote de Moedas', price: 2300 },
+                { label: '550 Moedas', sub: 'Pacote de Moedas', price: 3500 },
+                { label: '750 Moedas', sub: 'Pacote Avançado', price: 4750 },
+                { label: '1.040 Moedas', sub: 'Pacote Premium', price: 6500 },
+                { label: '2.130 Moedas', sub: 'Pacote Pro', price: 12600 },
+                { label: '3.250 Moedas', sub: 'Pacote Elite', price: 18500 }
             ]
         };
 
@@ -646,7 +646,7 @@
                     selectPackage(card, pkg.label, pkg.price);
                 };
                 card.innerHTML = `
-                    <div class="pkg-title">⚽ ${pkg.label}</div>
+                    <div class="pkg-title">🌕 ${pkg.label}</div>
                     <div class="pkg-sub">${pkg.sub}</div>
                     <div class="pkg-price">${pkg.price.toLocaleString('pt-PT')} FCFA</div>
                 `;
