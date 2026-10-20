@@ -2,95 +2,505 @@
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mercado Digital - Jogos, Recargas, Streaming & Websites</title>
+    <meta name="description" content="Recargas de jogos, streaming, IPTV, ferramentas de design e criação de websites na Guiné-Bissau. Entrega rápida e pagamento via Orange Money.">
+    <meta name="theme-color" content="#090d16">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Mercado Digital - Recargas, Streaming & Websites">
+    <meta property="og:description" content="Acessos digitais instantâneos e criação de websites profissionais na Guiné-Bissau.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        #netlify-badge, .netlify-badge, a[href*="netlify.com"] { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
-        :root {
-            --bg-dark: #090d16; --bg-card: #121926; --bg-card-hover: #1c273e;
-            --primary: #7c3aed; --primary-glow: rgba(124, 58, 237, 0.4);
-            --orange: #ff6600; --orange-glow: rgba(255, 102, 0, 0.4);
-            --blue-dev: #06b6d4; --blue-dev-glow: rgba(6, 182, 212, 0.4);
-            --text-main: #ffffff; --text-muted: #94a3b8; --success: #10b981;
-            --danger: #ef4444; --border: #1e293b; --border-highlight: rgba(124, 58, 237, 0.35);
+        /* Utilitário: esconder badge do Netlify */
+        #netlify-badge, .netlify-badge, a[href*="netlify.com"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
-        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.5; padding-bottom: 100px; -webkit-font-smoothing: antialiased; }
-        a { text-decoration: none; color: inherit; transition: all 0.2s ease; }
-        .top-bar { background: rgba(9, 13, 22, 0.92); backdrop-filter: blur(12px); padding: 0.85rem 1rem; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
-        .brand-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.65rem; gap: 8px; }
-        .brand-logo-group { display: flex; align-items: center; gap: 6px; }
-        .brand-logo { font-size: 1.05rem; font-weight: 800; background: linear-gradient(135deg, #ffffff 0%, var(--orange) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .location-badge { font-size: 0.7rem; font-weight: 700; background: rgba(255, 102, 0, 0.15); color: var(--orange); padding: 3px 8px; border-radius: 20px; border: 1px solid var(--orange-glow); }
-        .user-action-area { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-        .points-badge-top { display: inline-flex; align-items: center; gap: 4px; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--success); padding: 3px 8px; border-radius: 12px; font-size: 0.72rem; font-weight: 800; }
-        .btn-auth-header { background: linear-gradient(135deg, var(--orange), #d95300); color: #ffffff; border: none; padding: 6px 12px; border-radius: 18px; font-size: 0.75rem; font-weight: 800; cursor: pointer; }
-        .user-logged-menu { display: flex; align-items: center; gap: 8px; }
-        .profile-avatar-top { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--orange); object-fit: cover; }
-        .btn-logout-header { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.4); padding: 4px 8px; border-radius: 10px; font-size: 0.68rem; font-weight: 700; cursor: pointer; }
-        .search-container { display: flex; align-items: center; background-color: var(--bg-card); padding: 0.65rem 0.85rem; border-radius: 12px; border: 1px solid var(--border); }
-        .search-container svg { width: 18px; height: 18px; fill: var(--text-muted); margin-right: 0.5rem; flex-shrink: 0; }
-        .search-container input { border: none; background: transparent; width: 100%; font-size: 0.88rem; color: #ffffff; outline: none; font-weight: 500; }
-        .hero-banner-main { margin: 1rem; border-radius: 20px; background: linear-gradient(135deg, rgba(124, 58, 237, 0.9), rgba(255, 102, 0, 0.8)); padding: 1.5rem 1.15rem; border: 1px solid var(--border-highlight); }
-        .hero-banner-main h2 { font-size: 1.25rem; font-weight: 800; color: #ffffff; margin-bottom: 0.4rem; }
-        .hero-banner-main p { font-size: 0.82rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 1rem; }
-        .hero-btn { display: inline-flex; align-items: center; gap: 8px; background-color: #ffffff; color: #000000; padding: 9px 16px; border-radius: 12px; font-weight: 800; font-size: 0.82rem; }
-        .categories { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 0 1rem 1rem 1rem; }
-        .cat-item { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; font-size: 0.68rem; color: var(--text-muted); font-weight: 600; background-color: var(--bg-card); padding: 9px 2px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1rem 0.5rem 1rem; }
-        .section-header h2 { font-size: 1.05rem; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 8px; }
-        .section-header h2::before { content: ""; display: inline-block; width: 4px; height: 16px; background-color: var(--orange); border-radius: 4px; }
-        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 1rem 1.25rem 1rem; }
-        @media (min-width: 600px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
-        .card { background-color: var(--bg-card); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative; }
-        .card-banner { height: 105px; width: 100%; background-size: cover; background-position: center; position: relative; }
-        .card-badge { position: absolute; top: 8px; right: 8px; background: rgba(0, 0, 0, 0.75); color: var(--orange); font-size: 0.62rem; font-weight: 800; padding: 3px 7px; border-radius: 8px; border: 1px solid rgba(255, 102, 0, 0.4); z-index: 2; }
-        .card-badge.esgotado-badge { background: rgba(239, 68, 68, 0.9); color: #ffffff; border-color: #ef4444; }
-        .card-info { padding: 0.75rem; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
-        .card-info h3 { font-size: 0.9rem; font-weight: 800; color: #ffffff; margin-bottom: 0.2rem; }
-        .card-info p { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.75rem; }
-        .card-action-btn { background: linear-gradient(135deg, var(--primary), #5b21b6); color: #ffffff; text-align: center; padding: 8px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: block; width: 100%; }
-        .card.is-esgotado .card-action-btn { background: #334155; color: #94a3b8; }
-        .payment-banner { margin: 0.5rem 1rem 1.5rem 1rem; background: linear-gradient(135deg, #1f140e 0%, #121826 100%); border-radius: 16px; padding: 1.1rem; border: 1px solid rgba(255, 102, 0, 0.4); display: flex; flex-direction: column; gap: 8px; }
-        .payment-header { display: flex; align-items: center; gap: 10px; }
-        .payment-icon-box { width: 38px; height: 38px; background-color: var(--orange); color: #ffffff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
-        .phone-highlight { background-color: rgba(255, 102, 0, 0.15); color: var(--orange); padding: 7px 10px; border-radius: 10px; font-weight: 800; font-size: 0.9rem; text-align: center; border: 1px dashed var(--orange); }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(18, 25, 38, 0.95); backdrop-filter: blur(12px); display: flex; justify-content: space-around; padding: 0.65rem 0; border-top: 1px solid var(--border); z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; color: var(--text-muted); font-weight: 600; gap: 0.2rem; flex: 1; text-align: center; }
-        .nav-item.active { color: var(--orange); }
-        .nav-icon-wrapper { position: relative; display: inline-flex; align-items: center; justify-content: center; }
-        .nav-icon { font-size: 1.25rem; line-height: 1; }
-        .nav-badge-count { position: absolute; top: -5px; right: -8px; background: linear-gradient(135deg, var(--orange), #ff3300); color: #ffffff; font-size: 0.62rem; font-weight: 800; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 10px; display: none; align-items: center; justify-content: center; border: 1.5px solid var(--bg-card); }
-        .whatsapp-float { position: fixed; bottom: 72px; right: 14px; width: 50px; height: 50px; background-color: #25d366; color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4); z-index: 99; }
-        .whatsapp-float svg { width: 26px; height: 26px; fill: #ffffff; }
+
+        /* Variáveis (cores) */
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #121926;
+            --bg-card-hover: #1c273e;
+            --primary: #7c3aed;
+            --primary-glow: rgba(124, 58, 237, 0.4);
+            --orange: #ff6600;
+            --orange-glow: rgba(255, 102, 0, 0.4);
+            --blue-dev: #06b6d4;
+            --blue-dev-glow: rgba(6, 182, 212, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #1e293b;
+            --border-highlight: rgba(124, 58, 237, 0.35);
+        }
+
+        /* Reset e base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        /* Cabeçalho e pesquisa */
+        .top-bar {
+            background: rgba(9, 13, 22, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 0.85rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+        .brand-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.65rem;
+            gap: 8px;
+        }
+        .brand-logo-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .brand-logo {
+            font-size: 1.05rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, var(--orange) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .location-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: rgba(255, 102, 0, 0.15);
+            color: var(--orange);
+            padding: 3px 8px;
+            border-radius: 20px;
+            border: 1px solid var(--orange-glow);
+        }
+        .user-action-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .points-badge-top {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+        .btn-auth-header {
+            background: linear-gradient(135deg, var(--orange), #d95300);
+            color: #ffffff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 18px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .user-logged-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .profile-avatar-top {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid var(--orange);
+            object-fit: cover;
+        }
+        .btn-logout-header {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-card);
+            padding: 0.65rem 0.85rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .search-container svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-muted);
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+        .search-container input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-size: 0.88rem;
+            color: #ffffff;
+            outline: none;
+            font-weight: 500;
+        }
+
+        /* Hero e categorias */
+        .hero-banner-main {
+            margin: 1rem;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.9), rgba(255, 102, 0, 0.8));
+            padding: 1.5rem 1.15rem;
+            border: 1px solid var(--border-highlight);
+        }
+        .hero-banner-main h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.4rem;
+        }
+        .hero-banner-main p {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+        }
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #ffffff;
+            color: #000000;
+            padding: 9px 16px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.82rem;
+        }
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            padding: 0 1rem 1rem 1rem;
+        }
+        .cat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            background-color: var(--bg-card);
+            padding: 9px 2px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        /* Secções e cartões de produto */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.85rem 1rem 0.5rem 1rem;
+        }
+        .section-header h2 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-header h2::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 16px;
+            background-color: var(--orange);
+            border-radius: 4px;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 0 1rem 1.25rem 1rem;
+        }
+        @media (min-width: 600px) {
+            .product-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .card-banner {
+            height: 105px;
+            width: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .card-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.75);
+            color: var(--orange);
+            font-size: 0.62rem;
+            font-weight: 800;
+            padding: 3px 7px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 102, 0, 0.4);
+            z-index: 2;
+        }
+        .card-badge.esgotado-badge {
+            background: rgba(239, 68, 68, 0.9);
+            color: #ffffff;
+            border-color: #ef4444;
+        }
+        .card-info {
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+        .card-info h3 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.2rem;
+        }
+        .card-info p {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+        .card-action-btn {
+            background: linear-gradient(135deg, var(--primary), #5b21b6);
+            color: #ffffff;
+            text-align: center;
+            padding: 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: block;
+            width: 100%;
+        }
+        .card.is-esgotado .card-action-btn {
+            background: #334155;
+            color: #94a3b8;
+        }
+
+        /* Pagamento */
+        .payment-banner {
+            margin: 0.5rem 1rem 1.5rem 1rem;
+            background: linear-gradient(135deg, #1f140e 0%, #121826 100%);
+            border-radius: 16px;
+            padding: 1.1rem;
+            border: 1px solid rgba(255, 102, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .payment-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .payment-icon-box {
+            width: 38px;
+            height: 38px;
+            background-color: var(--orange);
+            color: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+        .phone-highlight {
+            background-color: rgba(255, 102, 0, 0.15);
+            color: var(--orange);
+            padding: 7px 10px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-align: center;
+            border: 1px dashed var(--orange);
+        }
+
+        /* Navegação inferior e botão WhatsApp */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(18, 25, 38, 0.95);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.65rem 0 calc(0.65rem + env(safe-area-inset-bottom, 0px));
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            gap: 0.2rem;
+            flex: 1;
+            text-align: center;
+        }
+        .nav-item.active {
+            color: var(--orange);
+        }
+        .nav-icon-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-icon {
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+        .nav-badge-count {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: linear-gradient(135deg, var(--orange), #ff3300);
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid var(--bg-card);
+        }
+        .whatsapp-float {
+            position: fixed;
+            bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+            right: 14px;
+            width: 50px;
+            height: 50px;
+            background-color: #25d366;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
+            z-index: 99;
+        }
+        .whatsapp-float svg {
+            width: 26px;
+            height: 26px;
+            fill: #ffffff;
+        }
+
+        /* Estados iniciais (o JavaScript do Firebase mostra/esconde estes elementos) */
+        #topPointsContainer, #userTopBar { display: none; }
+
+        /* Componentes que antes usavam estilos inline */
+        .btn-auth-header { display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; }
+        .btn-logout-header { display: flex; align-items: center; justify-content: center; padding: 6px; border-radius: 50%; width: 32px; height: 32px; }
+        .phone-highlight { display: block; }
+        button, input { font: inherit; }
+        main { max-width: 1100px; margin: 0 auto; }
+        .card-banner { background-color: var(--bg-card-hover); background-repeat: no-repeat; }
+        .empty-state { text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 2rem 1rem; }
+        .empty-state[hidden] { display: none; }
+        .empty-state a { color: var(--orange); font-weight: 700; }
+
+        /* Interação e acessibilidade */
+        :focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+        .card, .cat-item { transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease; }
+        .card:active, .cat-item:active { transform: scale(0.98); }
+        @media (hover: hover) {
+            .card:hover { transform: translateY(-3px); border-color: var(--border-highlight); background-color: var(--bg-card-hover); }
+            .cat-item:hover { border-color: var(--border-highlight); color: #ffffff; }
+            .hero-btn:hover, .btn-auth-header:hover { filter: brightness(0.92); }
+        }
+        @media (min-width: 900px) {
+            .product-grid { gap: 16px; }
+            .card-banner { height: 140px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            * { transition: none !important; }
+        }
     </style>
 </head>
 <body>
-    <div class="top-bar">
+    <header class="top-bar">
         <div class="brand-header">
             <div class="brand-logo-group">
                 <span class="brand-logo">MERCADO DIGITAL</span>
                 <span class="location-badge">GW</span>
-                <a href="conta.html" id="topPointsContainer" class="points-badge-top" style="display: none;"><span id="topUserPoints">0 Pts</span></a>
+                <a href="conta.html" id="topPointsContainer" class="points-badge-top" aria-label="Os meus pontos"><span id="topUserPoints">0 Pts</span></a>
             </div>
             <div class="user-action-area">
                 <div id="guestTopBar">
-                    <button class="btn-auth-header" onclick="window.location.href='conta.html'" title="Entrar na Conta" style="display: flex; align-items: center; gap: 4px; padding: 6px 10px;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <a href="conta.html" class="btn-auth-header" aria-label="Entrar na conta">
+                        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
                             <polyline points="10 17 15 12 10 7"></polyline>
                             <line x1="15" y1="12" x2="3" y2="12"></line>
                         </svg>
-                    </button>
+                    </a>
                 </div>
 
-                <div id="userTopBar" class="user-logged-menu" style="display: none;">
-                    <a href="conta.html"><img src="https://ui-avatars.com/api/?name=User&background=ff6600&color=fff" id="topAvatarImg" class="profile-avatar-top"></a>
-                    <button class="btn-logout-header" onclick="handleLogout()" title="Sair da Conta" style="display: flex; align-items: center; justify-content: center; padding: 6px; border-radius: 50%; width: 32px; height: 32px;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <div id="userTopBar" class="user-logged-menu">
+                    <a href="conta.html"><img src="https://ui-avatars.com/api/?name=User&background=ff6600&color=fff" id="topAvatarImg" class="profile-avatar-top" alt="O meu perfil" width="30" height="30"></a>
+                    <button type="button" class="btn-logout-header" onclick="handleLogout()" aria-label="Sair da conta">
+                        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                             <polyline points="16 17 21 12 16 7"></polyline>
                             <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -100,23 +510,24 @@
             </div>
         </div>
         <div class="search-container">
-            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            <input type="text" id="searchInput" onkeyup="filtrarProdutos()" placeholder="Pesquisar PUBG, Duolingo, Netflix, Criar Site...">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="search" id="searchInput" aria-label="Pesquisar produtos" autocomplete="off" placeholder="Pesquisar PUBG, Duolingo, Netflix, Criar Site...">
         </div>
-    </div>
+    </header>
 
+    <main>
     <div class="hero-banner-main">
-        <h2>Recargas, Streaming & Websites</h2>
+        <h1>Recargas, Streaming & Websites</h1>
         <p>Acessos digitais instantâneos e criação de websites profissionais na Guiné-Bissau.</p>
-        <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Vim%20pelo%20site." target="_blank" class="hero-btn">💬 ATENDIMENTO WHATSAPP</a>
+        <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Vim%20pelo%20site." target="_blank" rel="noopener noreferrer" class="hero-btn">💬 ATENDIMENTO WHATSAPP</a>
     </div>
 
     <div class="categories">
-        <a href="#jogos-section" class="cat-item"><span class="cat-icon">🎮</span><span>Jogos</span></a>
-        <a href="#streaming-section" class="cat-item"><span class="cat-icon">🎬</span><span>Streaming</span></a>
-        <a href="#websites-section" class="cat-item"><span class="cat-icon">💻</span><span>Websites</span></a>
-        <a href="#edicao-section" class="cat-item"><span class="cat-icon">🎨</span><span>Edição</span></a>
-        <a href="https://wa.me/245955288370" target="_blank" class="cat-item"><span class="cat-icon">🎧</span><span>Suporte</span></a>
+        <a href="#jogos-section" class="cat-item"><span class="cat-icon" aria-hidden="true">🎮</span><span>Jogos</span></a>
+        <a href="#streaming-section" class="cat-item"><span class="cat-icon" aria-hidden="true">🎬</span><span>Streaming</span></a>
+        <a href="#websites-section" class="cat-item"><span class="cat-icon" aria-hidden="true">💻</span><span>Websites</span></a>
+        <a href="#edicao-section" class="cat-item"><span class="cat-icon" aria-hidden="true">🎨</span><span>Edição</span></a>
+        <a href="https://wa.me/245955288370" target="_blank" rel="noopener noreferrer" class="cat-item"><span class="cat-icon" aria-hidden="true">🎧</span><span>Suporte</span></a>
     </div>
 
     <div class="section-header" id="jogos-section"><h2>Jogos e Moedas Digitais</h2></div>
@@ -191,24 +602,27 @@
         </a>
     </div>
 
+    <p id="emptyState" class="empty-state" hidden>Nenhum produto encontrado. <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Procuro%20um%20produto." target="_blank" rel="noopener noreferrer">Pergunte-nos no WhatsApp</a></p>
+
     <div class="payment-banner">
         <div class="payment-header">
             <div class="payment-icon-box">OM</div>
             <div><h3>Pagamento via Orange Money</h3><p>Forma oficial e rápida na Guiné-Bissau. 🇬🇼</p></div>
         </div>
-        <div class="phone-highlight">📱+(245) 955288370</div>
+        <a href="tel:+245955288370" class="phone-highlight" aria-label="Ligar para +245 955 288 370">📱 +245 955 288 370</a>
     </div>
+    </main>
 
-    <a href="https://wa.me/245955288370" target="_blank" class="whatsapp-float">
-        <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.887 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+    <a href="https://wa.me/245955288370" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Falar no WhatsApp">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.887 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
     </a>
 
-    <div class="bottom-nav">
-        <a href="index.html" class="nav-item active"><div class="nav-icon-wrapper"><span class="nav-icon">🏠</span></div><span>Loja</span></a>
-        <a href="pedidos.html" class="nav-item"><div class="nav-icon-wrapper"><span class="nav-icon">📦</span><span class="nav-badge-count" id="pedidosBadge">0</span></div><span>Pedidos</span></a>
-        <a href="carrinho.html" class="nav-item"><div class="nav-icon-wrapper"><span class="nav-icon">🛒</span><span class="nav-badge-count" id="cartBadge">0</span></div><span>Carrinho</span></a>
-        <a href="conta.html" class="nav-item"><div class="nav-icon-wrapper"><span class="nav-icon">👤</span></div><span>Conta</span></a>
-    </div>
+    <nav class="bottom-nav" aria-label="Navegação principal">
+        <a href="index.html" class="nav-item active" aria-current="page"><div class="nav-icon-wrapper"><span class="nav-icon" aria-hidden="true">🏠</span></div><span>Loja</span></a>
+        <a href="pedidos.html" class="nav-item"><div class="nav-icon-wrapper"><span class="nav-icon" aria-hidden="true">📦</span><span class="nav-badge-count" id="pedidosBadge">0</span></div><span>Pedidos</span></a>
+        <a href="carrinho.html" class="nav-item"><div class="nav-icon-wrapper"><span class="nav-icon" aria-hidden="true">🛒</span><span class="nav-badge-count" id="cartBadge">0</span></div><span>Carrinho</span></a>
+        <a href="conta.html" class="nav-item"><div class="nav-icon-wrapper"><span class="nav-icon" aria-hidden="true">👤</span></div><span>Conta</span></a>
+    </nav>
 
     <script>
         function atualizarContadoresNav() {
@@ -229,14 +643,33 @@
                 }
             } catch (e) { console.error(e); }
         }
-        function filtrarProdutos() {
-            const input = document.getElementById('searchInput').value.toLowerCase();
-            document.querySelectorAll('.product-card').forEach(card => {
-                const kw = (card.getAttribute('data-title') || '').toLowerCase();
-                card.style.display = kw.includes(input) ? 'flex' : 'none';
-            });
+        function normalizar(txt) {
+            return (txt || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
         }
-        window.addEventListener('DOMContentLoaded', atualizarContadoresNav);
+        function filtrarProdutos() {
+            const termo = normalizar(document.getElementById('searchInput').value.trim());
+            let totalVisiveis = 0;
+            document.querySelectorAll('.section-header').forEach(header => {
+                const grid = header.nextElementSibling;
+                if (!grid || !grid.classList.contains('product-grid')) return;
+                let visiveis = 0;
+                grid.querySelectorAll('.product-card').forEach(card => {
+                    const ok = normalizar(card.getAttribute('data-title')).includes(termo);
+                    card.style.display = ok ? 'flex' : 'none';
+                    if (ok) visiveis++;
+                });
+                header.style.display = visiveis ? '' : 'none';
+                grid.style.display = visiveis ? '' : 'none';
+                totalVisiveis += visiveis;
+            });
+            const vazio = document.getElementById('emptyState');
+            if (vazio) vazio.hidden = totalVisiveis > 0;
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            atualizarContadoresNav();
+            document.getElementById('searchInput')?.addEventListener('input', filtrarProdutos);
+        });
+        window.addEventListener('pageshow', atualizarContadoresNav);
     </script>
 
     <!-- Script do Firebase: Carrega produtos dinamicamente e atualiza Stock -->
