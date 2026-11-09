@@ -507,12 +507,12 @@
 
     <!-- Top Bar -->
     <div class="top-bar">
-        <a href="index.html" class="back-btn">
+        <a href="bemvindo.html" class="back-btn">
             ‹ Voltar
         </a>
         <h1 class="page-title">Prime Video Premium</h1>
         <a href="carrinho.html" class="icon-cart-link">
-            🛒
+            
             <span class="cart-badge-count" id="topCartBadge">0</span>
         </a>
     </div>
@@ -558,36 +558,34 @@
                 <div class="pkg-price">1.500 FCFA</div>
             </div>
 
-            <div class="pkg-card" onclick="selectPackage(this, 'Prime Video (3 Meses)', 4000)">
+            <div class="pkg-card" onclick="selectPackage(this, 'Prime Video (3 Meses)', 3000)">
                 <div class="pkg-info">
                     <div class="pkg-title">🍿 Acesso 3 Meses</div>
                     <div class="pkg-sub">Duração estendida com desconto | 90 Dias</div>
                 </div>
-                <div class="pkg-price">4.000 FCFA</div>
+                <div class="pkg-price">3.000 FCFA</div>
             </div>
 
-            <div class="pkg-card" onclick="selectPackage(this, 'Prime Video (6 Meses)', 7500)">
+            <div class="pkg-card" onclick="selectPackage(this, 'Prime Video (6 Meses)', 5750)">
                 <div class="pkg-info">
                     <div class="pkg-title">🍿 Acesso 6 Meses</div>
                     <div class="pkg-sub">Plano semestral económico | 180 Dias</div>
                 </div>
-                <div class="pkg-price">7.500 FCFA</div>
+                <div class="pkg-price">5.750 FCFA</div>
             </div>
 
-            <div class="pkg-card" onclick="selectPackage(this, 'Prime Video (1 Ano)', 12000)">
+            <div class="pkg-card" onclick="selectPackage(this, 'Prime Video (1 Ano)', 11000)">
                 <div class="pkg-info">
-                    <div class="pkg-title">👑 Acesso 1 Ano (Anual)</div>
+                    <div class="pkg-title">👑 Acesso 1 Ano</div>
                     <div class="pkg-sub">Acesso contínuo sem interrupções | 365 Dias</div>
                 </div>
-                <div class="pkg-price">12.000 FCFA</div>
+                <div class="pkg-price">11.000 FCFA</div>
             </div>
         </div>
 
         <!-- Botões de Ação -->
         <div class="action-container">
-            <button id="btnAddCart" class="btn-add-cart" onclick="addToCart()">
-                🛒 Adicionar ao Carrinho
-            </button>
+            
             <button id="btnBuyWA" class="btn-buy-wa" onclick="buyDirectWhatsApp()">
                 💬 Comprar Directo no WhatsApp
             </button>
@@ -598,30 +596,7 @@
     <div id="toast" class="toast">Item adicionado ao carrinho!</div>
 
     <!-- Navegação Inferior -->
-    <div class="bottom-nav">
-        <a href="index.html" class="nav-item">
-            <div class="nav-icon-wrapper"><span class="nav-icon">🏠</span></div>
-            <span>Loja</span>
-        </a>
-        <a href="pedidos.html" class="nav-item">
-            <div class="nav-icon-wrapper">
-                <span class="nav-icon">📦</span>
-                <span class="nav-badge-count" id="pedidosBadge">0</span>
-            </div>
-            <span>Pedidos</span>
-        </a>
-        <a href="carrinho.html" class="nav-item">
-            <div class="nav-icon-wrapper">
-                <span class="nav-icon">🛒</span>
-                <span class="nav-badge-count" id="cartBadge">0</span>
-            </div>
-            <span>Carrinho</span>
-        </a>
-        <a href="conta.html" class="nav-item">
-            <div class="nav-icon-wrapper"><span class="nav-icon">👤</span></div>
-            <span>Conta</span>
-        </a>
-    </div>
+   
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -640,6 +615,27 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // CONFIGURAÇÃO DO BOT DO TELEGRAM
+        const TELEGRAM_TOKEN = "9013133489:AAEyN5PNIbs9GNrGXbA00UdW_m9D7XZf-zw";
+        const TELEGRAM_CHAT_ID = "8881068067";
+
+        async function notificarTelegram(texto) {
+            try {
+                const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+                await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: texto,
+                        parse_mode: "Markdown"
+                    })
+                });
+            } catch (e) {
+                console.error("Erro ao enviar notificação para o Telegram:", e);
+            }
+        }
 
         let selectedLabel = 'Prime Video (1 Mês)';
         let selectedPrice = 1500;
@@ -792,6 +788,10 @@
             cart.push(newItem);
             localStorage.setItem('bissau_cart', JSON.stringify(cart));
 
+            // Notificação ao adicionar ao carrinho
+            const msgTelegram = `🛒 *ITEM ADICIONADO AO CARRINHO*\n\n👤 *Cliente:* ${name}\n📱 *WhatsApp:* ${wa}\n📦 *Produto:* ${selectedLabel}\n💰 *Valor:* ${selectedPrice.toLocaleString()} FCFA`;
+            notificarTelegram(msgTelegram);
+
             updateNavBadges();
             showToast("✅ Prime Video adicionado ao carrinho!");
         };
@@ -851,6 +851,19 @@
                 console.error("Erro ao salvar no Firestore:", err);
             }
 
+            // NOTIFICAÇÃO INSTANTÂNEA NO TELEGRAM
+            let msgTelegram = `🚨 *NOVO PEDIDO NO SITE!* 🎬\n`;
+            msgTelegram += `--------------------------------\n`;
+            msgTelegram += `🆔 *Pedido:* ${orderIdCode}\n`;
+            msgTelegram += `👤 *Cliente:* ${name}\n`;
+            msgTelegram += `📱 *WhatsApp:* ${wa}\n`;
+            msgTelegram += `📦 *Plano:* ${selectedLabel}\n`;
+            msgTelegram += `💰 *Valor:* ${selectedPrice.toLocaleString()} FCFA\n`;
+            msgTelegram += `--------------------------------\n`;
+            msgTelegram += `💳 *Método:* Orange Money (955288370)`;
+
+            notificarTelegram(msgTelegram);
+
             let text = `🎬 *PEDIDO DIRETO - PRIME VIDEO*\n`;
             text += `--------------------------------\n`;
             text += `📦 *Plano:* ${selectedLabel}\n`;
@@ -858,7 +871,7 @@
             text += `👤 *Nome:* ${name}\n`;
             text += `📱 *Contacto WhatsApp:* ${wa}\n`;
             text += `--------------------------------\n`;
-            text += `💳 *Método:* Orange Money (957973799)\n`;
+            text += `💳 *Método:* Orange Money (955288370)\n`;
             text += `Aguardando confirmação para ativação do acesso.`;
 
             const waUrl = `https://wa.me/245955288370?text=${encodeURIComponent(text)}`;
