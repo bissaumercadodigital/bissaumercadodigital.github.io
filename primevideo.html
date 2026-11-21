@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#050811">
     <title>Prime Video - Mercado Digital Bissau</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,25 +44,48 @@
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
+        html { scroll-behavior: smooth; }
+
         body {
             background-color: var(--bg-dark);
-            background-image: 
+            background-image:
                 radial-gradient(circle at 10% 20%, rgba(0, 216, 255, 0.12) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(255, 102, 0, 0.1) 0%, transparent 40%);
             color: var(--text-main);
             line-height: 1.5;
-            padding-bottom: 100px;
+            padding-bottom: calc(100px + env(safe-area-inset-bottom));
+            overflow-x: hidden;
+        }
+
+        /* Luzes flutuantes de fundo */
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            will-change: transform;
+        }
+        body::before { top: -100px; left: -110px; background: var(--prime-blue); opacity: 0.22; animation: floatOrb 14s ease-in-out infinite; }
+        body::after { bottom: -120px; right: -120px; background: var(--orange); opacity: 0.16; animation: floatOrb 18s ease-in-out infinite reverse; }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, 30px) scale(1.15); }
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes pulseGlow {
-            0% { box-shadow: 0 0 10px var(--prime-glow); }
-            50% { box-shadow: 0 0 25px var(--prime-glow); }
-            100% { box-shadow: 0 0 10px var(--prime-glow); }
+            0% { box-shadow: 0 10px 30px rgba(0, 216, 255, 0.2); }
+            50% { box-shadow: 0 10px 40px rgba(0, 216, 255, 0.45); }
+            100% { box-shadow: 0 10px 30px rgba(0, 216, 255, 0.2); }
         }
 
         @keyframes pulseWa {
@@ -70,6 +94,28 @@
             100% { box-shadow: 0 0 12px rgba(0, 255, 136, 0.4); }
         }
 
+        @keyframes shine {
+            0% { transform: translateX(-130%) skewX(-20deg); }
+            55%, 100% { transform: translateX(230%) skewX(-20deg); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-7px); }
+            40% { transform: translateX(7px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.4); }
+            70% { transform: scale(1.25); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
         a {
             text-decoration: none;
             color: inherit;
@@ -77,18 +123,24 @@
 
         /* Top Bar Ultra Neon */
         .top-bar {
-            background: rgba(5, 8, 17, 0.94);
+            background: rgba(5, 8, 17, 0.88);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            padding: 1rem;
+            padding: 0.85rem 1rem;
             position: sticky;
             top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--border);
-            box-shadow: 0 4px 20px rgba(0, 216, 255, 0.15);
+            box-shadow: 0 4px 20px rgba(0, 216, 255, 0.12);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            transition: box-shadow 0.3s, background 0.3s;
+        }
+
+        .top-bar.scrolled {
+            background: rgba(5, 8, 17, 0.97);
+            box-shadow: 0 6px 28px rgba(0, 216, 255, 0.28);
         }
 
         .back-btn {
@@ -106,24 +158,33 @@
         }
 
         .page-title {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 900;
-            color: #ffffff;
             letter-spacing: 0.5px;
-            text-shadow: 0 0 12px var(--prime-glow);
+            background: linear-gradient(90deg, #ffffff, var(--prime-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 10px var(--prime-glow));
         }
 
         .icon-cart-link {
             position: relative;
-            font-size: 1.35rem;
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(0, 216, 255, 0.08);
+            border: 1px solid rgba(0, 216, 255, 0.25);
         }
 
         .cart-badge-count {
             position: absolute;
-            top: -6px;
-            right: -8px;
+            top: -7px;
+            right: -7px;
             background: linear-gradient(135deg, var(--orange-neon), #ff0055);
             color: #ffffff;
             font-size: 0.65rem;
@@ -137,16 +198,31 @@
             justify-content: center;
             box-shadow: 0 0 10px var(--orange-glow);
             border: 1px solid #ffffff;
+            animation: pop 0.4s ease-out;
         }
 
         .container {
             padding: 1rem;
             max-width: 600px;
             margin: 0 auto;
-            animation: fadeIn 0.3s ease-out;
+            position: relative;
+            z-index: 1;
         }
 
+        /* Entrada escalonada das secções */
+        .container > * { animation: fadeIn 0.5s ease-out backwards; }
+        .container > :nth-child(3) { animation-delay: 0.08s; }
+        .container > :nth-child(4) { animation-delay: 0.14s; }
+        .container > :nth-child(5) { animation-delay: 0.2s; }
+        .container > :nth-child(7) { animation-delay: 0.26s; }
+        .container > :nth-child(8) { animation-delay: 0.32s; }
+        .container > :nth-child(9) { animation-delay: 0.38s; }
+
         /* Hero Product Card Neon */
+        .container > .product-hero {
+            animation: fadeIn 0.5s ease-out backwards, pulseGlow 4s ease-in-out 0.6s infinite;
+        }
+
         .product-hero {
             background-color: var(--bg-card);
             border-radius: 22px;
@@ -158,13 +234,27 @@
         }
 
         .product-banner {
-            height: 170px;
-            background: linear-gradient(180deg, rgba(5, 8, 17, 0.1) 0%, var(--bg-card) 100%),
-                        url('https://m.media-amazon.com/images/G/01/primevideo/seo/primevideo-seo-logo.png') center/cover no-repeat;
+            height: 180px;
+            background:
+                linear-gradient(180deg, rgba(5, 8, 17, 0.1) 0%, var(--bg-card) 100%),
+                url('https://m.media-amazon.com/images/G/01/primevideo/seo/primevideo-seo-logo.png') center/cover no-repeat,
+                linear-gradient(135deg, #0b1e3f, #1a0b3f);
             position: relative;
             display: flex;
             align-items: flex-end;
             padding: 1rem;
+            overflow: hidden;
+        }
+
+        .product-banner::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 35%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+            animation: shine 5s infinite;
+            pointer-events: none;
         }
 
         .hero-badge {
@@ -179,14 +269,34 @@
             border-radius: 12px;
             box-shadow: 0 0 12px var(--prime-glow);
             text-transform: uppercase;
+            z-index: 2;
         }
+
+        /* Etiqueta de stock em tempo real */
+        .stock-pill {
+            position: relative;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            padding: 4px 10px;
+            border-radius: 12px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        .stock-pill:empty { display: none; }
+        .stock-pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: blink 1.4s infinite; }
+        .stock-pill.in { background: rgba(0, 255, 136, 0.15); color: var(--success); border: 1px solid rgba(0, 255, 136, 0.4); }
+        .stock-pill.out { background: rgba(255, 0, 85, 0.18); color: #ff3377; border: 1px solid rgba(255, 0, 85, 0.45); }
 
         .product-hero-info {
             padding: 1.25rem;
         }
 
         .product-hero-info h2 {
-            font-size: 1.35rem;
+            font-size: 1.4rem;
             font-weight: 900;
             color: #ffffff;
             margin-bottom: 0.35rem;
@@ -196,8 +306,27 @@
         .product-hero-info p {
             font-size: 0.83rem;
             color: var(--text-muted);
-            line-height: 1.45;
+            line-height: 1.5;
             font-weight: 500;
+        }
+
+        .product-hero-info p b { color: var(--prime-blue); }
+
+        .hero-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 0.9rem;
+        }
+
+        .hero-chips span {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #e2e8f0;
+            background: rgba(0, 216, 255, 0.08);
+            border: 1px solid rgba(0, 216, 255, 0.25);
+            padding: 5px 10px;
+            border-radius: 20px;
         }
 
         .stock-warning {
@@ -214,7 +343,7 @@
             box-shadow: 0 0 15px rgba(255, 0, 85, 0.3);
         }
 
-        /* Form Inputs Víseis */
+        /* Form Inputs */
         .input-card {
             background-color: var(--bg-card);
             border-radius: 18px;
@@ -239,12 +368,26 @@
             margin-bottom: 0.95rem;
         }
 
+        .form-group:last-child { margin-bottom: 0; }
+
         .form-group label {
             display: block;
             font-size: 0.8rem;
             font-weight: 800;
             color: #d1d5db;
             margin-bottom: 0.4rem;
+        }
+
+        .input-wrap { position: relative; }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            pointer-events: none;
+            opacity: 0.85;
         }
 
         .form-input, .form-select, .form-textarea {
@@ -260,13 +403,23 @@
             transition: all 0.25s ease;
         }
 
+        .input-wrap .form-input { padding-left: 42px; }
+
+        .form-input:not(:placeholder-shown) { border-color: rgba(0, 255, 136, 0.4); }
+
         .form-input:focus, .form-select:focus {
             border-color: var(--prime-blue);
             box-shadow: 0 0 12px var(--prime-glow);
             background-color: #080d1a;
         }
 
-        /* Package Grid Selection Neon */
+        .form-input.shake {
+            animation: shake 0.4s;
+            border-color: var(--danger) !important;
+            box-shadow: 0 0 12px rgba(255, 0, 85, 0.5);
+        }
+
+        /* Package Grid Selection */
         .packages-title {
             font-size: 1rem;
             font-weight: 800;
@@ -288,14 +441,55 @@
             background-color: var(--bg-card);
             border: 2px solid var(--border);
             border-radius: 16px;
-            padding: 1.15rem;
+            padding: 1.1rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 12px;
             cursor: pointer;
             transition: all 0.25s ease;
             position: relative;
             overflow: hidden;
+            animation: fadeIn 0.45s ease-out backwards;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .pkg-card:nth-child(2) { animation-delay: 0.06s; }
+        .pkg-card:nth-child(3) { animation-delay: 0.12s; }
+        .pkg-card:nth-child(4) { animation-delay: 0.18s; }
+        .pkg-card:nth-child(5) { animation-delay: 0.24s; }
+
+        /* Indicador de seleção (bolinha) */
+        .pkg-card::before {
+            content: '';
+            order: -1;
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid #34476b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 900;
+            color: #000000;
+            transition: all 0.25s ease;
+        }
+
+        .pkg-card.selected::before {
+            content: '✓';
+            background: var(--prime-blue);
+            border-color: var(--prime-blue);
+            box-shadow: 0 0 12px var(--prime-glow);
+        }
+
+        @media (hover: hover) {
+            .pkg-card:hover {
+                border-color: rgba(0, 216, 255, 0.55);
+                background-color: var(--bg-card-hover);
+                transform: translateY(-2px);
+            }
         }
 
         .pkg-card.selected {
@@ -305,36 +499,29 @@
             transform: scale(1.01);
         }
 
-        .pkg-card.selected::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 5px;
-            height: 100%;
-            background: var(--prime-blue);
-            box-shadow: 0 0 10px var(--prime-blue);
-        }
+        .pkg-card:active { transform: scale(0.985); }
 
         .pkg-info {
             text-align: left;
+            flex: 1;
+            min-width: 0;
         }
 
         .pkg-title {
-            font-size: 1.05rem;
+            font-size: 1.02rem;
             font-weight: 900;
             color: #ffffff;
         }
 
         .pkg-sub {
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             color: var(--text-muted);
             margin-top: 0.25rem;
             font-weight: 600;
         }
 
         .pkg-price {
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             font-weight: 900;
             color: var(--prime-blue);
             white-space: nowrap;
@@ -343,6 +530,7 @@
             padding: 6px 12px;
             border-radius: 10px;
             border: 1px solid rgba(0, 216, 255, 0.3);
+            transition: all 0.25s;
         }
 
         .pkg-card.selected .pkg-price {
@@ -352,12 +540,47 @@
             box-shadow: 0 0 12px var(--prime-glow);
         }
 
-        /* Action Buttons Vibrantes */
+        /* Resumo do plano escolhido */
+        .order-summary {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: linear-gradient(135deg, rgba(0, 216, 255, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px dashed rgba(0, 216, 255, 0.45);
+            border-radius: 14px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 1rem;
+        }
+        .order-summary.show { display: flex; }
+        .os-label { display: block; font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .order-summary strong { font-size: 0.92rem; font-weight: 900; color: #ffffff; }
+        .os-price { font-size: 1.05rem; font-weight: 900; color: var(--prime-blue); white-space: nowrap; text-shadow: 0 0 10px var(--prime-glow); }
+        .os-price.bump { animation: pop 0.35s ease-out; }
+
+        /* Action Buttons */
         .action-container {
             display: flex;
             flex-direction: column;
             gap: 12px;
             margin-bottom: 1.25rem;
+        }
+
+        .btn-add-cart, .btn-buy-wa {
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-add-cart::after, .btn-buy-wa::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shine 3.5s infinite;
+            pointer-events: none;
         }
 
         .btn-add-cart {
@@ -385,7 +608,7 @@
             background: linear-gradient(135deg, #00ff88 0%, #00b359 100%);
             color: #000000;
             border: none;
-            padding: 15px;
+            padding: 16px;
             border-radius: 14px;
             font-weight: 900;
             font-size: 0.95rem;
@@ -400,6 +623,10 @@
             transition: all 0.2s;
         }
 
+        @media (hover: hover) {
+            .btn-add-cart:not(:disabled):hover, .btn-buy-wa:not(:disabled):hover { transform: translateY(-2px); }
+        }
+
         .btn-add-cart:disabled, .btn-buy-wa:disabled {
             background: #2d3748 !important;
             color: #718096 !important;
@@ -408,8 +635,64 @@
             animation: none !important;
         }
 
+        .btn-add-cart:disabled::after, .btn-buy-wa:disabled::after { display: none; }
+
         .btn-add-cart:active, .btn-buy-wa:active {
             transform: scale(0.97);
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.45);
+            width: 40px; height: 40px;
+            margin: -20px 0 0 -20px;
+            transform: scale(0);
+            animation: ripple 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        /* Como funciona */
+        .steps-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 1.1rem 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 0.9rem;
+        }
+        .step:last-child { margin-bottom: 0; }
+
+        .step-num {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 900;
+            color: #000000;
+            background: linear-gradient(135deg, var(--prime-blue), var(--primary));
+            box-shadow: 0 0 10px var(--prime-glow);
+        }
+
+        .step p { font-size: 0.82rem; font-weight: 600; color: #cbd5e1; line-height: 1.4; padding-top: 3px; }
+        .step p b { color: #ffffff; }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 0.5rem;
         }
 
         .toast {
@@ -427,6 +710,7 @@
             opacity: 0;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 1000;
+            white-space: nowrap;
         }
 
         .toast.show {
@@ -434,7 +718,7 @@
             opacity: 1;
         }
 
-        /* Navigation Inferior Néon */
+        /* Navegação Inferior Néon */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -501,18 +785,23 @@
             box-shadow: 0 0 10px var(--orange-glow);
             border: 1.5px solid var(--bg-card);
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+        }
     </style>
 </head>
 <body>
 
     <!-- Top Bar -->
-    <div class="top-bar">
+    <div class="top-bar" id="topBar">
         <a href="bemvindo.html" class="back-btn">
             ‹ Voltar
         </a>
         <h1 class="page-title">Prime Video Premium</h1>
-        <a href="carrinho.html" class="icon-cart-link">
-            
+        <a href="tel:+245955288370" class="btn-call">
+                📞
+                </a>
             <span class="cart-badge-count" id="topCartBadge">0</span>
         </a>
     </div>
@@ -522,10 +811,17 @@
         <div class="product-hero">
             <div class="product-banner">
                 <span class="hero-badge">⚡ Ativação Rápida</span>
+                <span id="stockPill" class="stock-pill"></span>
             </div>
             <div class="product-hero-info">
                 <h2>Prime Video 🎬</h2>
                 <p>Acesso ilimitado a filmes, séries originais e desporto ao vivo com qualidade Ultra HD/4K. <b>Descarregue e assista offline sem gastar a sua internet!</b></p>
+                <div class="hero-chips">
+                    <span>📺 4K Ultra HD</span>
+                    <span>⬇️ Modo Offline</span>
+                    <span>🎞️ Séries Originais</span>
+                    <span>⚽ Desporto ao Vivo</span>
+                </div>
             </div>
         </div>
 
@@ -539,24 +835,27 @@
             <h3 class="input-card-title">1. Dados para Receber o Acesso</h3>
             <div class="form-group">
                 <label for="clientName">Seu Nome Completo *</label>
-                <input type="text" id="clientName" class="form-input" placeholder="Ex: Du Black" required>
+                <div class="input-wrap">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="clientName" class="form-input" placeholder="Ex: Du Black" autocomplete="name" required>
+                </div>
             </div>
             <div class="form-group">
                 <label for="clientWhatsApp">Nº de WhatsApp para Envio do Acesso *</label>
-                <input type="tel" id="clientWhatsApp" class="form-input" placeholder="Ex: 95/96-5555555" required>
+                <div class="input-wrap">
+                    <span class="input-icon">📱</span>
+                    <input type="tel" id="clientWhatsApp" class="form-input" placeholder="Ex: 95/96-5555555" autocomplete="tel" inputmode="tel" required>
+                </div>
             </div>
         </div>
 
         <!-- Seleção do Plano -->
         <div class="packages-title">2. Escolha o Plano Desejado</div>
         <div class="package-grid" id="packageGridContainer">
-            
-
-
 
             <div class="pkg-card" onclick="selectPackage(this, 'Prime Video (3 Meses)', 3000)">
                 <div class="pkg-info">
-                    <div class="pkg-title">🍿 Acesso 3 Meses</div>
+                    <div class="pkg-title">🍿 3 Meses</div>
                     <div class="pkg-sub">Duração estendida com desconto | 90 Dias</div>
                 </div>
                 <div class="pkg-price">3.000 FCFA</div>
@@ -564,31 +863,55 @@
 
             <div class="pkg-card" onclick="selectPackage(this, 'Prime Video (6 Meses)', 5750)">
                 <div class="pkg-info">
-                    <div class="pkg-title">🍿 Acesso 6 Meses</div>
+                    <div class="pkg-title">🍿 6 Meses</div>
                     <div class="pkg-sub">Plano semestral económico | 180 Dias</div>
                 </div>
                 <div class="pkg-price">5.750 FCFA</div>
             </div>
 
-            
-              
+        </div>
+
+        <!-- Resumo do plano escolhido -->
+        <div id="orderSummary" class="order-summary">
+            <div>
+                <span class="os-label">Plano selecionado</span>
+                <strong id="osPlan">—</strong>
             </div>
+            <div class="os-price" id="osPrice">—</div>
         </div>
 
         <!-- Botões de Ação -->
         <div class="action-container">
-            
+
             <button id="btnBuyWA" class="btn-buy-wa" onclick="buyDirectWhatsApp()">
                 💬 Comprar Directo no WhatsApp
             </button>
         </div>
+
+        <!-- Como funciona -->
+        <div class="steps-card">
+            <h3 class="input-card-title">Como funciona</h3>
+            <div class="step">
+                <span class="step-num">1</span>
+                <p><b>Escolha o plano</b> e preencha o seu nome e WhatsApp.</p>
+            </div>
+            <div class="step">
+                <span class="step-num">2</span>
+                <p><b>Pague via Orange Money</b> (955288370) e aguarde a confirmação.</p>
+            </div>
+            <div class="step">
+                <span class="step-num">3</span>
+                <p><b>Receba o acesso</b> no seu WhatsApp e assista onde quiser.</p>
+            </div>
+        </div>
+
+        <p class="footer-note">Mercado Digital Bissau 🇬🇼 · Atendimento das 10h às 00h</p>
     </div>
 
     <!-- Toast Notification -->
     <div id="toast" class="toast">Item adicionado ao carrinho!</div>
 
     <!-- Navegação Inferior -->
-   
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -633,6 +956,28 @@
         let selectedPrice = 1500;
         let isProductEsgotado = false;
 
+        // [VISUAL] Atualiza o resumo do plano escolhido
+        function updateSummary() {
+            const box = document.getElementById('orderSummary');
+            const plan = document.getElementById('osPlan');
+            const price = document.getElementById('osPrice');
+            if (!box || !plan || !price) return;
+            plan.textContent = selectedLabel;
+            price.textContent = selectedPrice.toLocaleString() + ' FCFA';
+            box.classList.add('show');
+            price.classList.remove('bump');
+            void price.offsetWidth;
+            price.classList.add('bump');
+        }
+
+        // [VISUAL] Faz o campo vazio tremer
+        function shakeField(el) {
+            if (!el) return;
+            el.classList.remove('shake');
+            void el.offsetWidth;
+            el.classList.add('shake');
+        }
+
         function sincronizarComAdmin() {
             const q = query(collection(db, "produtos"), where("paginaDestino", "==", "primevideo.html"));
             onSnapshot(q, (snapshot) => {
@@ -643,6 +988,13 @@
                     const stockWarning = document.getElementById('stockWarning');
                     const btnAddCart = document.getElementById('btnAddCart');
                     const btnBuyWA = document.getElementById('btnBuyWA');
+
+                    // [VISUAL] Etiqueta de stock no banner
+                    const stockPill = document.getElementById('stockPill');
+                    if (stockPill) {
+                        stockPill.className = 'stock-pill ' + (isProductEsgotado ? 'out' : 'in');
+                        stockPill.textContent = isProductEsgotado ? 'Esgotado' : 'Disponível';
+                    }
 
                     if (isProductEsgotado) {
                         if (stockWarning) stockWarning.style.display = 'block';
@@ -691,6 +1043,7 @@
                                 `;
                                 grid.appendChild(card);
                             });
+                            updateSummary();
                         }
                     }
                 }
@@ -702,6 +1055,7 @@
             element.classList.add('selected');
             selectedLabel = label;
             selectedPrice = price;
+            updateSummary();
         };
 
         function updateNavBadges() {
@@ -761,6 +1115,8 @@
             const wa = document.getElementById('clientWhatsApp').value.trim();
 
             if (!name || !wa) {
+                if (!name) shakeField(document.getElementById('clientName'));
+                if (!wa) shakeField(document.getElementById('clientWhatsApp'));
                 alert("Por favor, preencha o seu Nome e Número de WhatsApp!");
                 document.getElementById('clientName').focus();
                 return;
@@ -798,6 +1154,8 @@
             const wa = document.getElementById('clientWhatsApp').value.trim();
 
             if (!name || !wa) {
+                if (!name) shakeField(document.getElementById('clientName'));
+                if (!wa) shakeField(document.getElementById('clientWhatsApp'));
                 alert("Por favor, preencha o seu Nome e Número de WhatsApp!");
                 document.getElementById('clientName').focus();
                 return;
@@ -886,6 +1244,37 @@
             if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
                 const bottomNav = document.querySelector('.bottom-nav');
                 if (bottomNav) bottomNav.style.display = 'flex';
+            }
+        });
+    </script>
+
+    <!-- Extras visuais (não mexem na lógica de compra) -->
+    <script>
+        // Sombra da barra superior ao rolar
+        (function () {
+            var bar = document.getElementById('topBar');
+            window.addEventListener('scroll', function () {
+                bar.classList.toggle('scrolled', window.scrollY > 8);
+            }, { passive: true });
+        })();
+
+        // Efeito ripple nos botões e nos cartões de plano
+        document.addEventListener('pointerdown', function (e) {
+            var el = e.target.closest('.btn-buy-wa, .btn-add-cart, .pkg-card');
+            if (!el || el.disabled) return;
+            var r = el.getBoundingClientRect();
+            var s = document.createElement('span');
+            s.className = 'ripple';
+            s.style.left = (e.clientX - r.left) + 'px';
+            s.style.top = (e.clientY - r.top) + 'px';
+            el.appendChild(s);
+            setTimeout(function () { s.remove(); }, 600);
+        });
+
+        // Remove o aviso vermelho quando o cliente começa a escrever
+        document.addEventListener('input', function (e) {
+            if (e.target.classList && e.target.classList.contains('form-input')) {
+                e.target.classList.remove('shake');
             }
         });
     </script>

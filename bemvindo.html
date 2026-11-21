@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#090d16">
     <title>Bissau Cinema & Entretenimento Digital - Mercado Digital Bissau</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -21,23 +22,74 @@
             --border: #1e293b;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); padding: 15px; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        @property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
 
-        .container { max-width: 480px; width: 100%; margin: 0 auto; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 15% 15%, rgba(0, 168, 225, 0.14) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(255, 102, 0, 0.12) 0%, transparent 45%);
+            color: var(--text-main);
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        /* Luzes flutuantes de fundo */
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            will-change: transform;
+        }
+        body::before { top: -100px; left: -100px; background: var(--primary); opacity: 0.28; animation: floatOrb 14s ease-in-out infinite; }
+        body::after { bottom: -120px; right: -120px; background: var(--orange); opacity: 0.2; animation: floatOrb 18s ease-in-out infinite reverse; }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, 30px) scale(1.15); }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { to { --angle: 360deg; } }
+        @keyframes shine { 0% { transform: translateX(-130%) skewX(-20deg); } 55%, 100% { transform: translateX(230%) skewX(-20deg); } }
+        @keyframes marquee { to { transform: translateX(-50%); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+        @keyframes badgePulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 102, 0, 0.5); } 50% { box-shadow: 0 0 0 8px rgba(255, 102, 0, 0); } }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+        .container { max-width: 480px; width: 100%; margin: 0 auto; position: relative; z-index: 1; perspective: 1000px; }
+
+        /* Borda animada em volta do cartão */
+        .card-glow {
+            padding: 2px;
+            border-radius: 26px;
+            background: conic-gradient(from var(--angle),
+                transparent 0deg, var(--orange) 60deg, transparent 120deg,
+                #00a8e1 200deg, transparent 280deg, var(--primary) 330deg, transparent 360deg);
+            animation: fadeIn 0.6s ease-out, spin 7s linear infinite;
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6);
+            transition: transform 0.15s ease-out;
+        }
 
         .bridge-card {
             background-color: var(--bg-card);
-            border: 1px solid var(--border);
             border-radius: 24px;
             padding: 1.8rem 1.25rem;
             text-align: center;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.6);
-            animation: fadeIn 0.3s ease-out;
             overflow: hidden;
+            position: relative;
         }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         .logo-badge {
             display: inline-block;
@@ -45,14 +97,47 @@
             color: #ffffff;
             font-size: 0.75rem;
             font-weight: 800;
-            padding: 4px 12px;
+            padding: 5px 14px;
             border-radius: 20px;
             margin-bottom: 1rem;
             letter-spacing: 0.5px;
+            animation: badgePulse 2.4s infinite;
         }
 
-        .title { font-size: 1.35rem; font-weight: 800; margin-bottom: 0.5rem; color: #ffffff; }
-        .subtitle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.4; }
+        .title {
+            font-size: 1.45rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #ffffff 0%, #ffd2b0 50%, #ffffff 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: fadeIn 0.6s 0.1s ease-out backwards;
+        }
+
+        .subtitle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.1rem; line-height: 1.45; animation: fadeIn 0.6s 0.18s ease-out backwards; }
+
+        /* Faixa de chips em movimento */
+        .chips {
+            overflow: hidden;
+            margin-bottom: 1.3rem;
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+            animation: fadeIn 0.6s 0.24s ease-out backwards;
+        }
+        .chips-track { display: flex; width: max-content; animation: marquee 20s linear infinite; }
+        .chips-set { display: flex; gap: 8px; padding-right: 8px; }
+        .chips-set span {
+            white-space: nowrap;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
 
         .info-box {
             background-color: var(--bg-dark);
@@ -60,7 +145,7 @@
             border-radius: 16px;
             padding: 1rem;
             text-align: left;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.4rem;
         }
 
         .info-item {
@@ -71,112 +156,293 @@
             font-weight: 700;
             color: #ffffff;
             margin-bottom: 0.75rem;
+            animation: fadeIn 0.5s ease-out backwards;
         }
+        .info-item:nth-child(1) { animation-delay: 0.3s; }
+        .info-item:nth-child(2) { animation-delay: 0.4s; }
+        .info-item:nth-child(3) { animation-delay: 0.5s; }
 
         .info-item:last-child { margin-bottom: 0; }
-        .info-icon { font-size: 1.1rem; }
+
+        .info-icon {
+            font-size: 1.05rem;
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 11px;
+            background: linear-gradient(135deg, rgba(255, 102, 0, 0.22), rgba(124, 58, 237, 0.2));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .copy-btn {
+            flex-shrink: 0;
+            margin-left: auto;
+            background: rgba(255, 102, 0, 0.14);
+            color: #ff9a55;
+            border: 1px solid rgba(255, 102, 0, 0.4);
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 6px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.15s, background 0.2s;
+        }
+        .copy-btn:active { transform: scale(0.92); }
+        .copy-btn.done { background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.5); }
 
         .action-container { display: flex; flex-direction: column; gap: 10px; }
 
-        .btn-site {
+        .btn-site, .btn-whatsapp, .btn-channel {
+            position: relative;
+            overflow: hidden;
             width: 100%;
-            background: linear-gradient(135deg, var(--orange), #d95300);
-            color: #ffffff;
-            padding: 14px;
-            border-radius: 14px;
             font-weight: 800;
-            font-size: 0.9rem;
             text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            box-shadow: 0 4px 15px var(--orange-glow);
             text-transform: uppercase;
+            transition: transform 0.2s, box-shadow 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            animation: fadeIn 0.5s ease-out backwards;
+        }
+        .btn-site { animation-delay: 0.55s; }
+        .btn-whatsapp { animation-delay: 0.65s; }
+        .btn-channel { animation-delay: 0.75s; }
+
+        .btn-site:active, .btn-whatsapp:active, .btn-channel:active { transform: scale(0.97); }
+
+        .btn-site::after, .btn-whatsapp::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+            animation: shine 3.5s infinite;
+            pointer-events: none;
+        }
+        .btn-whatsapp::after { animation-delay: 1.2s; }
+
+        .btn-site {
+            background: linear-gradient(135deg, var(--orange), #d95300);
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 18px var(--orange-glow);
         }
 
         .btn-whatsapp {
-            width: 100%;
             background: linear-gradient(135deg, #25d366, #128c7e);
             color: #ffffff;
             padding: 14px;
             border-radius: 14px;
-            font-weight: 800;
             font-size: 0.9rem;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
             box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-            text-transform: uppercase;
         }
 
         .btn-channel {
-            width: 100%;
             background: rgba(37, 211, 102, 0.12);
             color: #25d366;
             border: 1px solid rgba(37, 211, 102, 0.4);
             padding: 12px;
             border-radius: 14px;
-            font-weight: 800;
             font-size: 0.85rem;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-transform: uppercase;
         }
 
-        .footer-note { font-size: 0.72rem; color: var(--text-muted); margin-top: 1.25rem; font-weight: 600; }
+        @media (hover: hover) {
+            .btn-site:hover, .btn-whatsapp:hover { transform: translateY(-2px); }
+            .btn-channel:hover { transform: translateY(-2px); background: rgba(37, 211, 102, 0.2); }
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            width: 40px; height: 40px;
+            margin: -20px 0 0 -20px;
+            transform: scale(0);
+            animation: ripple 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        /* Estado do atendimento */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 1.2rem;
+            font-size: 0.74rem;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.12);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            animation: fadeIn 0.5s 0.85s ease-out backwards;
+        }
+        .status .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: blink 1.6s infinite; }
+        .status.closed { background: rgba(251, 191, 36, 0.1); color: #fbbf24; border-color: rgba(251, 191, 36, 0.35); }
+
+        .footer-note { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.8rem; font-weight: 600; }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #ffffff;
+            padding: 11px 22px;
+            border-radius: 25px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="bridge-card">
-            
-            <span class="logo-badge">MERCADO DIGITAL BISSAU 🇬🇼</span>
-            
-            <h1 class="title">Bissau Cinema & Entretenimento</h1>
-            <p class="subtitle">Aceda ao catálogo completo de conteúdos, filmes, séries e jogos ao vivo na Guiné-Bissau.</p>
+        <div class="card-glow" id="cardGlow">
+            <div class="bridge-card">
 
-            <div class="info-box">
-                <div class="info-item">
-                    <span class="info-icon">🎬</span>
-                    <span>Planos de 1 Mês, 3 Meses, 6 Meses e 1 Ano disponíveis</span>
+                <span class="logo-badge">MERCADO DIGITAL BISSAU 🇬🇼</span>
+
+                <h1 class="title">Bissau Cinema & Entretenimento</h1>
+                <p class="subtitle">Aceda ao catálogo completo de conteúdos, filmes, séries e jogos ao vivo na Guiné-Bissau.</p>
+
+                <div class="chips" aria-hidden="true">
+                    <div class="chips-track">
+                        <div class="chips-set">
+                            <span>🎬 Filmes</span><span>📺 Séries</span><span>⚽ Jogos ao vivo</span><span>📱 Em qualquer ecrã</span><span>⚡ Ativação rápida</span>
+                        </div>
+                        <div class="chips-set">
+                            <span>🎬 Filmes</span><span>📺 Séries</span><span>⚽ Jogos ao vivo</span><span>📱 Em qualquer ecrã</span><span>⚡ Ativação rápida</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="info-item">
-                    <span class="info-icon">📱</span>
-                    <span>Assista no Smartphone, TV, Notebook ou Tablet</span>
+
+                <div class="info-box">
+                    <div class="info-item">
+                        <span class="info-icon">🎬</span>
+                        <span>Planos de 1 Mês, 3 Meses, 6 Meses e 1 Ano disponíveis</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">📱</span>
+                        <span>Assista no Smartphone, TV, Notebook ou Tablet</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">💳</span>
+                        <span>Pagamento rápido via Orange Money (955288370)</span>
+                        <button type="button" class="copy-btn" id="copyBtn" data-num="955288370">Copiar</button>
+                    </div>
                 </div>
-                <div class="info-item">
-                    <span class="info-icon">💳</span>
-                    <span>Pagamento rápido via Orange Money (955288370)</span>
+
+                <div class="action-container">
+                    <!-- Link para o Site Principal -->
+                    <a href="primevideo.html" class="btn-site">
+                        🌐 Comprar no Site
+                    </a>
+
+                    <!-- Link para Atendimento Direto no WhatsApp -->
+                    <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Vim%20pelo%20an%C3%BAncio%20do%20Bissau%20Cinema%20e%20gostaria%20de%20comprar." target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                        💬 Pedir no WhatsApp Directo
+                    </a>
+
+                    <!-- Link para o Grupo Oficial no WhatsApp -->
+                    <a href="https://chat.whatsapp.com/H3Tp85UulXw9UNOpzmimFE?s=cl&p=i&mlu=4&ilr=4&iam=2" target="_blank" rel="noopener noreferrer" class="btn-channel">
+                        📢 Entrar no Grupo do Whatsapp
+                    </a>
                 </div>
+
+                <div class="status" id="status"><span class="dot"></span><span id="statusText">A verificar atendimento…</span></div>
+                <p class="footer-note">Atendimento disponível das 10h às 00h | Guiné-Bissau 🇬🇼</p>
             </div>
-
-            <div class="action-container">
-                <!-- Link para o Site Principal -->
-                <a href="primevideo.html" class="btn-site">
-                    🌐 Comprar no Site
-                </a>
-
-                <!-- Link para Atendimento Direto no WhatsApp -->
-                <a href="https://wa.me/245955288370?text=Ol%C3%A1!%20Vim%20pelo%20an%C3%BAncio%20do%20Bissau%20Cinema%20e%20gostaria%20de%20comprar." target="_blank" class="btn-whatsapp">
-                    💬 Pedir no WhatsApp Directo
-                </a>
-
-                <!-- Link para o Grupo Oficial no WhatsApp -->
-                <a href="https://chat.whatsapp.com/H3Tp85UulXw9UNOpzmimFE?s=cl&p=i&mlu=4&ilr=4&iam=2" target="_blank" class="btn-channel">
-                    📢 Entrar no Grupo do Whatsapp
-                </a>
-            </div>
-
-            <p class="footer-note">Atendimento disponível das 10h às 00h | Guiné-Bissau 🇬🇼</p>
         </div>
     </div>
 
-</body>
-</html>
+    <div class="toast" id="toast">Número copiado!</div>
+
+    <script>
+        // Estado do atendimento (Guiné-Bissau = UTC+0 | aberto das 10h às 00h)
+        function atualizarStatus() {
+            var hora = new Date().getUTCHours();
+            var aberto = hora >= 10;
+            var box = document.getElementById('status');
+            var txt = document.getElementById('statusText');
+            if (!box || !txt) return;
+            box.classList.toggle('closed', !aberto);
+            txt.textContent = aberto ? 'Atendimento aberto agora' : 'Fechado agora · abre às 10h';
+        }
+        atualizarStatus();
+        setInterval(atualizarStatus, 60000);
+
+        // Copiar número do Orange Money
+        function mostrarToast(msg) {
+            var t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(function () { t.classList.remove('show'); }, 2200);
+        }
+
+        var copyBtn = document.getElementById('copyBtn');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', function () {
+                var num = copyBtn.getAttribute('data-num');
+                function ok() {
+                    copyBtn.classList.add('done');
+                    copyBtn.textContent = 'Copiado ✓';
+                    mostrarToast('✅ Número copiado!');
+                    setTimeout(function () { copyBtn.classList.remove('done'); copyBtn.textContent = 'Copiar'; }, 2000);
+                }
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(num).then(ok).catch(function () { fallback(); });
+                } else { fallback(); }
+                function fallback() {
+                    var ta = document.createElement('textarea');
+                    ta.value = num; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                    document.body.appendChild(ta); ta.select();
+                    try { document.execCommand('copy'); ok(); } catch (e) { mostrarToast('Copie: ' + num); }
+                    document.body.removeChild(ta);
+                }
+            });
+        }
+
+        // Efeito ripple nos botões
+        document.querySelectorAll('.btn-site, .btn-whatsapp, .btn-channel').forEach(function (btn) {
+            btn.addEventListener('pointerdown', function (e) {
+                var r = btn.getBoundingClientRect();
+                var s = document.createElement('span');
+                s.className = 'ripple';
+                s.style.left = (e.clientX - r.left) + 'px';
+                s.style.top = (e.clientY - r.top) + 'px';
+                btn.appendChild(s);
+                setTimeout(function () { s.remove(); }, 600);
+            });
+        });
+
+        // Inclinação 3D suave (só em ecrãs com rato)
+        if (window.matchMedia('(pointer: fine)').matches) {
+            var glow = document.getElementById('cardGlow');
+            document.addEventListener('pointermove', function (e) {
+                var x = (e.clientX / window.innerWidth - 0.5) * 6;
+                var y = (e.clientY / window.innerHeight - 0.5) * -6;
+                glow.style.transform = 'rotateX(' + y + 'deg) rotateY(' + x + 'deg)';
+            });
+            document.addEventListener('pointerleave', function () { glow.style.transform = ''; });
+        }
+    
